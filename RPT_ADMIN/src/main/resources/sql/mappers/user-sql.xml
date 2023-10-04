@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="user">
+    	<resultMap type="user" id="userResult">
+    		<id property="userId" column="USER_ID" javaType="String"/>
+    		<result property="userNm" column="USER_NM" javaType="String" />
+    		<result property="password" column="PASSWORD" javaType="String" />
+    		<result property="lastLoginTime" column="LAST_LOGIN_TIME" javaType="String" />
+    		<result property="loginType" column="LOGIN_TYPE" javaType="String" />
+    		<result property="userType" column="USER_TYPE" javaType="String" />
+    		<result property="stockId" column="STOCK_ID" javaType="String"/>
+    		<result property="phoneNum" column="PHONE_NUM" javaType="String"/>
+    		<result property="nickNm" column="NICK_NM" javaType="String"/>
+    		<result property="stockNm" column="STOCK_NM" javaType="String"/>
+    	</resultMap>
+    	
+    	<select id="selectUserSearchList" parameterType="user" resultMap="userResult">
+    		SELECT * FROM (
+				SELECT A.*, ROW_NUMBER() OVER(ORDER BY USER_ID ASC) ROWNUM 
+				FROM RPT_USER A
+				 <where>
+			    	<if test="userId != null">
+			    		AND USER_ID LIKE  '%'+#{userId}+'%'
+			    	</if>
+			    	<if test="userNm != null">
+			    		AND USER_NM LIKE '%'+#{userNm}+'%'
+			    	</if>
+			    	<if test="loginType != null">
+			    		AND LOGIN_TYPE = #{loginType}
+			    	</if>
+			    	<if test="userType != null">
+			    		AND USER_TYPE = #{userType}
+			    	</if>
+			    </where>
+				<if test="sort != null">
+			    	ORDER BY
+			    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+						${item.field} ${item.dir}
+					</foreach>
+			    </if>
+			) B
+			WHERE B.ROWNUM <![CDATA[ > ]]>  #{firstIndex}
+			AND B.ROWNUM <![CDATA[ <=]]>  #{firstIndex} + #{recordCountPerPage}
+    	</select>
+    	
+    	<select id="selectUserSearchListCount" parameterType="user" resultType="String">
+    		SELECT COUNT(USER_ID) FROM RPT_USER
+				 <where>
+			    	<if test="userId != null">
+			    		AND USER_ID LIKE  '%'+#{userId}+'%'
+			    	</if>
+			    	<if test="userNm != null">
+			    		AND USER_NM LIKE '%'+#{userNm}+'%'
+			    	</if>
+			    	<if test="loginType != null">
+			    		AND LOGIN_TYPE = #{loginType}
+			    	</if>
+			    	<if test="userType != null">
+			    		AND USER_TYPE = #{userType}
+			    	</if>
+			    </where>
+    	</select>
+    	
+    	<select id="selectUserDetail" parameterType="user" resultMap="userResult">
+    		SELECT 
+    		   ISNULL(USER_ID,'') USER_ID
+		      ,ISNULL(USER_NM,'') USER_NM
+		      ,ISNULL(PASSWORD,'') PASSWORD
+		      ,ISNULL(LAST_LOGIN_TIME,'') LAST_LOGIN_TIME
+		      ,ISNULL(LOGIN_TYPE,'') LOGIN_TYPE
+		      ,ISNULL(USER_TYPE,'') USER_TYPE
+		      ,ISNULL(PHONE_NUM,'') PHONE_NUM
+		      ,ISNULL(NICK_NM,'') NICK_NM
+    		FROM RPT_USER WHERE USER_ID = #{userId}
+    	</select>
+    	
+    	<select id="selectUserStockList" parameterType="user"  resultType="hashmap">
+    		SELECT * FROM (
+				SELECT 
+					A.STOCK_ID AS stockId
+					,B.종목명 AS stockNm 
+					,ROW_NUMBER() OVER(ORDER BY STOCK_ID ASC) ROWNUM
+				FROM RPT_USER_POSSESS A
+				INNER JOIN RPTrader.DBO.주식기본정보 B
+				ON A.STOCK_ID = B.종목코드
+				AND A.USER_ID = #{userId}
+				<if test="sort != null">
+			    	ORDER BY
+			    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+						${item.field} ${item.dir}
+					</foreach>
+			    </if>
+			) B
+			WHERE B.ROWNUM <![CDATA[ > ]]>  #{firstIndex}
+			AND B.ROWNUM <![CDATA[ <=]]>  #{firstIndex} + #{recordCountPerPage}
+    	</select>
+    	
+    	<select id="selectUserStockListCount" parameterType="user" resultType="String">
+			SELECT 
+				COUNT(*)
+			FROM RPT_USER_POSSESS A
+			INNER JOIN RPTrader.DBO.주식기본정보 B
+			ON A.STOCK_ID = B.종목코드
+			AND A.USER_ID = #{userId}
+    	</select>
+    	
+    	<select id="selectUserCheck" parameterType="user" resultType="String">
+    		SELECT COUNT(*) FROM RPT_USER WHERE USER_ID = #{userId}
+    	</select>
+    	
+    	<insert id="userRegist" parameterType="user">
+    		INSERT INTO RPT_USER (
+    			USER_ID
+    			,USER_NM
+    			,PASSWORD
+    			,LOGIN_TYPE
+    			,USER_TYPE
+    			,PHONE_NUM
+    			,NICK_NM
+    		)
+    		VALUES (
+    			#{userId}
+    			,#{userNm}
+    			,#{password}
+    			,#{loginType}
+    			,#{userType}
+    			,#{phoneNum}
+    			,#{nickNm}
+    		)
+    		
+    	</insert>
+    	
+    	<select id="selectUserLoginCheck" parameterType="user" resultType="String">
+    		SELECT COUNT(*) FROM RPT_USER WHERE USER_ID = #{userId} AND PASSWORD = #{password}
+    	</select>
+    	
+    	<update id="userUpdate" parameterType="user">
+    		UPDATE RPT_USER
+    		<trim prefix="SET" suffixOverrides=",">
+				<if test="userNm != null"> USER_NM = #{userNm}</if>    			
+				<if test="password != null"> PASSWORD = #{password}</if>    			
+				<if test="loginType != null"> LOGIN_TYPE =  #{loginType}</if>    			
+				<if test="userType != null"> USER_TYPE = #{userType}</if>    			
+				<if test="phoneNum != null"> PHONE_NUM = #{phoneNum}</if>    			
+				<if test="nickNm != null"> NICK_NM = #{nickNm}</if>    			
+				<if test="lastLoginTime != null"> LAST_LOGIN_TIME = CAST(STUFF(STUFF(STUFF(#{lastLoginTime}, 9, 0, ' '), 12, 0, ':'), 15, 0, ':') AS DATETIME) #{nickNm}</if>    			
+    		</trim>
+    		WHERE USER_ID = #{userId}
+    	</update>
+    	
+    	<select id="selectUserPossessStockList" parameterType="user" resultType="hashmap">
+			SELECT STOCK_ID stockId, 종목명 stockNm FROM RPT_USER_POSSESS A
+			INNER JOIN RPTrader.DBO.주식기본정보 B
+			ON A.STOCK_ID = B.종목코드
+			WHERE USER_ID = #{userId}   			
+    	</select>
+    	
+    	    	
+    	<select id="selectUserDetailApi" parameterType="user" resultType="hashmap">
+    		SELECT 
+    		   ISNULL(USER_ID,'') userId
+		      ,ISNULL(USER_NM,'') userNm
+		      ,ISNULL(PASSWORD,'') password
+		      ,ISNULL(CONVERT(NVARCHAR,LAST_LOGIN_TIME,120),'') lastLoginTime
+		      ,ISNULL(LOGIN_TYPE,'') loginType
+		      ,ISNULL(USER_TYPE,'') userType
+		      ,ISNULL(PHONE_NUM,'') phoneNum
+		      ,ISNULL(NICK_NM,'') nickNm
+    		FROM RPT_USER WHERE USER_ID = #{userId}
+    	</select>
+    	
+    	<insert id="insertUserPossessStock" parameterType="user">
+	    	<![CDATA[
+			  MERGE INTO RPT_USER_POSSESS A
+			  USING (SELECT #{userId} USER_ID, #{stockId} STOCK_ID) B
+			  ON (A.USER_ID = B.USER_ID AND A.STOCK_ID = B.STOCK_ID)
+			  WHEN NOT MATCHED THEN
+			  INSERT (STOCK_ID, USER_ID) VALUES(#{stockId},#{userId});
+	    	]]>
+    	</insert>
+    	
+    	<delete id="deleteUserPossessStock" parameterType="user">
+    		DELETE FROM RPT_USER_POSSESS WHERE USER_ID = #{userId} AND STOCK_ID = #{stockId}
+    	</delete>
+    
+    </mapper>

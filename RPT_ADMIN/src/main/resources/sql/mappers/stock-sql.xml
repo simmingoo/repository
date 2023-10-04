@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="stock">
+    
+    	<resultMap type="stock" id="stockInfoMap">
+    		<id property="stockId" column="STOCK_ID" javaType="String"/>
+    		<result property="stockNm" column="STOCK_NM" javaType="String"/>
+    		<result property="stockType" column="STOCK_TYPE" javaType="String"/>
+    		<result property="stockReportYn" column="STOCK_REPORT_YN" javaType="String"/>
+    	</resultMap>
+    	
+    	<resultMap type="trade" id="tradeInfoMap">
+    		<id property="stockId" column="STOCK_ID" javaType="String"/>
+    		<result property="stockNm" column="STOCK_NM" javaType="String"/>
+			<result property="settleAccounts" column="SETTLE_ACCOUNTS" javaType="String"/>
+			<result property="faceVal" column="FACE_VAL" javaType="String"/>
+			<result property="capital" column="CAPITAL" javaType="String"/>
+			<result property="stocksListed" column="STOCKS_LISTED" javaType="String"/>
+			<result property="creditRatio" column="CREDIT_RATIO" javaType="String"/>
+			<result property="maxValYear" column="MAX_VAL_YEAR" javaType="String"/>
+			<result property="minValYear" column="MIN_VAL_YEAR" javaType="String"/>
+			<result property="marketCapital" column="MARKET_CAPITAL" javaType="String"/>
+			<result property="marketCapitalImportance" column="MARKET_CAPITAL_IMPORTANCE" javaType="String"/>
+			<result property="foreignerRunoutRate" column="FOREIGNER_RUNOUT_RATE" javaType="String"/>
+			<result property="substitutePrice" column="SUBSTITUTE_PRICE" javaType="String"/>
+			<result property="per" column="PER" javaType="String"/>
+			<result property="eps" column="EPS" javaType="String"/>
+			<result property="roe" column="ROE" javaType="String"/>
+			<result property="pbr" column="PBR" javaType="String"/>
+			<result property="ev" column="EV" javaType="String"/>
+			<result property="bps" column="BPS" javaType="String"/>
+			<result property="sales" column="SALES" javaType="String"/>
+			<result property="businessProfits" column="BUSINESS_PROFITS" javaType="String"/>
+			<result property="currentIncome" column="CURRENT_INCOME" javaType="String"/>
+			<result property="top" column="TOP" javaType="String"/>
+			<result property="low" column="LOW" javaType="String"/>
+			<result property="currentPrice" column="CURRENT_PRICE" javaType="String"/>
+			<result property="highPrice" column="HIGH_PRICE" javaType="String"/>
+			<result property="lowPrice" column="LOW_PRICE" javaType="String"/>
+			<result property="maximumPurchasePrice" column="MAXIMUM_PURCHASE_PRICE" javaType="String"/>
+			<result property="minimumPurchasePrice" column="MINIMUM_PURCHASE_PRICE" javaType="String"/>
+			<result property="standardPrice" column="STANDARD_PRICE" javaType="String"/>
+			<result property="expectContractPrice" column="EXPECT_CONTRACT_PRICE" javaType="String"/>
+			<result property="expectContractQuantity" column="EXPECT_CONTRACT_QUANTITY" javaType="String"/>
+			<result property="maxdate" column="MAXDATE" javaType="String"/>
+			<result property="maxdaterate" column="MAXDATERATE" javaType="String"/>
+			<result property="mindate" column="MINDATE" javaType="String"/>
+			<result property="mindaterate" column="MINDATERATE" javaType="String"/>
+			<result property="presentPrice" column="RESENT_PRICE" javaType="String"/>
+			<result property="contrastMark" column="CONTRAST_MARK" javaType="String"/>
+			<result property="netChange" column="NET_CHANGE" javaType="String"/>
+			<result property="fluctuationRate" column="FLUCTUATION_RATE" javaType="String"/>
+			<result property="volume" column="VOLUME" javaType="String"/>
+			<result property="tradeContrast" column="TRADE_CONTRAST" javaType="String"/>
+			<result property="par" column="PAR" javaType="String"/>
+			<result property="mobilizationStock" column="MOBILIZATION_STOCK" javaType="String"/>
+			<result property="mobilizationRate" column="MOBILIZATION_RATE" javaType="String"/>
+			<result property="presentPrice" column="PRESENT_PRICE" javaType="String"/>
+			<result property="dartCompanyCode" column="DART_COMPANYCODE" javaType="String"/>
+			<result property="strategyDate" column="STRATEGY_DATE" javaType="String"/>
+			<result property="strategyId" column="STRATEGY_ID" javaType="String"/>
+			<result property="strategyNm" column="STRATEGY_NM" javaType="String"/>
+			<result property="strategyDesc" column="STRATEGY_DESC" javaType="String"/>
+			<result property="strategyPrice" column="STRATEGY_PRICE" javaType="String"/>
+			<result property="strategyRate" column="STRATEGY_RATE" javaType="String"/>
+			<result property="strategyVolume" column="STRATEGY_VOLUME" javaType="String"/>
+			<result property="strategyContrast" column="STRATEGY_CONTRAST" javaType="String"/>
+			<result property="strategyType" column="STRATEGY_TYPE" javaType="String"/>
+			<result property="engCompanyNm" column="ENG_COMPANY_NM" javaType="String"/>
+			<result property="companyPresident" column="COMPANY_PRESIDENT" javaType="String"/>
+			<result property="corporateClass" column="CORPORATE_CLASS" javaType="String"/>
+			<result property="corporateNum" column="CORPORATE_NUM" javaType="String"/>
+			<result property="corporateRegistrationNum" column="CORPORATE_REGISTRATION_NUM" javaType="String"/>
+			<result property="address" column="ADDRESS" javaType="String"/>
+			<result property="homepage" column="HOMEPAGE" javaType="String"/>
+			<result property="irHomepage" column="IR_HOMEPAGE" javaType="String"/>
+			<result property="corporatePhoneNum" column="CORPORATE_PHONE_NUM" javaType="String"/>
+			<result property="corporateFaxNum" column="CORPORATE_FAX_NUM" javaType="String"/>
+			<result property="businessCode" column="BUSINESS_CODE" javaType="String"/>
+			<result property="incorporationDate" column="INCORPORATION_DATE" javaType="String"/>
+			<result property="quickRatio" column="QUICK_RATIO" javaType="String"/>
+			<result property="currentRatio" column="CURRENT_RATIO" javaType="String"/>
+			<result property="debtRatio" column="DEBT_RATIO" javaType="String"/>
+			<result property="reservRatio" column="RESERVE_RATIO" javaType="String"/>
+			<result property="seqDepositRatio" column="SEQ_DEPOSIT_RATIO" javaType="String"/>
+			<result property="timeInterestEarned" column="TIME_INTEREST_EARNED" javaType="String"/>
+			<result property="equityOwnewRatio" column="EQUITY_OWNER_RATIO" javaType="String"/>
+			<result property="receiptNum" column="RECEIPT_NUMBER" javaType="String"/>
+			<result property="reportCode" column="REPORT_CODE" javaType="String"/>
+			<result property="businessYear" column="BUSINESS_YEAR" javaType="String"/>
+			<result property="financialStatementClass" column="FINANCIAL_STATEMENTS_CLASS" javaType="String"/>
+			<result property="financialStatementNm" column="FINANCIAL_STATEMENTS_NM" javaType="String"/>
+			<result property="accountId" column="ACCOUNT_ID" javaType="String"/>
+			<result property="accountNm" column="ACCOUNT_NM" javaType="String"/>
+			<result property="accountDetail" column="ACCOUNT_DETAIL" javaType="String"/>
+			<result property="currentTermNm" column="CURRENT_TERM_NAME" javaType="String"/>
+			<result property="currentTermSum" column="CURRENT_TERM_SUM" javaType="String"/>
+			<result property="currentTermAccumulateSum" column="CURRENT_TERM_ACCUMULATE_SUM" javaType="String"/>
+			<result property="privousTermNm" column="PRIVIOUS_TERM_NAME" javaType="String"/>
+			<result property="privousTermSum" column="PRIVIOUS_TERM_SUM" javaType="String"/>
+			<result property="privousTermQuarterlyNm" column="PRIVIOUS_TERM_QUARTERLY_NAME" javaType="String"/>
+			<result property="privousTermQuarterlySum" column="PRIVIOUS_TERM_QUARTERLY_SUM" javaType="String"/>
+			<result property="formerPartQuarterlyNm" column="FORMER_PART_QUARTERLY_NAME" javaType="String"/>
+			<result property="formerPartQuarterlySum" column="FORMER_PART_QUARTERLY_SUM" javaType="String"/>
+			<result property="corpOverviewContent" column="CORP_OVERVIEW_CONTENT" javaType="String"/>
+			<result property="industryProperty" column="INDUSTRY_PROPERTY" javaType="String"/>
+			<result property="elementCompetition" column="ELEMENT_COMPETITION" javaType="String"/>
+			<result property="companyStatus" column="COMPANY_STATUS" javaType="String"/>
+			<result property="primaryProductSales" column="PRIMARY_PRODUCT_SALES" javaType="String"/>
+			<result property="incomeStatementImagePath1" column="INCOME_STATEMENT_IMAGE_PATH1" javaType="String"/>
+			<result property="incomeStatementImageContent1" column="INCOME_STATEMENT_IMAGE_CONTENT1" javaType="String"/>
+			<result property="incomeStatementImagePath2" column="INCOME_STATEMENT_IMAGE_PATH2" javaType="String"/>
+			<result property="incomeStatementImageContent2" column="INCOME_STATEMENT_IMAGE_CONTENT2" javaType="String"/>
+			<result property="krxStandardCode" column="KRX_STANDARD_CODE" javaType="String"/>
+			<result property="krxRealName" column="KRX_REAL_NAME" javaType="String"/>
+			<result property="krxStockEngNm" column="KRX_STOCK_ENG_NM" javaType="String"/>
+			<result property="stockListDt" column="STOCK_LIST_DT" javaType="String"/>
+			<result property="marketType" column="MARKET_TYPE" javaType="String"/>
+			<result property="shareType" column="SHARE_TYPE" javaType="String"/>
+			<result property="affiliateDivision" column="AFFILIATE_DIVISION" javaType="String"/>
+			<result property="stockForm" column="STOCK_FORM" javaType="String"/>
+			<result property="krxFaceVal" column="KRX_FACE_VAL" javaType="String"/>
+			<result property="krxStocksListed" column="KRX_STOCKS_LISTED" javaType="String"/>
+			<result property="krxCapital" column="KRX_CAPITAL" javaType="String"/>
+			<result property="krxMarketCapital" column="KRX_MARKET_CAPITAL" javaType="String"/>
+			<result property="krxSubstitutePrice" column="KRX_SUBSTITUTE_PRICE" javaType="String"/>
+			<result property="substitutePriceCalcDt" column="SUBSTITUTE_PRICE_CALC_DT" javaType="String"/>
+			<result property="tradingSuspension" column="TRADING_SUSPENSION" javaType="String"/>
+			<result property="clearanceTradingItems" column="CLEARANCE_TRADING_ITEMS" javaType="String"/>
+			<result property="managementItems" column="MANAGEMENT_ITEMS" javaType="String"/>
+			<result property="investmentCautionAttentionItems" column="INVESTMENT_CAUTION_ATTENTION_ITEMS" javaType="String"/>
+			<result property="insincerityNoticeItems" column="INSINCERITY_NOTICE_ITEMS" javaType="String"/>
+			<result property="singleTradingItems" column="SINGLE_TRADING_ITEMS" javaType="String"/>
+			<result property="shortagePreferredStock" column="SHORTAGE_PREFERRED_STOCK" javaType="String"/>
+			<result property="excessiveInvestmentItems" column="EXCESSIVE_INVESTMENT_ITEMS" javaType="String"/>
+			<result property="investmentCautionItems" column="INVESTMENT_CAUTION_ITEMS" javaType="String"/>
+			<result property="investmentWarnItems" column="INVESTMENT_WARN_ITEMS" javaType="String"/>
+			<result property="investmentDangerItems" column="INVESTMENT_DANGER_ITEMS" javaType="String"/>
+			<result property="krxEps" column="KRX_EPS" javaType="String"/>
+			<result property="krxPer" column="KRX_PER" javaType="String"/>
+			<result property="krxBps" column="KRX_BPS" javaType="String"/>
+			<result property="krxPbr" column="KRX_PBR" javaType="String"/>
+			<result property="shareDividend" column="SHARE_DIVIDEND" javaType="String"/>
+			<result property="dividendRate" column="DIVIDEND_RATE" javaType="String"/>
+			<result property="krxBusinessCode" column="KRX_BUSINESS_CODE" javaType="String"/>
+			<result property="krxBusinessNm" column="KRX_BUSINESS_NM" javaType="String"/>
+			<result property="krxBusinessDetailNm" column="KRX_BUSINESS_DETAIL_NM" javaType="String"/>
+			<result property="foreignerHoldingVol" column="FOREIGNER_HOLDING_VOL" javaType="String"/>
+			<result property="foreignerOwnerPer" column="FOREIGNER_OWNER_PER" javaType="String"/>
+			<result property="foreignerLimitVol" column="FOREIGNER_LIMIT_VOL" javaType="String"/>
+			<result property="foreignerLimitRunoutRate" column="FOREIGNER_LIMIT_RUNOUT_RATE" javaType="String"/>
+			<result property="krxSettleAccounts" column="KRX_SETTLE_ACCOUNTS" javaType="String"/>
+			<result property="currency" column="CURRENCY" javaType="String"/>
+			<result property="krxCompanyPresident" column="KRX_COMPANY_PRESIDENT" javaType="String"/>
+			<result property="krxCorporatePhoneNum" column="KRX_CORPORATE_PHONE_NUM" javaType="String"/>
+			<result property="krxAddress" column="KRX_ADDRESS" javaType="String"/>
+    	</resultMap>
+    
+    	<select id="selectStockList" parameterType="stock" resultMap="stockInfoMap">
+    		SELECT * FROM (
+				SELECT A.* , ROW_NUMBER() OVER (ORDER BY STOCK_ID) ROWNUM FROM (
+					SELECT 
+						 A.종목코드 STOCK_ID
+						,A.종목명 STOCK_NM
+						,CASE 
+							WHEN C.종목유형 IS NULL  THEN '일반주'
+							ELSE C.종목유형
+							END STOCK_TYPE
+						,CASE
+							WHEN D.STOCK_ID IS NULL THEN '리포트 미 보유'
+							ELSE '리포트 보유'
+							END STOCK_REPORT_YN
+					FROM RPTrader.DBO.주식기본정보 A
+					LEFT OUTER JOIN (SELECT * FROM (
+					SELECT 종목코드, 종목명, 종목유형, LastTime, ROW_NUMBER() OVER(PARTITION BY 종목코드 ORDER BY LastTime DESC) RNUM 
+					from RPTrader.dbo.전략검색종목
+					) B
+					WHERE RNUM = 1 ) C
+					ON A.종목코드 = C.종목코드
+					LEFT OUTER JOIN RPT_STOCK_REPORT_INFO D
+					ON A.종목코드 = D.STOCK_ID
+				) A 
+				<where>
+					<if test="stockId != null">
+						AND STOCK_ID LIKE '%'+#{stockId}+'%'
+					</if>
+					<if test="stockNm != null">
+						AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+					</if>
+					<if test="stockType != null">
+						AND STOCK_TYPE LIKE '%'+#{stockType}+'%'
+					</if>
+					<if test="stockReportYn != null">
+						AND STOCK_REPORT_YN LIKE '%'+#{stockReportYn}+'%'
+					</if>
+				</where>
+			) B
+		    WHERE B.ROWNUM <![CDATA[ > ]]>  #{firstIndex}
+			AND B.ROWNUM <![CDATA[ <=]]>  #{firstIndex} + #{recordCountPerPage}		
+    	
+    	</select>
+    	
+    	<select id="selectStockListCount" parameterType="stock" resultType="String">
+    			SELECT COUNT(*) FROM (
+	    			SELECT A.* FROM (
+						SELECT 
+							 A.종목코드 STOCK_ID
+							,A.종목명 STOCK_NM
+							,CASE 
+								WHEN C.종목유형 IS NULL  THEN '일반주'
+								ELSE C.종목유형
+								END STOCK_TYPE
+							,CASE
+								WHEN D.STOCK_ID IS NULL THEN '리포트 미 보유'
+								ELSE '리포트 보유'
+								END STOCK_REPORT_YN
+						FROM RPTrader.DBO.주식기본정보 A
+						LEFT OUTER JOIN (SELECT * FROM (
+						SELECT 종목코드, 종목명, 종목유형, LastTime, ROW_NUMBER() OVER(PARTITION BY 종목코드 ORDER BY LastTime DESC) RNUM 
+						from RPTrader.dbo.전략검색종목
+						) B
+						WHERE RNUM = 1 ) C
+						ON A.종목코드 = C.종목코드
+						LEFT OUTER JOIN RPT_STOCK_REPORT_INFO D
+						ON A.종목코드 = D.STOCK_ID
+					) A 
+					<where>
+						<if test="stockId != null">
+							AND STOCK_ID LIKE '%'+#{stockId}+'%'
+						</if>
+						<if test="stockNm != null">
+							AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+						</if>
+						<if test="stockType != null">
+							AND STOCK_TYPE LIKE '%'+#{stockType}+'%'
+						</if>
+						<if test="stockReportYn != null">
+							AND STOCK_REPORT_YN LIKE '%'+#{stockReportYn}+'%'
+						</if>
+					</where>
+				) B
+    	</select>	
+    
+    	<select id="selectStockListApi" parameterType="trade" resultMap="tradeInfoMap">
+    			SELECT A.* FROM (
+    			
+    			
+					SELECT	
+						   B.종목코드 STOCK_ID
+					      ,ISNULL(B.종목명,'') STOCK_NM
+					      ,ISNULL(결산월,'') SETTLE_ACCOUNTS
+					      ,ISNULL(액면가,'') FACE_VAL
+					      ,ISNULL(자본금,'') CAPITAL
+					      ,ISNULL(상장주식,'') STOCKS_LISTED
+					      ,ISNULL(신용비율,'') CREDIT_RATIO
+					      ,ISNULL(연중최고,'') MAX_VAL_YEAR
+					      ,ISNULL(연중최저,'') MIN_VAL_YEAR
+					      ,ISNULL(시가총액,'') MARKET_CAPITAL
+					      ,ISNULL(시가총액비중,'') MARKET_CAPITAL_IMPORTANCE
+					      ,ISNULL(외인소진률,'') FOREIGNER_RUNOUT_RATE
+					      ,ISNULL(대용가,'') SUBSTITUTE_PRICE
+					      ,ISNULL(PER,'') PER
+					      ,ISNULL(EPS,'') EPS
+					      ,ISNULL(ROE,'') ROE
+					      ,ISNULL(PBR,'') PBR
+					      ,ISNULL(EV,'') EV
+					      ,ISNULL(BPS,'') BPS
+					      ,ISNULL(매출액,'') SALES
+					      ,ISNULL(영업이익,'') BUSINESS_PROFITS
+					      ,ISNULL(당기순이익,'') CURRENT_INCOME
+					      ,ISNULL(_250최고,'') 'TOP'
+					      ,ISNULL(_250최저,'') 'LOW'
+					      ,ISNULL(시가,'') CURRENT_PRICE
+					      ,ISNULL(고가,'') HIGH_PRICE
+					      ,ISNULL(저가,'') LOW_PRICE
+					      ,ISNULL(상한가,'') MAXIMUM_PURCHASE_PRICE
+					      ,ISNULL(하한가,'') MINIMUM_PURCHASE_PRICE
+					      ,ISNULL(기준가,'') STANDARD_PRICE
+					      ,ISNULL(예상체결가,'') EXPECT_CONTRACT_PRICE
+					      ,ISNULL(예상체결수량,'') EXPECT_CONTRACT_QUANTITY
+					      ,ISNULL(_250최고가일,'') MAXDATE
+					      ,ISNULL(_250최고가대비율,'') MAXDATERATE
+					      ,ISNULL(_250최저가일,'') MINDATE
+					      ,ISNULL(_250최저가대비율,'') MINDATERATE
+					      ,ISNULL(B.현재가,'') PRESENT_PRICE
+					      ,ISNULL(대비기호,'') CONTRAST_MARK
+					      ,ISNULL(전일대비,'') NET_CHANGE
+					      ,ISNULL(등락율,'') FLUCTUATION_RATE
+					      ,ISNULL(B.거래량,'') VOLUME
+					      ,ISNULL(거래대비,'') TRADE_CONTRAST
+					      ,ISNULL(액면가단위,'') PAR
+					      ,ISNULL(유통주식,'') MOBILIZATION_STOCK
+					      ,ISNULL(유통비율,'') MOBILIZATION_RATE
+					      ,ISNULL(영문회사명,'') ENG_COMPANY_NM
+					      ,ISNULL(대표자명,'') COMPANY_PRESIDENT
+					      ,ISNULL(법인구분,'')  CORPORATE_CLASS
+					      ,ISNULL(법인등록번호,'') CORPORATE_NUM
+					      ,ISNULL(사업자등록번호,'') CORPORATE_REGISTRATION_NUM
+					      ,ISNULL(주소,'') ADDRESS
+					      ,ISNULL(홈페이지,'') HOMEPAGE
+					      ,ISNULL(IR홈페이지,'') IR_HOMEPAGE
+					      ,ISNULL(전화번호,'') CORPORATE_PHONE_NUM
+					      ,ISNULL(팩스번호,'') CORPORATE_FAX_NUM
+					      ,ISNULL(업종코드,'') BUSINESS_CODE
+					      ,ISNULL(설립일,'') INCORPORATION_DATE
+					      ,ISNULL(당좌비율,'') QUICK_RATIO
+					      ,ISNULL(유동비율,'') CURRENT_RATIO
+					      ,ISNULL(부채비율,'') DEBT_RATIO
+					      ,ISNULL(유보율,'') RESERVE_RATIO
+					      ,ISNULL(순차입금비율,'') SEQ_DEPOSIT_RATIO
+					      ,ISNULL(이자보상배율,'') TIME_INTEREST_EARNED
+					      ,ISNULL(자기자본비율,'') EQUITY_OWNER_RATIO
+					      <if test="stockSearchType != null">
+						      ,ISNULL(C.전략ID,'') STRATEGY_ID 
+							  ,ISNULL(C.전략명,'') STRATEGY_NM 
+							  ,ISNULL(C.전략설명,'') STRATEGY_DESC 
+							  ,ISNULL(C.현재가,'') STRATEGY_PRICE 
+							  ,ISNULL(C.등락률,'') STRATEGY_RATE 
+							  ,ISNULL(C.거래량,'') STRATEGY_VOLUME 
+							  ,ISNULL(C.거래량대비,'') STRATEGY_CONTRAST 
+							  ,ISNULL(C.종목유형,'') STRATEGY_TYPE 
+						</if>
+						<choose>
+							<when test="fluctuationRateType != null and fluctuationRateType.equals('uppertop')">
+								,ROW_NUMBER() OVER (ORDER BY 등락율 DESC) ROWNUM
+							</when>
+							<when test="fluctuationRateType != null and fluctuationRateType.equals('lowertop')">
+								,ROW_NUMBER() OVER (ORDER BY 등락율 ASC) ROWNUM
+							</when>
+						</choose>
+					FROM RPTrader.dbo.주식기본정보 B
+					<if test="stockSearchType != null">
+					INNER JOIN (
+						SELECT * FROM (
+							SELECT *, ROW_NUMBER() OVER(PARTITION BY 종목코드 ORDER BY LASTTIME DESC) RNUM 
+							from RPTrader.dbo.전략검색종목
+						) B
+						WHERE RNUM = 1
+						<if test="stockSearchType.equals('today')">
+							AND convert(varchar,LastTime,112) = convert(varchar,getdate(),112)
+						</if> 
+						<if test="stockSearchType.equals('todayStrategy')">
+							AND convert(varchar,RegTime,112) = convert(varchar,getdate(),112)
+						</if> 
+				
+					) C
+						ON B.종목코드 = C.종목코드
+						<choose>
+							<when test="stockSearchType.equals('value')">
+								WHERE C.종목유형 = '가치주'
+							</when>
+							<when test="stockSearchType.equals('chart')">
+								WHERE C.종목유형 = '차트주'
+							</when>							
+						</choose>
+					</if>
+				) A 
+				<choose>
+					<when test="searchType != null and searchType.equals('all')">
+						WHERE 1=1
+					</when>
+					<when test="searchType != null and searchType.equals('stockId')">
+						<where>
+							<if test="stockId != null">
+								AND STOCK_ID LIKE '%'+#{stockId}+'%'
+							</if>
+						</where>
+					</when>
+					<when test="searchType != null and searchType.equals('stockNm')">
+						<where>
+							<if test="stockNm != null">
+								AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+							</if>
+						</where>
+					</when>
+					<when test="searchType != null and searchType.equals('stockInfo')">
+						<where>
+							<if test="stockId != null">
+								AND STOCK_ID LIKE '%'+#{stockId}+'%'
+							</if>
+							<if test="stockNm != null">
+								AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+							</if>
+						</where>
+					</when>
+				</choose>
+				<choose>
+					<when test="fluctuationRateType != null and fluctuationRateType.equals('upper')">
+						<where>
+							<if test="fluctuationRateType != null">
+								AND FLUCTUATION_RATE <![CDATA[>]]> 0
+								ORDER BY FLUCTUATION_RATE DESC
+							</if>
+						</where>
+					</when>
+					<when test="fluctuationRateType != null and fluctuationRateType.equals('lower')">
+						<where>
+							<if test="fluctuationRateType != null">
+								AND FLUCTUATION_RATE <![CDATA[<]]> 0
+								ORDER BY FLUCTUATION_RATE ASC
+							</if>
+						</where>
+					</when>
+					<when test="fluctuationRateType != null and fluctuationRateType.equals('uppertop')">
+						<where>
+							<if test="fluctuationRateType != null">
+								AND FLUCTUATION_RATE <![CDATA[>]]> 0
+								<choose>
+									<when test="topNum != null">
+											AND ROWNUM <![CDATA[<=]]> #{topNum}	
+									</when>
+									<otherwise>
+											AND ROWNUM <![CDATA[<=]]> 10
+									</otherwise>
+								
+								</choose>
+								ORDER BY FLUCTUATION_RATE DESC
+							</if>
+						</where>
+					</when>
+					<when test="fluctuationRateType != null and fluctuationRateType.equals('lowertop')">
+						<where>
+							<if test="fluctuationRateType != null">
+								AND FLUCTUATION_RATE <![CDATA[<]]> 0
+								<choose>
+									<when test="topNum != null">
+											AND ROWNUM <![CDATA[<=]]> #{topNum}	
+									</when>
+									<otherwise>
+											AND ROWNUM <![CDATA[<=]]> 10
+									</otherwise>
+								
+								</choose>
+								ORDER BY FLUCTUATION_RATE ASC
+							</if>
+						</where>
+					</when>
+				</choose>
+    	</select>
+    
+    	<select id="selectStockListSimpleApi" parameterType="trade" resultMap="tradeInfoMap">
+    			SELECT A.* FROM (
+					SELECT	
+						   종목코드 STOCK_ID
+					      ,ISNULL(종목명,'') STOCK_NM				      
+					      ,ISNULL(시가,'') CURRENT_PRICE
+					      ,ISNULL(고가,'') HIGH_PRICE
+					      ,ISNULL(저가,'') LOW_PRICE
+					      ,ISNULL(상한가,'') MAXIMUM_PURCHASE_PRICE
+					      ,ISNULL(하한가,'') MINIMUM_PURCHASE_PRICE
+					      ,ISNULL(기준가,'') STANDARD_PRICE
+					      ,ISNULL(현재가,'') PRESENT_PRICE
+					      ,ISNULL(대비기호,'') CONTRAST_MARK
+					      ,ISNULL(전일대비,'') NET_CHANGE
+					  FROM RPTrader.dbo.주식기본정보
+				) A 
+				<choose>
+					<when test="searchType != null and searchType.equals('all')">
+						WHERE 1=1
+					</when>
+					<when test="searchType != null and searchType.equals('stockId')">
+						<where>
+							<if test="stockId != null">
+								AND STOCK_ID LIKE '%'+#{stockId}+'%'
+							</if>
+						</where>
+					</when>
+					<when test="searchType != null and searchType.equals('stockNm')">
+						<where>
+							<if test="stockNm != null">
+								AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+							</if>
+						</where>
+					</when>
+					<when test="searchType != null and searchType.equals('stockInfo')">
+						<where>
+							<if test="stockId != null">
+								AND STOCK_ID LIKE '%'+#{stockId}+'%'
+							</if>
+							<if test="stockNm != null">
+								AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+							</if>
+						</where>
+					</when>
+				</choose>
+    	</select>
+    
+    	<select id="selectStockCategoryListSimpleApi" parameterType="trade" resultMap="tradeInfoMap">
+    			SELECT DISTINCT A.* FROM (
+					  SELECT	
+						   A.종목코드 STOCK_ID
+					      ,ISNULL(A.종목명,'') STOCK_NM				      
+					      ,ISNULL(시가,'') CURRENT_PRICE
+					      ,ISNULL(고가,'') HIGH_PRICE
+					      ,ISNULL(저가,'') LOW_PRICE
+					      ,ISNULL(상한가,'') MAXIMUM_PURCHASE_PRICE
+					      ,ISNULL(하한가,'') MINIMUM_PURCHASE_PRICE
+					      ,ISNULL(기준가,'') STANDARD_PRICE
+					      ,ISNULL(A.현재가,'') PRESENT_PRICE
+					      ,ISNULL(대비기호,'') CONTRAST_MARK
+					      ,ISNULL(전일대비,'') NET_CHANGE
+					  FROM RPTrader.dbo.주식기본정보 A
+					  INNER JOIN RPTrader.dbo.전략검색종목 B
+					  ON A.종목코드 = B.종목코드
+					  <choose>
+							<when test="stockSearchType != null and stockSearchType.equals('value')">
+								<where>
+									AND 종목유형 = '가치주'
+								</where>
+							</when>
+							<when test="stockSearchType != null and stockSearchType.equals('chart')">
+								<where>
+									AND 종목유형 = '차트주'
+								</where>
+							</when>
+					 </choose>
+				) A 
+				<choose>
+					<when test="searchType != null and searchType.equals('all')">
+						WHERE 1=1
+					</when>
+					<when test="searchType != null and searchType.equals('stockId')">
+						<where>
+							<if test="stockId != null">
+								AND STOCK_ID LIKE '%'+#{stockId}+'%'
+							</if>
+						</where>
+					</when>
+					<when test="searchType != null and searchType.equals('stockNm')">
+						<where>
+							<if test="stockNm != null">
+								AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+							</if>
+						</where>
+					</when>
+					<when test="searchType != null and searchType.equals('stockInfo')">
+						<where>
+							<if test="stockId != null">
+								AND STOCK_ID LIKE '%'+#{stockId}+'%'
+							</if>
+							<if test="stockNm != null">
+								AND STOCK_NM LIKE '%'+#{stockNm}+'%'
+							</if>
+						</where>
+					</when>
+				</choose>
+    	</select>
+    	
+    	<select id="selectStockDetailInfo" parameterType="trade" resultMap="tradeInfoMap">
+    		  SELECT 
+					A.종목코드 STOCK_ID
+					,ISNULL(A.종목명,'') STOCK_NM
+					,ISNULL(A.결산월,'') SETTLE_ACCOUNTS
+					,ISNULL(A.액면가,'') FACE_VAL
+					,ISNULL(A.자본금,'') CAPITAL
+					,ISNULL(A.상장주식,'') STOCKS_LISTED
+					,ISNULL(A.신용비율,'') CREDIT_RATIO
+					,ISNULL(A.연중최고,'') MAX_VAL_YEAR
+					,ISNULL(A.연중최저,'') MIN_VAL_YEAR
+					,ISNULL(A.시가총액,'') MARKET_CAPITAL
+					,ISNULL(A.시가총액비중,'') MARKET_CAPITAL_IMPORTANCE
+					,ISNULL(A.외인소진률,'') FOREIGNER_RUNOUT_RATE
+					,ISNULL(A.대용가,'') SUBSTITUTE_PRICE
+					,ISNULL(A.PER,'') PER
+					,ISNULL(A.EPS,'') EPS
+					,ISNULL(A.ROE,'') ROE
+					,ISNULL(A.PBR,'') PBR
+					,ISNULL(A.EV,'') EV
+					,ISNULL(A.BPS,'') BPS
+					,ISNULL(A.매출액,'') SALES
+					,ISNULL(A.영업이익,'') BUSINESS_PROFITS
+					,ISNULL(A.당기순이익,'') CURRENT_INCOME
+					,ISNULL(A._250최고,'') 'TOP'
+					,ISNULL(A._250최저,'') 'LOW'
+					,ISNULL(A.시가,'') CURRENT_PRICE
+					,ISNULL(A.고가,'') HIGH_PRICE
+					,ISNULL(A.저가,'') LOW_PRICE
+					,ISNULL(A.상한가,'') MAXIMUM_PURCHASE_PRICE
+					,ISNULL(A.하한가,'') MINIMUM_PURCHASE_PRICE
+					,ISNULL(A.기준가,'') STANDARD_PRICE
+					,ISNULL(A.예상체결가,'') EXPECT_CONTRACT_PRICE
+					,ISNULL(A.예상체결수량,'') EXPECT_CONTRACT_QUANTITY
+					,ISNULL(A._250최고가일,'') MAXDATE
+					,ISNULL(A._250최고가대비율,'') MAXDATERATE
+					,ISNULL(A._250최저가일,'') MINDATE
+					,ISNULL(A._250최저가대비율,'') MINDATERATE
+					,ISNULL(A.현재가,'') PRESENT_PRICE
+					,ISNULL(A.대비기호,'') CONTRAST_MARK
+					,ISNULL(A.전일대비,'') NET_CHANGE
+					,ISNULL(A.등락율,'') FLUCTUATION_RATE
+					,ISNULL(A.거래량,'') VOLUME
+					,ISNULL(A.거래대비,'') TRADE_CONTRAST
+					,ISNULL(A.액면가단위,'') PAR
+					,ISNULL(A.유통주식,'') MOBILIZATION_STOCK
+					,ISNULL(A.유통비율,'') MOBILIZATION_RATE
+			        ,ISNULL(영문회사명,'') ENG_COMPANY_NM
+			        ,ISNULL(대표자명,'') COMPANY_PRESIDENT
+			        ,ISNULL(법인구분,'')  CORPORATE_CLASS
+			        ,ISNULL(법인등록번호,'') CORPORATE_NUM
+  			        ,ISNULL(사업자등록번호,'') CORPORATE_REGISTRATION_NUM
+			        ,ISNULL(A.주소,'') ADDRESS
+			        ,ISNULL(홈페이지,'') HOMEPAGE
+			        ,ISNULL(IR홈페이지,'') IR_HOMEPAGE
+			        ,ISNULL(전화번호,'') CORPORATE_PHONE_NUM
+			        ,ISNULL(팩스번호,'') CORPORATE_FAX_NUM
+			        ,ISNULL(A.업종코드,'') BUSINESS_CODE
+			        ,ISNULL(설립일,'') INCORPORATION_DATE
+			        ,ISNULL(당좌비율,'') QUICK_RATIO
+			        ,ISNULL(유동비율,'') CURRENT_RATIO
+			        ,ISNULL(부채비율,'') DEBT_RATIO
+			        ,ISNULL(유보율,'') RESERVE_RATIO
+			        ,ISNULL(순차입금비율,'') SEQ_DEPOSIT_RATIO
+			        ,ISNULL(이자보상배율,'') TIME_INTEREST_EARNED
+			        ,ISNULL(자기자본비율,'') EQUITY_OWNER_RATIO
+					,ISNULL(B.DART회사코드,'') DART_COMPANYCODE 
+					,ISNULL(CONVERT(NVARCHAR,C.날짜,120),'') STRATEGY_DATE
+					,ISNULL(C.전략ID,'') STRATEGY_ID 
+					,ISNULL(C.전략명,'') STRATEGY_NM 
+					,ISNULL(C.전략설명,'') STRATEGY_DESC 
+					,ISNULL(C.현재가,'') STRATEGY_PRICE 
+					,ISNULL(C.등락률,'') STRATEGY_RATE 
+					,ISNULL(C.거래량,'') STRATEGY_VOLUME 
+					,ISNULL(C.거래량대비,'') STRATEGY_CONTRAST 
+					,ISNULL(C.종목유형,'') STRATEGY_TYPE 
+					,ISNULL(D.CORP_OVERVIEW_CONTENT,'') CORP_OVERVIEW_CONTENT 
+					,ISNULL(D.INDUSTRY_PROPERTY,'') INDUSTRY_PROPERTY 
+					,ISNULL(D.ELEMENT_COMPETITION,'') ELEMENT_COMPETITION 
+					,ISNULL(D.COMPANY_STATUS,'') COMPANY_STATUS 
+					,ISNULL(D.PRIMARY_PRODUCT_SALES,'') PRIMARY_PRODUCT_SALES 
+					,ISNULL(D.INCOME_STATEMENT_IMAGE_PATH1,'') INCOME_STATEMENT_IMAGE_PATH1 
+					,ISNULL(D.INCOME_STATEMENT_IMAGE_CONTENT1,'') INCOME_STATEMENT_IMAGE_CONTENT1 
+					,ISNULL(D.INCOME_STATEMENT_IMAGE_PATH2,'') INCOME_STATEMENT_IMAGE_PATH2 
+					,ISNULL(D.INCOME_STATEMENT_IMAGE_CONTENT2,'') INCOME_STATEMENT_IMAGE_CONTENT2 
+					,ISNULL(E.KRX표준코드,'') KRX_STANDARD_CODE
+  			        ,ISNULL(E.종목본명,'') KRX_REAL_NAME
+			        ,ISNULL(E.영문종목명,'') KRX_STOCK_ENG_NM
+			        ,ISNULL(E.상장일,'') STOCK_LIST_DT
+			        ,ISNULL(E.시장구분,'') MARKET_TYPE
+			        ,ISNULL(E.주권구분,'') SHARE_TYPE
+			        ,ISNULL(E.소속부,'') AFFILIATE_DIVISION
+			        ,ISNULL(E.주식종류,'') STOCK_FORM
+			        ,ISNULL(E.액면가,0) KRX_FACE_VAL
+			        ,ISNULL(E.상장주식수,0) KRX_STOCKS_LISTED
+			        ,ISNULL(E.자본금,0) KRX_CAPITAL
+			        ,ISNULL(E.시가총액,0) KRX_MARKET_CAPITAL
+			        ,ISNULL(E.대용가,0) KRX_SUBSTITUTE_PRICE
+			        ,ISNULL(E.대용가_산출기준일,'') SUBSTITUTE_PRICE_CALC_DT
+			        ,ISNULL(E.매매거래정지여부,'') TRADING_SUSPENSION
+			        ,ISNULL(E.정리매매종목여부,'') CLEARANCE_TRADING_ITEMS
+			        ,ISNULL(E.관리종목여부,'') MANAGEMENT_ITEMS
+			        ,ISNULL(E.투자주의환기종목여부,'') INVESTMENT_CAUTION_ATTENTION_ITEMS
+			        ,ISNULL(E.불성실공지여부,'') INSINCERITY_NOTICE_ITEMS
+			        ,ISNULL(E.단일가매매대상_초저유동성종목여부,'') SINGLE_TRADING_ITEMS
+			        ,ISNULL(E.상장주식수부족우선주여부,'')  SHORTAGE_PREFERRED_STOCK
+			        ,ISNULL(E.단기과열종목여부,'') EXCESSIVE_INVESTMENT_ITEMS
+			        ,ISNULL(E.투자주의종목여부,'')INVESTMENT_CAUTION_ITEMS
+ 			        ,ISNULL(E.투자경고종목여부,'') INVESTMENT_WARN_ITEMS
+			        ,ISNULL(E.투자위험종목여부,'') INVESTMENT_DANGER_ITEMS
+			        ,ISNULL(E.EPS,0) KRX_EPS
+			        ,ISNULL(E.PER,'') KRX_PER
+			        ,ISNULL(E.BPS,0) KRX_BPS
+   			        ,ISNULL(E.PBR,'') KRX_PBR
+			        ,ISNULL(E.주당배당금,0) SHARE_DIVIDEND
+			        ,ISNULL(E.배당수익률,0) DIVIDEND_RATE
+			        ,ISNULL(E.업종코드,'') KRX_BUSINESS_CODE
+			        ,ISNULL(E.업종명,'') KRX_BUSINESS_NM
+			        ,ISNULL(E.업종명상세,'') KRX_BUSINESS_DETAIL_NM
+			        ,ISNULL(E.외국인보유수량,0) FOREIGNER_HOLDING_VOL
+			        ,ISNULL(E.외국인지분율,0) FOREIGNER_OWNER_PER
+			        ,ISNULL(E.외국인한도수량,0) FOREIGNER_LIMIT_VOL
+			        ,ISNULL(E.외국인한도소진율,0) FOREIGNER_LIMIT_RUNOUT_RATE
+			        ,ISNULL(E.결산월,0) KRX_SETTLE_ACCOUNTS
+			        ,ISNULL(E.통화구분,'') CURRENCY
+			        ,ISNULL(E.대표이사명,'') KRX_COMPANY_PRESIDENT
+			        ,ISNULL(E.대표전화,'') KRX_CORPORATE_PHONE_NUM
+			        ,ISNULL(E.주소,'') KRX_ADDRESS
+			  FROM RPTrader.DBO.주식기본정보 A
+			  LEFT OUTER JOIN (  SELECT * FROM RPTrader.DBO.DART회사정보 WHERE 종목코드 IS NOT NULL AND TRIM(종목코드) <![CDATA[<>]]>  '') B
+			  ON A.종목코드 = B.종목코드
+			  LEFT OUTER JOIN (
+				SELECT * FROM (
+					SELECT *, ROW_NUMBER() OVER(PARTITION BY 종목코드 ORDER BY RegTime DESC) RNUM 
+					from RPTrader.dbo.전략검색종목
+					) B
+					WHERE RNUM = 1 
+			  ) C
+			  ON A.종목코드 = C.종목코드
+			  LEFT OUTER JOIN RPT_STOCK_REPORT_INFO D
+			  ON A.종목코드 = D.STOCK_ID
+			  LEFT OUTER JOIN RPTrader.DBO.KRX종목기본정보 E
+			  ON A.종목코드 = E.종목코드
+			  <where>
+			  	<if test="stockId != null">
+			  		AND A.종목코드 = #{stockId}
+			  	</if>
+			  </where>
+    	</select>
+    	
+    	<select id="selectDartFinancialInfo" parameterType="trade" resultMap="tradeInfoMap">
+			SELECT  DISTINCT
+				 ISNULL(A.종목코드,'') STOCK_ID
+				,ISNULL(B.회사명,'') STOCK_NM
+			    ,ISNULL(접수번호,'') RECEIPT_NUMBER
+			    ,ISNULL(보고서코드,'') REPORT_CODE
+			    ,ISNULL(사업연도,'') BUSINESS_YEAR 
+			    ,ISNULL(DART기업코드,'') DART_COMPANYCODE
+			FROM RPTrader.dbo.DART재무보고서 A
+			INNER JOIN RPTrader.dbo.DART회사정보 B
+			ON A.종목코드 = B.종목코드
+			WHERE A.종목코드 = #{stockId}
+    	</select>
+    	
+    	<select id="selectDartFinancialInfoDetail" parameterType="trade" resultMap="tradeInfoMap">
+			SELECT  
+			    ISNULL(재무제표구분,'') FINANCIAL_STATEMENTS_CLASS
+			    ,ISNULL(재무제표명,'') FINANCIAL_STATEMENTS_NM
+			    ,ISNULL(계정ID,'') ACCOUNT_ID
+			    ,ISNULL(계정명,'') ACCOUNT_NM
+			    ,ISNULL(계정상세,'') ACCOUNT_DETAIL
+			    ,ISNULL(당기명,'') CURRENT_TERM_NAME
+			    ,ISNULL(당기금액,0) CURRENT_TERM_SUM
+			    ,ISNULL(당기누적금액,0) CURRENT_TERM_ACCUMULATE_SUM
+			    ,ISNULL(전기명,'') PRIVIOUS_TERM_NAME
+			    ,ISNULL(전기금액,0) PRIVIOUS_TERM_SUM
+			    ,ISNULL(전기명_분반기,'') PRIVIOUS_TERM_QUARTERLY_NAME
+			    ,ISNULL(전기금액_분반기,0)PRIVIOUS_TERM_QUARTERLY_SUM
+			    ,ISNULL(전전기명,'') FORMER_PART_QUARTERLY_NAME
+			    ,ISNULL(전전기금액,0) FORMER_PART_QUARTERLY_SUM
+			FROM RPTrader.dbo.DART재무보고서
+			WHERE 종목코드 = #{stockId}
+    	</select>
+    	
+    	<select id="selectReportCnt" parameterType="report" resultType="String">
+    		SELECT COUNT(*) FROM RPT_STOCK_REPORT_INFO WHERE STOCK_ID = #{stockId}
+    	</select>
+    	
+    	<delete id="deletePrevReport" parameterType="report">
+			DELETE FROM RPT_STOCK_REPORT_INFO WHERE STOCK_ID = #{stockId}  	
+    	</delete>
+    	
+    	<insert id="registReport" parameterType="report">
+
+			INSERT INTO RPT_STOCK_REPORT_INFO 
+					(
+					   STOCK_ID
+			           ,CORP_OVERVIEW_CONTENT
+			           ,INDUSTRY_PROPERTY
+			           ,ELEMENT_COMPETITION
+			           ,COMPANY_STATUS
+			           ,PRIMARY_PRODUCT_SALES
+			           ,INCOME_STATEMENT_IMAGE_PATH1
+			           ,INCOME_STATEMENT_IMAGE_CONTENT1
+			           ,INCOME_STATEMENT_IMAGE_PATH2
+			           ,INCOME_STATEMENT_IMAGE_CONTENT2
+					)
+		     VALUES (
+			     		#{stockId, jdbcType=VARCHAR}
+			           ,#{corpOverviewContent, jdbcType=VARCHAR}
+			           ,#{industryProperty, jdbcType=VARCHAR}
+			           ,#{elementCompetition, jdbcType=VARCHAR}
+			           ,#{companyStatus, jdbcType=VARCHAR}
+			           ,#{primaryProductSales, jdbcType=VARCHAR}
+			           ,#{incomeStatementImagePath1, jdbcType=VARCHAR}
+			           ,#{incomeStatementImageContent1, jdbcType=VARCHAR}
+			           ,#{incomeStatementImagePath2, jdbcType=VARCHAR}
+			           ,#{incomeStatementImageContent2, jdbcType=VARCHAR}
+					)
+    	</insert>
+    	
+    </mapper>
