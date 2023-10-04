@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+   <head>
+     <meta charset="UTF-8">
+<!--     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+   <meta name="viewport" content="width=595, user-scalable=yes">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <meta name="theme-color" content="#ffffff">
+     <meta name="Description" content="사이트 설명">
+     <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+     <title>page10 Report</title> <!-- [페이지명 | 사이트명] -->
+
+   </head>
+<body>
+   <div class="page page10" style="page-break-before:always">
+      <header>
+        <h1><span class="label_type"></span></h1>
+        <span class="num">10</span>
+      </header>
+      <div class="container">
+         <h2>6. 특허 활동 동향</h2>
+         <div class="content">
+            <div class="unit">
+               <div class="bx_blue">
+                  <span class="tit">TIP</span>
+                  <ul class="list">
+                     <li>출원특허 : 발명자가 발명을 특허권리로 인정받기 위해 특허청에 제출한 문서. </li>
+                     <li>등록특허 : 출원 후 특허청의 심사를 통과하여 특허권리가 인정된 것.</li>
+                     <li>보유특허 : 현재 보유하고 있으며 권리가 유효한 등록특허.(매입,매각을 통해 보유상황이 달라질 수 있음)</li>
+                  </ul>
+               </div>
+               <div class="desc mt10">
+                  <span class="isuKorNm"></span>는 최근 20년간 <span class="patentCnt"></span>건 출원하여 <span class="patentCnt"></span>건이 등록되어 특허권을 획득하였습니다.<br/>
+                  <span class="patentCnt"></span>건의 등록특허를 외부에서 매입하였으며, 현재 권리유효한 특허는 <span class="patentCnt"></span>건입니다. <span class="patentCnt"></span>건의 해외 특허를 보유하고 있습니다.
+               </div>
+            </div>
+            <div class="unit">
+               <h3>(1) 특허 출원 동향</h3>
+               <div class="desc">
+                  일반적으로 R&D 투자가 많을 수록 그 결과물인 특허 출원수가 증가하게 됩니다. 기업의 R&D 규모가 클 수록 특허 출원 수가 많고, 새로운 제품을 출시하거나 신기술을 개발하는 시점에 특허 출원이 급증하는 경향이 있습니다.
+               </div>
+            </div>
+            <div class="unit bx_chart">
+               <h3 class="tit">최근 10년간 특허 출원 동향</h3>
+               <div id = container1 style="width:450px;height:130px; margin:0 auto"></div>
+            </div>
+            <div class="unit mt50">
+               <h3>(2) 특허 등록 동향</h3>
+               <div class="desc">
+                  등록특허는 까다로운 기술 심사를 통과하여 독점적인 권리가 인증된 특허를 의미합니다. 등록된 특허를 많이 보유할수록 실질적으로 기술경쟁력이 있다고 할 수 있습니다.
+               </div>
+            </div>
+            <div class="unit bx_chart">
+               <h3 class="tit">최근 10년간 특허 등록 동향</h3> 
+               <div id = container2 style="width:450px;height:130px; margin:0 auto"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <script>
+      $(document).ready(function(){
+         $.ajax({
+            type: 'GET',
+            url: '/report/patentactivity',
+            data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+            success: function(response) {
+             var data = JSON.parse(response);
+               $(".patentCnt:eq(0)").html(addComma(data.appPatent))
+               $(".patentCnt:eq(1)").html(addComma(data.regPatent))
+               $(".patentCnt:eq(2)").html(addComma(data.transferedPatent))
+               $(".patentCnt:eq(3)").html(addComma(data.alivePatent))
+               $(".patentCnt:eq(4)").html(addComma(data.foreignPatent))
+               
+               Highcharts.chart('container1', {
+            	  chart: {
+                    	 width: 450,
+	  					 height: 130,
+	  					 backgroundColor:'rgba(255, 255, 255, 0)',
+	  					 plotBorderWidth: 1,
+	  					events: {
+				            load: function() {
+				              var chart = this;
+				              var bottom = chart.plotHeight+15;
+				              
+				              $.each(chart.series[0].data,function(i,data){
+				              
+				                  data.dataLabel.attr({
+				                      y: bottom
+				                  });
+				              });
+				             
+				            }
+				          }
+                     },
+  				
+  				  title: {
+  				    text: ''
+  				  },
+  				
+  				  exporting: {
+  				      enabled: false
+  				    },
+  				    credits: {enabled: false},
+  				    
+  				  subtitle: {
+  				    text: ''
+  				  },
+  				
+  				  yAxis: {
+	  					min:0,
+	  					tickInterval:5,
+  					    title: {
+  					      text: ''
+  					    },
+  					    labels:{
+  					    	style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '8px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold'
+  							  }
+  					    }					 
+  				  },
+  				
+  				  xAxis: {
+  				    	categories:["2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],
+  				    	labels: {
+  							  style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '8px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold'
+  							  }
+  				    	}
+  				  },
+  				
+  				  legend: {
+  				    layout: 'vertical',
+  				    align: 'left',
+  				    floating:true,
+  				    verticalAlign: 'bottom',
+  			    	itemStyle: {
+  						fontFamily: 'NanumSquare',
+  					  	fontSize: '8px',
+  					 	color: '#BFBFBF',
+  					 	fontWeight:'bold'
+  					  },
+  					x:-18,
+  					y:20
+  				  },
+  				
+  				  plotOptions: {
+  					series: {
+				        states: {
+				            inactive: {
+				                opacity: 1
+				            },
+			  				hover:{
+			  					enabled:true
+			  				},
+				        },
+				        events: {
+		  		            legendItemClick: function() {
+		  		              return false;
+		  		            }
+		  				},
+                       animation:false
+				    }
+  				  }, 
+				  series: [{
+				    name: '해당기업',
+				    label: {
+     					enabled: false
+					},
+					marker: {
+                		enabled: true,
+                		symbol: 'circle',
+                		radius: 3,               		
+		 				},
+		 			color: '#AE2318',
+				    data: [data.annualApp[0].cnt,
+				    	data.annualApp[1].cnt,
+				    	data.annualApp[2].cnt,
+				    	data.annualApp[3].cnt,
+				    	data.annualApp[4].cnt,
+				    	data.annualApp[5].cnt,
+				    	data.annualApp[6].cnt,
+				    	data.annualApp[7].cnt,
+				    	data.annualApp[8].cnt,
+				    	data.annualApp[9].cnt],
+	 				dataLabels: {
+	 					formatter: function() {
+			    			if (this.y == 0) {
+			    				return 'N/A';
+			    			}
+			    			else {
+			    				return this.y;
+			    			}
+			    		},
+			            enabled: true,	
+			            style: {
+							fontFamily: 'NanumSquare',
+						  	fontSize: '8px',
+						 	color: '#BFBFBF',
+						 	fontWeight:'bold',
+						 	textOutline:'0px'
+						  }
+				        }
+				   }],						    
+				
+				});
+               
+               Highcharts.chart('container2', {
+            	   chart: {
+                  	 width: 450,
+					 height: 130,
+					 backgroundColor:'rgba(255, 255, 255, 0)',
+					 plotBorderWidth: 1,
+					 events: {
+				            load: function() {
+				              var chart = this;
+				              var bottom = chart.plotHeight+15;
+				              
+				              $.each(chart.series[0].data,function(i,data){
+				              
+				                  data.dataLabel.attr({
+				                      y: bottom
+				                  });
+				              });
+				             
+				            }
+				          }
+                   },
+				
+				  title: {
+				    text: ''
+				  },
+				
+				  exporting: {
+				      enabled: false
+				    },
+				    credits: {enabled: false},
+				    
+				  subtitle: {
+				    text: ''
+				  },
+				
+				  yAxis: {
+					    min:0,					  
+					    tickInterval:5,
+					    title: {
+					      text: ''
+					    },
+					    labels:{
+					    	style: {
+								fontFamily: 'NanumSquare',
+							  	fontSize: '8px',
+							 	color: '#BFBFBF',
+							 	fontWeight:'bold'
+							  }
+					    }					 
+				  },
+				
+				  xAxis: {
+				    	categories:["2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],
+				    	labels: {
+							  style: {
+								fontFamily: 'NanumSquare',
+							  	fontSize: '8px',
+							 	color: '#BFBFBF',
+							 	fontWeight:'bold'
+							  }
+				    	}
+				  },
+				
+				  legend: {
+				    layout: 'vertical',
+				    floating:true,
+				    align: 'left',
+				    verticalAlign: 'bottom',
+			    	itemStyle: {
+						fontFamily: 'NanumSquare',
+					  	fontSize: '8px',
+					 	color: '#BFBFBF',
+					 	fontWeight:'bold'
+					  },
+				   x:-18,
+				   y:20
+				  },
+				
+				  plotOptions: {
+					  series: {
+					        states: {
+					            inactive: {
+					                opacity: 1
+					            },
+				  				hover:{
+				  					enabled:true
+				  				},
+					        },
+					        events: {
+			  		            legendItemClick: function() {
+			  		              return false;
+			  		            }
+			  				},
+                         animation:false
+					    }
+				  },
+				
+				  series: [{
+				    name: '해당기업',
+				    label: {
+     					enabled: false
+					},
+					marker: {
+                		enabled: true,
+                		symbol: 'circle',
+                		radius: 3,               		
+		 				},
+					color: '#AE2318',			
+				    data: [data.annualReg[0].cnt,
+				    	data.annualReg[1].cnt,
+				    	data.annualReg[2].cnt,
+				    	data.annualReg[3].cnt,
+				    	data.annualReg[4].cnt,
+				    	data.annualReg[5].cnt,
+				    	data.annualReg[6].cnt,
+				    	data.annualReg[7].cnt,
+				    	data.annualReg[8].cnt,
+				    	data.annualReg[9].cnt],
+			    	dataLabels: {
+			    		formatter: function() {
+			    			if (this.y == 0) {
+			    				return 'N/A';
+			    			}
+			    			else {
+			    				return this.y;
+			    			}
+			    		},
+			            enabled: true,	
+			            style: {
+							fontFamily: 'NanumSquare',
+						  	fontSize: '8px',
+						 	color: '#BFBFBF',
+						 	fontWeight:'bold',
+						 	textOutline:'0px'
+						  }
+				        }
+				  }],
+								  				
+				});
+            }
+         });
+      });
+   </script>
+</body>
+</html>

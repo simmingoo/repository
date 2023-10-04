@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=595, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page2 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page page2" style="page-break-before:always">
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">2</span>
+		</header>
+		<div class="container">
+			<h2>2. 기술투자지수란?</h2>
+			<div class="content">
+				<div class="unit">
+					<h3>기술투자지수란? <span>(시가총액/TSS점수)</span></h3>
+					<ul class="list">
+						<li>기술투자지수란 기업의 시가총액을 TSS 점수(위즈도메인이 개발한 통계기법으로 산출)로 나눈 값입니다.</li>
+						<li>보유한 기술력대비 주가가 어느정도인지 가늠하는 수치로 동종기술로 분류된 테마내에서 상대비교를 통해 기업이 가치를 평가할 수 있는 보조지표입니다.</li>
+						<li>기술투자자가 낮을수록 “기술력대비 저평가“ 되어있어 기술력관점에서 투자매력도가 높습니다.즉, 기술투자지수가 낮다면 기업이 보유한 기술력보다 주가가 상대적으로 저평가되어있다는 의미인 것입니다.</li>
+					</ul>
+				</div>
+				<!-- <div class="unit bx_chart" style= "overflow:hidden;height:auto;">
+					<div><h3 class="tit">기술투자지수</h3></div>
+					<img src="/extstatic/img/tii_high.png" style="width: 535px; height: 195px;" alt="기술 투자 지수"/>
+				</div> -->
+				<div class="unit bx_img mt20">
+					<h3 class="tit">기술투자지수</h3>
+					<img src="/extstatic/img/p2_img1.jpg" alt="기술 투자 지수"/>
+				</div>
+
+				<div class="bx_style mt50">
+					<h3 class="tit">TCG (Technology Competitiveness Grade : 기술 경쟁력 등급)</h3>
+					<div class="cont_txt">
+						<ul class="list">
+							<li>TCG는 기업이 취득한 특허들을 평가하여 합산한 점수와 이 점수를 기반으로 한 업계 순위에 근거하여  생성되었습니다.</li>
+							<li>특허 평가 점수는 ㈜위즈도메인이 개발한 통계기법에 의해 계산된 값입니다.</li>
+							<li>이 점수는 객관적인 평가기준에 따라 동종 기술분야의 특허들과 상대 비교하여 산출됩니다</li>
+						</ul>
+					</div>
+				</div>
+				<div class="bx_style">
+					<h3 class="tit">TSS (Technology Strength Score : 기술력 점수)</h3>
+					<div class="cont_txt">
+						<ul class="list">
+							<li>TSS는 기업이 가진 특허의 규모(quantity)와 기술 수준(quality)를 동시에 측정한 기술 경쟁력 지수입니다.</li>
+							<li>기업이 보유한 전체 특허를 점수화한 것으로 수치가 클 수록 기술 경쟁력이 높음을 의미하며 다른 기업의 수치와 비교하여 상대적으로 평가할 수 있습니다.</li>
+						</ul>
+					</div>
+				</div>
+				<div class="bx_style">
+					<h3 class="tit">APES (Average Patent Evaluation Score : 특허 평가 평균 점수)</h3>
+					<div class="cont_txt">
+						<ul class="list">
+							<li>APES는 각 기술부문별 특허의 점수를 평균한 것으로, 개별 특허의 평가 점수는 특허 빅데이터 및 ㈜위즈도메인의 특허평가엔진(Patent Evaluation Engine)을 이용하여 산출합니다. 특허 평가 요소는 10여 가지가 있으며 평가 요소 중 하나를 예로 들면 다른 특허들로부터 인용을 많이 당한 특허는 좋은 점수를 받습니다.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		  $(function(){
+			  //stockReport 페이지에서 값을 가져와 주석 처리 했습니다. 2021/11/25 심민구
+			  /*
+			  let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")};
+			let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
+			let url = '/report/outline?' + query;
+
+			fetch(url)
+				.then(res => res.json())
+				.then(data => {
+						$("#reportPage2 .label_type").html(data.mktCapScale);
+						$("#reportPage2 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+					})
+				.catch(function (error) {
+						console.log('request failed', error)
+					});
+
+			*/
+		  });
+	  </script>
+</body>
+</html>

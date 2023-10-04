@@ -1,0 +1,412 @@
+.inner{
+	width: $min;
+	margin: 0 auto;
+	@media (max-width:$min) {
+		padding: 0 20px;
+	}
+}
+#app {
+	width: 100%;
+}
+body{
+	@media (max-width:$min) {
+		padding-top: 0;
+	}
+}
+.hwrap {
+	position: fixed;
+	width: 100%;
+	top:0;
+	background: $white;
+	z-index: 100;
+	@media (max-width:$min) {
+		position: relative;
+	}
+}
+header {
+	@include setCont(100%, $header, null, relative);
+	border-bottom : 1px solid #e4e8eb;
+	button:hover{
+		opacity: 0.6;
+	}
+	.inner {
+		@include setCont(100%, 100%, flex);
+		max-width: $min;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.logo {
+		@include setCont(150px, 30px, block);
+		@include bgSvg(logo(), no-repeat, 50% 50%);
+		@include blind;
+		flex-shrink: 1;
+	}
+	.btn_login{
+		@include setCont(23px, 100%, block);
+		@include bgSvg(login(102041), no-repeat, 50% 50%, 23px 24px);
+		@include blind;
+	}
+	.right{
+		height: $header;
+		display: flex;
+		position: relative;
+	}
+	.h_search{
+		@include setCont(21px, $header, flex, absolute, rgba(255,255,255,0));
+		justify-content: center;
+		align-items: center;
+		top: 0;
+		right:43px;
+		overflow: hidden;
+		z-index: 2;
+		transition: all 100ms;
+		&:before{
+			content:"";
+			@include setCont(0, 39px, flex, absolute, $point);
+			transition: all 100ms;
+			top:50%;
+			right: 0;
+			transform: translateY(-50%);
+			border-radius: 39px; 
+			z-index: 1;
+			opacity: 0;
+		}
+		.ipt{
+			@include setCont(0, 39px, block, absolute, rgba(255,255,255,0));
+			line-height: 39px;
+			box-shadow: none;
+			border: none;
+			color: #999;
+			top: 50%;
+			right: 0;
+			transition: all 100ms;
+			transform: translateY(-50%);
+			border-radius: 39px; 
+			z-index: 3;
+		}
+		.btn_search{
+			@include setCont(21px, 39px, block, absolute);
+			top: 50%;
+			transform: translateY(-50%);
+			right: 0;
+			@include bgSvg(search(102041), no-repeat, 50% 50%, 21px 24px);
+			@include blind;
+			transition: left 100ms;
+			z-index: 4;
+		}
+		&.on{
+			@include setCont(431px, $header, flex, absolute);
+			right: 33px;
+			&:before{
+				width: 100%;
+				opacity: 1;
+			}
+			.ipt{
+				width: 100%;
+				padding: 0 59px 0 20px;
+			}
+			.btn_search{
+				height: 39px;
+				@include bgSvg(search(rgb(255,255,255)), no-repeat, 50% 50%, 21px 24px);
+				right: 20px;
+			}
+		}
+	}
+}
+nav {
+	&:before {
+		content:"";
+		@include setCont(100%, 0, block, absolute, rgba(255,255,255, 0.9));
+		transition: all 100ms;
+		box-sizing: border-box;
+		top: $header;
+		left: 0;
+		z-index: 100;
+		visibility: hidden;
+		opacity: 0;
+		box-shadow: 0px 3px 3px 0 rgba(24, 24, 24, 0.15);
+	}
+	&.on {
+		&:before {
+			height: 102px;
+			border-bottom : 1px solid #e4e8eb;
+			visibility: visible;
+			opacity: 1;
+		}
+		.dep {
+			height: 103px;
+			visibility: visible;
+			padding: 16px 0 26px;
+			z-index: 101;
+			position: absolute;
+			opacity: 1;
+		}
+	}
+	.gnb {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+		&>li {
+			position: relative;
+			&:hover{
+				.menu, .dep{
+					background: $point;
+					color:$white;
+					a{
+						color:$white;
+					}
+				}
+				.dep{
+					border-top : 1px solid #e4e8eb;
+				}
+			}
+		}
+	}
+	a {
+		display: inline-block;
+		text-align: center;
+	}
+	.menu {
+		display: inline-block;
+		height: $header;
+		line-height: 1.2;
+		font-size: 18px;
+		padding: 0 30px;
+		transition: all 100ms;
+		cursor: pointer;
+		letter-spacing: -0.9px;
+		&:hover{
+			color:$white;
+			background: $point;
+			opacity: 1;			
+		}
+	}
+	.dep {
+		font-size: 15px;
+		letter-spacing: -1.5px;
+		line-height: 26px;
+		@include setCont(100%, 0, null, absolute);
+		padding: 0;
+		overflow: hidden;
+		visibility: hidden;
+		top: $header - 1px;
+		left: 0;
+		transition: all 100ms;
+		opacity: 0;
+		text-align: center;
+	}
+	.smenu {
+		height: 27px;
+		padding: 0 5px;
+		// margin: 2px 0;
+		font-weight: 100;
+		&:hover, &:active {
+			border-bottom: 1px solid #24909e;
+		}
+	}
+}
+.container {
+	padding: 40px 0;
+	text-align: left;
+	.p_top {
+		color:#4c5e70;
+		background: $white;
+		line-height: 1.4;
+		padding: 24px 29px 17px;
+		h1 {
+			color:$black ;
+		}
+		.desc {
+			font-size: 14px;
+			font-weight: 100;
+			margin: 4px 0 0;
+			display: block;
+			color:$gray;
+		}
+	}
+	.c_tap{
+		display: flex;
+		margin-bottom: 11px;
+		.tap{
+			display: flex;
+			align-items: center;
+			height: 43px;
+			font-size: 14px;
+			padding: 0 20px;
+			border: 1px solid #E4E8EB;
+			background: $white;
+			transition: all 150ms;
+			&:not(.on):hover{
+				background: $border;
+			}
+			&+.tap{
+				margin-left: 3px;
+			}
+			&.on{
+				border-color: $point;
+				background: $point;
+				color:$white;
+			}
+		}
+		&.type1{
+			padding: 12px 10px 20px;
+			.tap{
+				height: 30px;
+				line-height: 30px;
+			}
+		}
+	}
+	.content {
+		background: $white;
+		padding: 30px 30px 40px;
+		border-top: 1px solid $border;
+		&+.content{
+			margin-top: 40px;
+		}
+		&+.top{
+			margin-top: 80px;
+		}
+		.c_top{
+			margin-bottom: 20px;
+			h2 {
+				font-size: 18px;
+			}
+			.desc {
+				font-size: 12px;
+				font-weight: 100;
+				display: block;
+			}
+		}
+	}
+}
+footer {
+	background: #ffffff;
+	border-top: #dedede solid 1px;
+	padding: 0 0 20px;
+	font-size: 16px;
+	.fmenu {
+		height: 55px;
+		background: $point;
+		.inner{
+			@include setCont($min, 100%, flex);
+			padding-left: 200px;
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		a {
+			display: inline-block;
+			font-size: 16px;
+			letter-spacing: -0.32px;
+			line-height: 1;
+			text-align: center;
+			padding: 0 20px;
+			color:#adadae;
+			&:hover{
+				color:#ccc;
+			}
+			&.on{
+				color:$white;
+				font-weight: 500;
+			}
+			&+a{
+				border-left: 1px solid #adadae;
+			}
+		}
+	}
+	.finfo{
+		display: flex;
+		align-items:flex-start;
+		font-weight: $thin;
+		font-size: 14px;
+		line-height: 1.4;
+		ul{
+			display: block;
+			color: #737373;
+			padding: 21px 0 16px 70px;
+			letter-spacing: 0.35px;
+			width: 1020px;
+		}
+		.address{
+			margin: 15px 0 36.6px;
+		}
+	}
+	.flogo {
+		@include setCont(150px, 30px, block);
+		@include bgSvg(flogo(), no-repeat, 50% 50%, 100%);
+		@include blind;
+		flex-shrink: 1;
+		margin-top: 27px;
+	}
+}
+.btn_top{
+	@include setCont(70px, 70px, flex, fixed);
+	background: $point;
+  box-shadow: 3.5px 3.5px 5px 0 rgba(24, 24, 24, 0.2);
+	right: 80px;
+	bottom: 40px;
+	font-size: 14px;
+	justify-content: center;
+	align-items: center;
+	z-index: 3;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	&:hover{
+		span{
+			opacity: 0.8;
+		}
+	}
+	span{
+		display: block;
+		padding-top: 28px;
+		color:$white;
+		@include bgSvg(arrPageUp(rgb(255,255,255)), no-repeat, 50% 0, 20px 24px);
+	}
+} 
+.p_tap{
+	display: flex;
+	margin-bottom: 30px;
+	background: $white;
+	.tap{
+		min-width: 100px;
+		font-size: 15px;
+		color:$gray;
+		padding: 12px 20px;
+		text-align: center;
+		flex-grow: 1;
+		transition: all 100ms;
+		box-sizing: border-box;
+		border: 1px solid $white;
+		&.on,&:hover{
+			border: 1px solid $point;
+			background: $point;
+			color:$white;
+			box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.3);
+			&+.tap{
+				border-left-color: $point;
+			}
+		}
+		&+.tap{
+			border-left: 1px solid #e4e8eb;
+		}
+		&.on span{
+			font-weight: $bold;
+		}
+	}
+	&.type1{
+		.tap{
+			flex-grow: unset;
+			border:1px solid #e4e8eb;
+			&.on,&:hover{
+				border: 1px solid $point;
+				background: $point;
+				color:$white;
+				&+.tap{
+					border-left-color: $point;
+				}
+			}
+			&+.tap{
+				border-left-color: $white;
+			}
+		}
+	}
+}

@@ -1,0 +1,25 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - echo Build Starting on `date`
+      - cd src/main/resources/10bagger/
+      - npm install
+      - npm run build
+      - cd ../../../../
+      - pwd
+      - mvn clean
+      - mvn package -Dmaven.test.skip=true
+  post_build:
+    commands:
+      - echo Build Starting on `date`
+      - pwd
+artifacts:
+  files:
+    - target/tenbagger-listed-front-0.0.1.jar
+    - appspec.yml
+    - scripts/**
+  discard-paths: yes
+cache:
+  paths:
+    - '/root/.m2/**/*'

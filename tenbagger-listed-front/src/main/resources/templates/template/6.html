@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Patent Status</title>
+<script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+<script src="/extstatic/js/template-util.js"></script>
+<script src="/extstatic/ext/Highcharts-9.2.2/code/highcharts.js"></script>
+</head>
+<body style="background-color: white;">
+<style type="text/css">
+h2 {
+  margin: 25px;
+  margin-left: 0px;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 500;
+}
+</style>
+  <div style="width: 600px">
+    <h2>
+      [표] <span class="isuKorNm"></span> 최근 10년간 특허 출원 동향
+    </h2>
+    <div id="container1" style="height: 200px;"></div>
+    <h2>
+      [표] <span class="isuKorNm"></span> 최근 10년간 특허 등록 동향
+    </h2>
+    <div id="container2" style="height: 200px;"></div>
+  </div>
+  <div style="width: 600px ;">
+    <h2>
+      [그래프] <span class="isuKorNm"></span> 기술부문별 특허 현황
+    </h2>
+    <div id="container3" style="height: 400px;"></div>
+  </div>
+  <script type="text/javascript">
+            $(document).ready(function() {
+                $.ajax({
+                    type : "GET",
+                    url : "https://c-api.10bagger.co.kr/v1/news/patentStatus",
+                    data : {
+                        isuSrtCd : getParameter("isuSrtCd")
+                    },
+                    success : function(data) {
+                        var isuKorNm = data.isuKorNm;
+                        var annualAppYears = data.annualApp.map(function(el) {
+                            return el.year
+                        });
+                        var annualAppCnt = data.annualApp.map(function(el) {
+                            return el.cnt
+                        });
+                        var annualRegYears = data.annualReg.map(function(el) {
+                            return el.year
+                        });
+                        var annualRegCnt = data.annualReg.map(function(el) {
+                            return el.cnt
+                        });
+                        var portfolios = data.portfolios.map(function(el) {
+                            return {
+                                name : el.ic,
+                                y : el.ratio
+                            }
+                        });
+
+                        $(".isuKorNm").html(isuKorNm);
+                        Highcharts.setOptions({
+                            lang: {
+                            thousandsSep: ','
+                          }
+                        })
+                        Highcharts.chart('container1', {
+                            chart : {
+                                backgroundColor : '#f9f9f9',
+                                
+                            },
+
+                            title : {
+                                text : ''
+
+                            },
+
+                            credits : {
+                                enabled : false
+                            },
+
+                            subtitle : {
+                                text : '최근 10년간 특허 등록 동향',
+                                style : {
+                                    fontFamily : 'Noto Sans KR',
+                                    color : 'black',
+                                    fontSize : '12px',
+                                }
+                            },
+
+                            yAxis : {
+                                lineWidth : 1,
+                                lineColor : "black",
+                                min : 0,
+                                title : {
+                                    text : '등록특허건수',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            },
+
+                            xAxis : {
+                                gridLineWidth : 1,
+                                lineColor : "black",
+                                categories : annualAppYears,
+                                title : {
+                                    text : '등록연도',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            },
+
+                            legend : {
+                                enabled : false
+                            },
+
+                            plotOptions : {
+                                series : {
+                                    states : {
+                                        inactive : {
+                                            opacity : 1
+                                        },
+                                        hover : {
+                                            enabled : true
+                                        },
+                                    },
+                                    events : {
+                                        legendItemClick : function() {
+                                            return false;
+                                        }
+                                    },
+                                    animation : false
+                                }
+                            },
+                            series : [{
+                                lineWidth : 1,
+                                label : {
+                                    enabled : false
+                                },
+                                marker : {
+                                    enabled : true,
+                                    symbol : 'circle',
+                                    radius : 4,
+                                },
+                                color : '#ef4d4d',
+                                data : annualAppCnt,
+                                dataLabels : {
+                                    enabled : true,
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            }
+                            ],
+                        });
+                        
+                        Highcharts.chart('container2', {
+                            chart : {
+                                backgroundColor : '#f9f9f9',
+                            },
+
+                            title : {
+                                text : ''
+
+                            },
+
+                            credits : {
+                                enabled : false
+                            },
+
+                            subtitle : {
+                                text : '최근 10년간 특허 출원 동향',
+                                style : {
+                                    fontFamily : 'Noto Sans KR',
+                                    color : 'black',
+                                    fontSize : '12px',
+                                }
+                            },
+
+                            yAxis : {
+                                lineWidth : 1,
+                                lineColor : "black",
+                                min : 0,
+                                title : {
+                                    text : '출원특허건수',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            },
+
+                            xAxis : {
+                                gridLineWidth : 1,
+                                lineColor : "black",
+                                categories : annualRegYears,
+                                title : {
+                                    text : '출원연도',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            },
+
+                            legend : {
+                                enabled : false
+                            },
+
+                            plotOptions : {
+                                series : {
+                                    states : {
+                                        inactive : {
+                                            opacity : 1
+                                        },
+                                        hover : {
+                                            enabled : true
+                                        },
+                                    },
+                                    events : {
+                                        legendItemClick : function() {
+                                            return false;
+                                        }
+                                    },
+                                    animation : false
+                                }
+                            },
+                            series : [{
+                                lineWidth : 1,
+                                label : {
+                                    enabled : false
+                                },
+                                marker : {
+                                    enabled : true,
+                                    symbol : 'circle',
+                                    radius : 4,
+                                },
+                                color : '#ef4d4d',
+                                data : annualRegCnt,
+                                dataLabels : {
+                                    enabled : true,
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            }
+                            ],
+                        });
+
+                        Highcharts.chart('container3', {
+                            chart : {
+                                backgroundColor : 'rgba(255, 255, 255, 0)',
+                                type : 'pie',
+                            },
+                            credits : {
+                                enabled : false
+                            },
+                            title : {
+                                text : ''
+                            },
+                            tooltip : {
+                                enabled : false
+                            },
+
+                            plotOptions : {
+                                pie : {
+                                    allowPointSelect : false,
+                                    dataLabels : {
+                                        enabled : true,
+                                        format : '<b>{point.name}</b>, {point.y:.2f} %',
+                                    },
+                                    animation : false
+                                }
+                            },
+                            series : [{
+                                data : portfolios
+                            }
+                            ]
+                        });
+                    },
+                    error : function(request, status, error) {
+                        console.error("code = " + request.status + "\nmessage = " + request.responseText + "\nerror = " + error);
+                    }
+                });
+
+            });
+        </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>native call test page</title>
+
+    <script type="text/javascript">
+        function getCookie(name) {
+            let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return value? value[2] : "";
+        }
+
+        function nativeFunction(json) {
+
+        }
+
+        function callJooPaSoo() {
+            let ua = navigator.userAgent.toLowerCase();
+            if(ua.indexOf('10bagger-ios') >-1) {
+                webkit.messageHandlers.callJooPaSoo.postMessage('call joopasoo')
+            } else if(ua.indexOf('10bagger-android') >-1) {
+                native.callJooPaSoo();
+            } else {
+                alert('텐베거 안드로이드 또는 아이폰 아님!');
+            }
+        }
+
+        function callToastMsg() {
+            let ua = navigator.userAgent.toLowerCase();
+            if(ua.indexOf('10bagger-ios') >-1) {
+                webkit.messageHandlers.callToast.postMessage('메세지 호출!!')
+            } else if(ua.indexOf('10bagger-android') >-1) {
+                native.showToast('메세지 호출!!');
+            } else {
+                alert('텐베거 안드로이드 또는 아이폰 아님!');
+            }
+
+        }
+
+        function getUserAgent() {
+            alert(navigator.userAgent.toLowerCase())
+        }
+
+        function getDeviceCookie() {
+            alert(getCookie("device-10bagger"))
+        }
+
+    </script>
+</head>
+<body>
+    <input type="button" onclick="callJooPaSoo()" value="SK 주파수 앱 호출"/>
+    <br/>
+    <br><input type="button" onclick="callToastMsg()" value="토스트 메세지 호출"/>
+    <br/>
+    <br><input type="button" onclick="getUserAgent()" value="유저 에이전트 확인"/>
+    <br/>
+    <br><input type="button" onclick="getDeviceCookie()" value="디바이스 쿠키 확인"/>
+
+</body>
+</html>

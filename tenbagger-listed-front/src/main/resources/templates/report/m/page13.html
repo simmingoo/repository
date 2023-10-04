@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page13 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page13">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">13</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(5) 기술 키워드 변동</h3>
+					<p class="desc">
+						<span class="isuKorNm"></span>의 출원 특허를 대상으로 특허 문헌에 사용한 기술 키워드의 분포를 표시합니다. 과거의 기술 키워드와 최근 키워드의 변화를 통해 집중하고있는 기술 분야의 변동을 파악할 수 있습니다.
+					</p>
+				</div>
+				<div class="bx_chart">
+					<div class="tit"><strong>2002년-2006년</strong></div>
+					<div id="chart13-1"></div>
+				</div>
+				<div class="bx_chart">
+					<div class="tit"><strong>2007년-2011년</strong></div>
+					<div id="chart13-2"></div>
+				</div>
+				<div class="bx_chart">
+					<div class="tit"><strong>2012년-2016년</strong></div>
+					<div id="chart13-3"></div>
+				</div>
+				<div class="bx_chart">
+					<div class="tit"><strong>2017년-2021년</strong></div>
+					<div id="chart13-4"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+$(document).ready(function(){
+	$.ajax({
+		type: 'GET',
+		url: '/report/keyword',
+		data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		success: function(response) {
+			var data = JSON.parse(response)
+			var list = []
+			$.each(data.set1.words, function(index, item) {
+				let object = {};
+				object.name = item.word;
+				object.weight= item.weight;
+				list.push(object);
+			});
+			Highcharts.chart('chart13-1', {
+				
+			    chart: {
+			    	top: 195,
+			    	left: 67,
+			    	width: 188,
+			    	height: 188
+			    },
+			    title: {
+			    	text: ''
+			    },
+			    tooltip: {
+			    	enabled: false
+			    },
+			    exporting: {
+			        enabled: false
+			    },
+			    credits: {
+			    	enabled: false
+			    },
+			    series: [{
+			        type: 'wordcloud',
+			        data: list,
+			        name: 'Occurrences'
+			    }]
+			});
+		}
+	});
+	$.ajax({
+		type: 'GET',
+		url: '/report/keyword',
+		data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		success: function(response) {
+			var data = JSON.parse(response)
+			var list = []
+			$.each(data.set2.words, function(index, item) {
+				let object = {};
+				object.name = item.word;
+				object.weight= item.weight;
+				list.push(object);
+			});
+			Highcharts.chart('chart13-2', {
+				
+			    chart: {
+			    	top: 195,
+			    	left: 67,
+			    	width: 188,
+			    	height: 188
+			    },
+			    title: {
+			    	text: ''
+			    },
+			    tooltip: {
+			    	enabled: false
+			    },
+			    exporting: {
+			        enabled: false
+			    },
+			    credits: {
+			    	enabled: false
+			    },
+			    series: [{
+			        type: 'wordcloud',
+			        data: list,
+			        name: 'Occurrences'
+			    }]
+			});
+		}
+	});
+	$.ajax({
+		type: 'GET',
+		url: '/report/keyword',
+		data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		success: function(response) {
+			var data = JSON.parse(response)
+			var list = []
+			$.each(data.set3.words, function(index, item) {
+				let object = {};
+				object.name = item.word;
+				object.weight= item.weight;
+				list.push(object);
+			});
+			Highcharts.chart('chart13-3', {
+				
+			    chart: {
+			    	top: 195,
+			    	left: 67,
+			    	width: 188,
+			    	height: 188
+			    },
+			    title: {
+			    	text: ''
+			    },
+			    tooltip: {
+			    	enabled: false
+			    },
+			    exporting: {
+			        enabled: false
+			    },
+			    credits: {
+			    	enabled: false
+			    },
+			    series: [{
+			        type: 'wordcloud',
+			        data: list,
+			        name: 'Occurrences'
+			    }],
+				plotOptions:{
+					series:{
+						animation:false
+					}
+				}
+			});
+		}
+	});
+	$.ajax({
+		type: 'GET',
+		url: '/report/keyword',
+		data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		success: function(response) {
+			var data = JSON.parse(response)
+			var list = []
+			$.each(data.set4.words, function(index, item) {
+				let object = {};
+				object.name = item.word;
+				object.weight= item.weight;
+				list.push(object);
+			});
+			Highcharts.chart('chart13-4', {
+				
+			    chart: {			  	
+			    	width: 188,
+			    	height: 188
+			    },
+			    title: {
+			    	text: ''
+			    },
+			    tooltip: {
+			    	enabled: false
+			    },
+			    exporting: {
+			        enabled: false
+			    },
+			    credits: {
+			    	enabled: false
+			    },
+			    series: [{
+			        type: 'wordcloud',
+			        data: list,
+			        name: 'Occurrences'
+			    }],
+				plotOptions:{
+					series:{
+						animation:false
+					}
+				}
+			});
+		}
+	});
+});
+</script>
+</body>
+</html>

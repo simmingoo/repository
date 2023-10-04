@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>Unicorn Ranch</title>
+
+    <link rel="stylesheet" type="text/css" id="bootstrapBasic" href="/extstatic/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" id="bootstrapGrid" href="/extstatic/css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" type="text/css" id="bootstrapUtil" href="/extstatic/css/bootstrap-utilities.min.css"/>
+
+    <link rel="stylesheet" type="text/css" id="layoutStylesheet" href="/extstatic/css/xa-layout.css"/>
+    <link rel="stylesheet" type="text/css" id="jqueryUi" href="/extstatic/css/jquery-ui.css">
+
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/highcharts.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/data.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/exporting.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/export-data.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/sonification.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/accessibility.js"></script>
+
+    <script src="/extstatic/js/jquery-3.5.1.min.js"></script>
+    <script src="/extstatic/js/jquery-ui.min.js"></script>
+    <script src="/extstatic/js/tenbagger-grid.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+    <script src="/extstatic/js/tenbagger-push-util.js"></script>
+    <script>
+        let sectorNo, sectorName;
+        $(document).ready( function () {
+            sectorNo = "[[${sectorNo}]]"
+            sectorName = "";
+            sectorOutline(sectorNo);
+
+            $("#cover").load("/sectorreport/page/cover?sectorNo=" + sectorNo);
+            
+            $("#page1").load("/sectorreport/page/" + sectorNo + "/1");
+            
+            $("#page2").load("/sectorreport/page/" + sectorNo + "/2");
+            
+            $("#page3").load("/sectorreport/page/" + sectorNo + "/3");
+            
+            $("#page4").load("/sectorreport/page/" + sectorNo + "/4");
+            
+            $("#page5").load("/sectorreport/page/" + sectorNo + "/5");
+
+            $("#end").load("/sectorreport/page/end");
+
+
+
+        });
+    </script>
+
+</head>
+<body>
+<div class="xl-contents">
+    <div class="xl-cbody">
+    	<div class="xa-sector xl-flex-col xl-top" style="display: flex">
+			<div id="cover" style="page-break-before:always;">
+		    </div>
+		</div>
+		
+		<div id="page1" class="xa-sector xl-flex-col xl-top" style="display: flex">
+
+        </div>
+        
+        <div id="page2" class="xa-sector xl-flex-col xl-top" style="display: flex">
+
+        </div>
+        
+        <div id="page3" class="xa-sector xl-flex-col xl-top" style="display: flex">
+
+        </div>
+        
+        <div id="page4" class="xa-sector xl-flex-col xl-top" style="display: flex">
+
+        </div>
+        
+        <div id="page5" class="xa-sector xl-flex-col xl-top" style="display: flex">
+
+        </div>
+
+		
+		
+		<div class="xa-sector xl-flex-col xl-top" style="display: flex">    
+		    <div id="end" style="page-break-before:always;">
+		    </div>
+		</div>
+    </div>
+</div>
+</body>
+</html>

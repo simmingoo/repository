@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page7 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page7">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">7</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(4) 주요기술부문별 최신 출원특허</h3>
+					<div class="desc">
+					
+					</div>
+				</div>
+				<div class="unit showUnit" style="display: none;">
+					<h3 class="p7"><u></u></h3>
+					<div class="desc p7_1">
+					
+					</div>
+					<ul class="list_patent">
+						<!-- <li>
+							<dl>
+								<dt>특허번호.</dt>
+								<dd><a href="#" target="_blank"></a></dd>
+							</dl>
+							<p>
+							</p>
+							<p class="data"></p>
+						<li> -->
+					</ul>
+				</div>
+				<div class="unit showUnit" style="display: none;">
+					<h3 class="p7"><u></u></h3>
+					<div class="desc p7_1">
+					
+					</div>
+					<ul class="list_patent">
+						<!-- <li>
+							<dl>
+								<dt>특허번호.</dt>
+								<dd><a href="#" target="_blank"></a></dd>
+							</dl>
+							<p>
+							</p>
+							<p class="data"></p>
+						<li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		  $(function(){
+			 	let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")}; 
+				let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&'); 
+				let url1 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+				let url2 = 'https://c-api.10bagger.co.kr/v1/report/technology?' + query;
+				
+				fetch(url1) 
+					.then(res => res.json()) 
+					.then(data => { 
+							//$("#reportPage7 .label_type").html(data.mktCapScale);
+							//$("#reportPage7 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+							$("#reportPage7 .desc:eq(0)").html(data.isuKorNm + "(이)가 기술부문별로 출원한 최근 특허를 표시합니다.")
+						})
+					.catch(function (error) { 
+						console.log('request failed', error) 
+						});
+				
+				fetch(url2) 
+					.then(res => res.json()) 
+					.then(data => {
+							$.each(data.ipcs, function(index, row) {
+								if(index < 2){
+									$("#reportPage7 .p7").eq(index).children().html("["+row.ic+"] "+row.icName)
+									$("#reportPage7 .showUnit").eq(index).show()
+								}
+							});
+							
+							$.each(data.ipcs, function(count, row) {
+								if(count < 2){
+									$("#reportPage7 .desc.p7_1").eq(count).html(row.icDesc)
+									$.each(row.patents, function(index, row) {
+										let tr_html = '<li>\
+											<dl>\
+											<dt>특허번호.</dt>\
+											<dd><a href='+ row.link + ' target="_blank">' + row.patnv + '</a></dd>\
+											</dl>\
+											<p>\
+											' + row.ttl +'\
+											</p>\
+											<p class="date">' + row.apd +'</p>\
+											</li>'
+											$("#reportPage7 .list_patent").eq(count).append(tr_html);
+									});
+								}
+							});
+						})
+				.catch(function (error) { 
+					console.log('request failed', error) 
+					});
+				
+			
+		  });
+	  </script>
+</body>
+</html>

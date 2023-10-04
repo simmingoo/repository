@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>Unicorn Ranch</title>
+
+    <link rel="stylesheet" type="text/css" id="bootstrapBasic" href="/extstatic/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" id="bootstrapGrid" href="/extstatic/css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" type="text/css" id="bootstrapUtil" href="/extstatic/css/bootstrap-utilities.min.css"/>
+
+    <link rel="stylesheet" type="text/css" id="layoutStylesheet" href="/extstatic/css/xm-layout.css"/>
+
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/highcharts.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/data.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/exporting.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/export-data.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/sonification.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/accessibility.js"></script>
+
+    <script src="/extstatic/js/jquery-3.5.1.min.js"></script>
+    <script src="/extstatic/js/jquery-ui.min.js"></script>
+
+    <script>
+
+        var sectorId;
+        var sectorName;
+        var jsonArray;
+
+        function getParameter(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function fillSectorInfo() {
+
+            $("._sector_name").text(jsonArray.themeName);
+            $("._rptDt").text("Weekly Report Date : " + jsonArray.rptDt);
+            $("._rptOutline").html(jsonArray.rptOutline);
+            $("._rptIssue").text(jsonArray.rptIssue);
+
+            sectorName = jsonArray.sectorName + "섹터";
+
+        }
+
+        function getSectorInfo(stid) {
+
+            jsonArray = null;
+
+            $.ajax({
+                url: 'https://c-api.10bagger.co.kr/v1/theme/' + stid,
+                type: 'GET',
+                dataType: 'json',
+                success : function(result) {
+                    if( result != null ) {
+                        jsonArray = result;
+                    }
+                },
+                complete: function(result) {
+                    fillSectorInfo();
+                },
+                error : function(request, status, error) {
+                    jsonArray = "{errorcode:-1,errormsg:" + request.responseText + "}";
+                    //alert("섹터번호를 정확하게 입력해 주십시요.");
+                }
+            });
+
+        }
+
+        function drawInvestmentChart(stid) {
+
+            $(document).ready(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://c-api.10bagger.co.kr/v1/stk',
+                    data: {pageNo: 1, pageSize: 5, searchThemeNo: stid, sortColumn: 'TII', sortOrdr: 'ASC'},
+                    dataType: 'json',
+                    success: function(response) {
+                        var data = response;
+
+                        for( var i=0; i<5; i++ ) {
+                            if( (i%2) == 0 ) {
+                                if( (i+1) == 5 ) {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center' style='border-right:none'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='border-bottom:red solid 1px;border-left:red solid 1px;border-right:red solid 1px'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_investment_top5").append(htmlStr);
+                                } else {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center' style='border-right:none'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='border-left:red solid 1px;border-right:red solid 1px'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_investment_top5").append(htmlStr);
+                                }
+                            } else {
+                                if( (i+1) == 5 ) {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center xl-str-g' style='border-right:none'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='border-bottom:red solid 1px;border-left:red solid 1px;border-right:red solid 1px'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_investment_top5").append(htmlStr);
+                                } else {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center xl-str-g' style='border-right:none'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='border-left:red solid 1px;border-right:red solid 1px'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_investment_top5").append(htmlStr);
+                                }
+                            }
+                        }
+
+                    }
+                });
+            });
+
+        }
+
+        function drawTSSRankingChart(stid) {
+
+            $(document).ready(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://c-api.10bagger.co.kr/v1/stk',
+                    data: {pageNo: 1, pageSize: 1000, searchThemeNo: stid, sortColumn: 'TSS', sortOrdr: 'DESC'},
+                    dataType: 'json',
+                    success: function(response) {
+                        var data = response;
+
+                        for( var i=0; i<data.totalCnt; i++ ) {
+                            if( (i%2) == 0 ) {
+                                if( (i+1) == data.totalCnt ) {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='border-right:none'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='border-bottom:red solid 1px;border-left:red solid 1px;border-right:red solid 1px;text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_tss_rank").append(htmlStr);
+                                } else {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='border-right:none'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='border-left:red solid 1px;border-right:red solid 1px;text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_tss_rank").append(htmlStr);
+                                }
+                            } else {
+                                if( (i+1) == data.totalCnt ) {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center xl-str-g'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='border-right:none'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='border-bottom:red solid 1px;border-left:red solid 1px;border-right:red solid 1px;text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_tss_rank").append(htmlStr);
+                                } else {
+                                    var htmlStr = "<div class='xl-st-row'>"
+                                        + " <div class='xl-str-1 xl-flex-col xl-center xl-str-g'>" + data.stks[i].isuKorNm + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='border-right:none'>" + ((data.stks[i].corp.tii).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='border-left:red solid 1px;border-right:red solid 1px;text-align:center'>" + ((data.stks[i].corp.tss).toFixed(1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.assdValue + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.tcg + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.apes).toFixed(1) + "</div>"
+                                        + " <div class='xl-str-2 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + data.stks[i].corp.patentCount + "</div>"
+                                        + " <div class='xl-str-3 xl-flex-col xl-center xl-str-g' style='text-align:center'>" + (data.stks[i].corp.mktCap).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div>"
+                                        + "</div>";
+                                    $("#_tss_rank").append(htmlStr);
+                                }
+                            }
+                        }
+
+                    }
+                });
+            });
+
+        }
+
+        // 페이지내 스크립트
+        $(document).ready( function () {
+
+            sectorId = getParameter("themeId");
+            //sectorId = 1109;
+            getSectorInfo(sectorId);
+
+            drawInvestmentChart(sectorId);
+            drawTSSRankingChart(sectorId);
+
+        });
+
+    </script>
+
+    <style>
+
+        ._cover {
+            display: flex;
+            position: relative;
+            overflow: hidden;
+
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+
+            width: 100vw;
+            height: 134.8vw;
+            background-image: url("/extstatic/img/x/cover2.jpg");
+            background-size: 100vw 134.8vw;
+            background-position-x: center;
+            background-position-y: center;
+            background-repeat: no-repeat;
+        }
+
+        ._title {
+            display: flex;
+            position: relative;
+            overflow: hidden;
+
+            top: 33%;
+            font-family: 'Noto Sans KR', 'Montserrat', 'Nanum Gothic', sans-serif;
+            font-size: 3vh;
+            font-weight: bold;
+            color: #222a35;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="xl-contents">
+    <div class="xl-cbody" style="padding-left:0px;padding-right:0px">
+
+        <!-- 표지 //-->
+        <div style="page-break-before:always" class="xl-flex-col xl-top">
+
+            <div class="_cover">
+                <div style="font-size:6vw" class="_sector_name _title" id="title_name"></div>
+            </div>
+
+        </div>
+
+        <!-- 1페이지 //-->
+        <div style="page-break-before:always">
+
+            <!-- ### 타이틀바 ### //-->
+            <div class="xl-header xl-flex-row xl-left">
+                <div class="_sector_name xl-st-4 xl-flex-col xl-center"></div>
+                <div class="xl-st-3">&nbsp;</div>
+                <div class="xl-st-2 xl-flex-col xl-center">
+                    기술가치투자 테마 리포트
+                </div>
+                <div class="xl-st-1">&nbsp;</div>
+            </div>
+
+            <!-- 날짜 //-->
+            <div class="_rptDt xl-date xl-flex-row xl-right"></div>
+
+            <!-- 1. 개요 //-->
+            <div class="xl-title-s1">
+                1. 개요
+            </div>
+
+            <div class="_rptOutline xl-note-1"></div>
+
+            <div style="height:40px"></div>
+
+            <!-- 2. 업계 주간 이슈 및 기술 트렌드 //-->
+            <div class="xl-title-s1">
+                2. 업계 주간 이슈 및 기술 트렌드
+            </div>
+            <div class="_rptIssue xl-note-1"></div>
+
+            <div style="height:40px"></div>
+
+            <!-- 3. 기숭 투자매력도 상위 종목 Top5 //-->
+            <div class="xl-title-s1">
+                3. 기술 투자매력도 상위 종목 Top5
+            </div>
+            <div class="xl-paragraph-spacing-10">&nbsp;</div>
+            <div class="_sector_name xl-title-s2"></div>
+            <div class="xl-paragraph-spacing-10">&nbsp;</div>
+            <div class="xl-stock-table" id="_investment_top5">
+                <div class="xl-st-title">
+                    <div class="xl-stt-1 xl-flex-col xl-center" style="border:none">기업명</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="border-top:red solid 1px;border-left:red solid 1px;border-right:red solid 1px">기술투자지수</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">기술평가점수<br>(TSS)</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">기업가치추정</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">기술경쟁력등급<br>(TCG)</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">특허평가평균점수<br>(APES)</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">특허보유건수</div>
+                    <div class="xl-stt-3 xl-flex-col xl-center" style="text-align:center">시가총액<br>(억원)</div>
+                </div>
+            </div>
+
+            <div style="height:20px"></div>
+
+            <div class="xl-tab-title xl-flex-row xl-left">
+                <div class="xl-tt-1 xl-flex-col xl-center" style="width:165px">
+                    기술투자지수(시가총액/TSS)
+                </div>
+                <div class="xl-tt-2">&nbsp;</div>
+            </div>
+            <div class="xl-note-1" style="background-color:#FBFBFB;border:#D9D9D9 solid 1px">
+• &nbsp;기술투자지수란 기업의 시가총액을 TSS(기술평가점수 - 위즈도메인이 개발한 통계기법으로 산출)로 나눈값입니다.
+
+• &nbsp;보유한 기술력대비 주가가 어느정도인지 가늠하는 수치로 동종기술로 분류된 테마내에서 상대비교를 통해 기업의 가치를 평가할 수 있는 보조지표입니다.
+
+• &nbsp;기술투자지수가 낮을수록 "기술력대비 저평가" 되어있어 기술력관점에서 투자매력도가 높습니다.
+
+<b>즉, 기술투자지수가 낮다면 기업이 보유한 기술력보다 주가가 상대적으로 저평가 되어있다는 의미인 것입니다.</b>
+            </div>
+
+            <div style="height:20px"></div>
+
+            <div class="xl-graph-title xl-flex-row xl-center">
+                <div class="xl-gt-1">&nbsp;</div>
+                <div class="xl-gt-2 xl-flex-col xl-center">
+                    기술투자지수 = 시총/TSS
+                </div>
+                <div class="xl-gt-3">&nbsp;</div>
+            </div>
+            <div class="xl-paragraph-spacing-10">&nbsp;</div>
+            <div style="width:100%;min-height:100px;">
+                <img style="width:100%;height:auto" src="/extstatic/img/x/tii.png">
+            </div>
+
+            <div style="height:40px"></div>
+
+            <!-- 4. 퀀트기술 분석(TSS 랭킹순) //-->
+            <div class="xl-title-s1">
+                4. 퀀트기술 분석(TSS 랭킹순)
+            </div>
+            <div class="xl-note-1">아래 지표는 해당 분야 기업이 보유한 모든 특허의 규모(Quantity)와 기술 수준(Quality)을 동시에 반영한 기술평가점수(TSS : Technology Strength Score) 랭킹을 나타내고 있습니다.
+<b>이 지수의 값이 클수록 기업이 보유한 기술 경쟁력이 높다고 판단할 수 있습니다.</b>
+            </div>
+
+            <div class="xl-paragraph-spacing-10">&nbsp;</div>
+            <div class="_sector_name xl-title-s2"></div>
+            <div class="xl-paragraph-spacing-10">&nbsp;</div>
+            <div class="xl-stock-table" id="_tss_rank">
+                <div class="xl-st-title">
+                    <div class="xl-stt-1 xl-flex-col xl-center">기업명</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="border:none">기술투자지수</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="border-top:red solid 1px;border-left:red solid 1px;border-right:red solid 1px;text-align:center">기술평가점수<br>(TSS)</div>
+                    <div class="xl-stt-3 xl-flex-col xl-center" style="text-align:center">기업가치추정</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">기술경쟁력등급<br>(TCG)</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">특허평가평균점수<br>(APES)</div>
+                    <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">특허보유건수</div>
+                    <div class="xl-stt-3 xl-flex-col xl-center" style="text-align:center">시가총액<br>(억원)</div>
+
+                </div>
+            </div>
+
+            <div style="height:100px"></div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

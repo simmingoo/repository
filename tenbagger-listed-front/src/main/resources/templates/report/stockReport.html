@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+<!--    <link rel="stylesheet" type="text/css" href="/extstatic/css/style.css">-->
+    <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+    <script src="/extstatic/js/stock/highstock.js"></script>
+    <script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+    <script src="/extstatic/js/maps/modules/data.js"></script>
+    <script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+    <script src="/extstatic/js/modules/series-label.js"></script>
+    <script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script>
+    <script>
+        let description, mktCapScale, isuKorNm,isMobile, isPrint, frontUrl, headerLabel, isMts;
+
+        $(function (){
+            frontUrl = '[[${frontUrl}]]';
+            isMobile = fnIsMobile();
+            isPrint = getParameter("isPrint");
+            isMts = fnIsMts();
+            if(isPrint) {
+                console.log("print true");
+            }
+
+           /*  if(isMts) {
+                $("#pdfdownload").hide()
+            } */
+            $("#pdfdownload").hide()
+
+            var link = document.createElement("link");
+            if(isPrint) {
+                link.href = "/extstatic/css/style.css"
+            }else{
+                if(isMobile) {
+                    link.href = "/extstatic/css/style_mobile.css";
+                } else {
+                    link.href = "/extstatic/css/style_pc.css";
+                }
+            }
+            link.async = false;
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            document.head.appendChild(link);
+
+            let obj = document.getElementById("parent");
+
+            for(let i=1; i<=23; i++) {
+                    newDiv = document.createElement("div");
+                    newDiv.setAttribute("id","reportPage"+i);//새롭게 만들어지는 div태그에 id값 저장
+                    obj.appendChild(newDiv);//body에 자식 태그로 추가.
+                    if(isPrint) {
+                        $("#reportPage"+i).load("/report/page/"+i);
+                    }else {
+                        if(isMobile) {
+                            $("#reportPage"+i).load("/report/page/m/"+i);
+                        } else {
+                            $("#reportPage"+i).load("/report/page/p/"+i);
+                        }
+                    }
+
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: 'https://c-api.10bagger.co.kr/v1/report/outline',
+                data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+                success: function(response) {
+                    let jsonString = JSON.stringify(response);
+                    let escapedJSONString = jsonString.replace(/\\n/g, "\\n")
+                        .replace(/\\'/g, "\\'")
+                        .replace(/\\"/g, '\\"')
+                        .replace(/\\&/g, "\\&")
+                        .replace(/\\r/g, "\\r")
+                        .replace(/\\t/g, "\\t")
+                        .replace(/\\b/g, "\\b")
+                        .replace(/\\f/g, "\\f");
+                    let data = JSON.parse(escapedJSONString);
+                    let industry = data.industry==null?'':data.industry;
+                    isuKorNm = data.isuKorNm;
+                    mktCapScale = data.mktCapScale;
+                    description = data.isuKorNm + " (" + data.mkt + " " +industry+ ")";
+                    $(".label_type").html(mktCapScale);
+                    $(".label_type").parent().append(description);
+
+                    $(".isuKorNm").html(data.isuKorNm)
+                    $(".isuKorNm_th:eq(0)").html(data.isuKorNm + "(이)가 인용한 기업<span><h4>[" + data.isuKorNm +"(이)가 영향을 받은 기업]</h4></span>")
+                    $(".isuKorNm_th:eq(1)").html(data.isuKorNm + "의 특허를 인용하는 기업<span><h4>[" + data.isuKorNm +"(이)가 영향을 준 기업]</h4></span>")
+                    $(".isuKorNm_m:eq(0)").html(data.isuKorNm + "(이)가 인용한 기업<span>[" + data.isuKorNm +"(이)가 영향을 받은 기업]</span>")
+                    $(".isuKorNm_m:eq(1)").html(data.isuKorNm + "의 특허를 인용하는 기업<span>[" + data.isuKorNm +"(이)가 영향을 준 기업]</span>")
+                    sessionStorage.setItem('isuKorNm',isuKorNm);
+                    loadHtml();
+                    checkPageNum();
+                    window.scrollTo(0,0);
+                }
+            })
+
+        })
+        function loadHtml() {
+            if(isPrint) {
+                $("#cover").load("/report/page/cover?isuSrtCd="+getParameter("isuSrtCd"));
+                $("#table").load("/report/page/table");
+                $("#end").load("/report/page/end");
+            } else {
+                if(isMobile) {
+                    $("#cover").load("/report/page/m/cover?isuSrtCd="+getParameter("isuSrtCd"));
+                    $("#end").load("/report/page/m/end");
+                } else {
+                    $("#cover").load("/report/page/p/cover?isuSrtCd="+getParameter("isuSrtCd"));
+                    $("#end").load("/report/page/p/end");
+                }
+            }
+        }
+
+        function checkPageNum() {
+            $('header').children('span').each(function (index,item){
+               $(item).html(index+1);
+            });
+        }
+
+        async function makepdf() {
+            let convertApi = ConvertApi.auth({secret: 'qin8mmv6k7Hj693p'})
+
+            let elResultLink = document.getElementById('resultLink')
+
+            try {
+                // Converting DOCX to PDF file
+                let params = convertApi.createParams()
+                params.add('Url', frontUrl+'/report/stockReport?bizNo='+getParameter("bizNo")+'&isuSrtCd='+getParameter("isuSrtCd"));
+                params.add('PageRange', '2-100');
+                params.add('ConversionDelay', '20');
+                params.add('ViewportWidth', '1180');
+                params.add('ViewportHeight', '1900');
+                params.add('PageSize', 'a4');
+                params.add('PageWidth', '210');
+                params.add('PageHeight', '310');
+                params.add('MarginTop', '0');
+                params.add('MarginRight', '0');
+                params.add('MarginBottom', '0');
+                params.add('MarginLeft', '0');
+                params.add('FileName', isuKorNm+"("+getParameter("isuSrtCd")+")");
+
+                let result = await convertApi.convert('web', 'pdf', params)
+                // Showing link with the result file
+                elResultLink.setAttribute('href', result.files[0].Url)
+                elResultLink.click();
+            } finally {
+                document.documentElement.style.cursor = 'default'
+            }
+        }
+    </script>
+</head>
+<body style="background-color: white">
+    <div id="pdfdownloaddiv" style="page-break-before:always;" class="cover_top">
+        <h1 id="title_name"></h1>
+        <button type="button" id="pdfdownload" class="btn_pdf" onclick="makepdf()"></button>
+        <a id="resultLink" style="display: none"></a>
+    </div>
+    <div id="cover" style="page-break-before:always;">
+    </div>
+    <div id="parent" style="page-break-before:always;">
+    </div>
+    <div id="end" style="page-break-before:always">
+    </div>
+</body>
+</html>

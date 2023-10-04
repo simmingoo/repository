@@ -1,0 +1,565 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Montserrat:wght@100&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+@import url('x-font-awesome.css');
+
+/*!
+ * Unicorn Ranch Company Page v1.0.0 (https://www.unicornranch.co.kr/)
+ * Copyright 2021 Unicorn Ranch, Inc.
+ * Author      : Gibberishor
+ * Create Date : 2021.10.01
+ */
+
+html, body {
+    margin: 0px;
+    border: none;
+    font-family: 'Noto Sans KR', 'Montserrat', 'Nanum Gothic', sans-serif;
+    font-size: 1em;
+    color: #191919;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+
+    /*background-color: #FFF;*/
+}
+
+::-webkit-scrollbar { display: none; }
+
+.xl-pointer {
+    cursor: pointer;
+}
+
+.xl-flex-col {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+
+    flex-direction: column;
+}
+
+.xl-flex-row {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+
+    flex-direction: row;
+}
+
+.xl-center {
+    justify-content: center;
+    align-items: center;
+}
+
+.xl-top {
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.xl-left {
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.xl-right {
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.xl-page-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #5c636a;
+}
+
+.xl-paragraph-spacing-10 {
+    width: 100%;
+    height: 10px;
+}
+
+.xl-paragraph-spacing-20 {
+    width: 100%;
+    height: 20px;
+}
+
+.xa-page-title {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.xa-page-subtitle {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.xa-top40 {
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.xa-top40-t5 {
+    width: 100%;
+    border-bottom: #000000 solid 1px;
+}
+
+.xa-top40-t5c {
+    width: 100%;
+    border-top: #000000 solid 1px;
+}
+
+.xa-top40-t5b {
+    width: 200px;
+    border: none;
+    margin-right: 20px;
+}
+
+.xa-top40-t5c-no {
+    width: 10%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+
+    border-right: #000000 solid 1px;
+}
+
+.xa-top40-t5c-code {
+    width: 35%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+
+    border-right: #000000 solid 1px;
+}
+
+.xa-top40-t5c-name {
+    width: 35%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+
+    border-right: #000000 solid 1px;
+}
+
+.xa-top40-t5c-btn {
+    width: 20%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.xa-sectortab {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.xa-sectortab-btn {
+    width: 13%;
+    height: 30px;
+
+    margin-left: 2px;
+    margin-right: 2px;
+    border: #000000 solid 1px;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.xa-sector {
+    display: none;
+}
+
+.xa-col {
+    width: 100%;
+    height: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.xa-10i {
+    width: 9%;
+    height: 100%;
+}
+
+.xa-5i {
+    width: 16%;
+    height: 100%;
+}
+
+xa-90p {
+    width: 90%;
+    height: 100%;
+}
+
+xa-50p {
+    width: 50%;
+    height: 100%;
+}
+
+.xa-select {
+    width: 100%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+}
+
+.xa-input {
+    width: 100%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+}
+
+.xa-btn {
+    width: 100%;
+    height: 26px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 5px;
+    background-color: #ff2800;
+    border: none;
+
+    cursor: pointer;
+}
+
+
+.xl-title-s1 {
+    width: 100%;
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.xl-title-s2 {
+    width: 100%;
+    height: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.xl-btn-l {
+    width: 100%;
+    height: 30px;
+}
+
+.xl-btn-i {
+    width: 200px;
+    height: 30px;
+}
+
+.xl-note-1 {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font-size: 16px;
+    font-weight: 300;
+    white-space: pre-wrap;
+    text-align: justify;
+}
+
+.xl-note-1-textarea {
+    width: 100%;
+    height: 300px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.xl-note-1-input {
+    width: 100%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.xl-note-1-select {
+    width: 100%;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.xl-contents {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    background-color: #ffffff;
+}
+
+.xl-cbody {
+    width: 100%;
+    max-width: 890px;
+}
+
+.xl-pbody {
+    width: 100%;
+    height: calc( 1200px - 50px - 60px );
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.xl-pbottom {
+    width: 100%;
+    height: 60px;
+}
+
+.xl-header {
+    width: 100%;
+    height: 50px;
+    border-top: #102041 solid 1px;
+    border-bottom: #102041 solid 1px;
+}
+
+.xl-footer {
+    width: 100%;
+    height: 50px;
+}
+
+.xl-logobg {
+    width: 150px;
+    height: 100%;
+}
+
+.xl-logo {
+    width: 120px;
+    height: auto !important;
+}
+
+.xl-pageno {
+    width: calc( 100% - 150px );
+    height: 100%;
+    font-size: 14px;
+    font-weight: 300;
+    padding-left: 150px;
+}
+
+.xl-st-1 {
+    width: 10px;
+    height: 100%;
+    background-color: #223E6A;
+}
+
+.xl-st-2 {
+    width: 200px;
+    height: 100%;
+    padding-left: 4px;
+    background-color: #102041;
+
+    font-size: 14px;
+    font-weight: 400;
+    color: #ffffff;
+}
+
+.xl-st-3 {
+    width: 25px;
+    height: 100%;
+    background-color: #ffffff;
+
+    border-bottom: #102041 solid 50px;
+    border-left: transparent solid 25px;
+}
+
+.xl-st-4 {
+    width: calc( 100% - 10px - 200px - 25px );
+    height: 100%;
+
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.xl-graph-title {
+    width: 100%;
+    height: 40px;
+    border-top: #102041 solid 1px;
+}
+
+.xl-gt-1 {
+    width: 30px;
+    height: 100%;
+    background-color: #ffffff;
+
+    border-top: #02406A solid 40px;
+    border-left: transparent solid 30px;
+}
+
+.xl-gt-2 {
+    width: 250px;
+    height: 100%;
+    background-color: #02406A;
+
+    font-size: 15px;
+    font-weight: 400;
+    color: #ffffff;
+}
+
+.xl-gt-3 {
+    width: 30px;
+    height: 100%;
+    background-color: #ffffff;
+
+    border-top: #02406A solid 40px;
+    border-right: transparent solid 30px;
+}
+
+.xl-gt-bottom {
+    width: 100%;
+    height: 5px;
+    border-bottom: #102041 solid 1px;
+}
+
+.xl-tab-title {
+    width: 100%;
+    height: 40px;
+    border-bottom: #102041 solid 1px;
+}
+
+.xl-tt-1 {
+    min-width: 250px;
+    height: 100%;
+    background-color: #02406A;
+
+    font-size: 15px;
+    font-weight: 400;
+    color: #ffffff;
+}
+
+.xl-tt-2 {
+    width: 30px;
+    height: 100%;
+    background-color: #ffffff;
+
+    border-bottom: #02406A solid 40px;
+    border-right: transparent solid 30px;
+}
+
+.xl-date {
+    width: 100%;
+    height: 20px;
+    padding-right: 10px;
+
+    font-size: 11px;
+    font-weight: 300;
+}
+
+.xl-3-2-1 {
+    width: 100%;
+    height: 70px;
+    background-color: #F2F2F2;
+}
+
+.xl-321-1 {
+    width: 200px;
+    height: 100%;
+}
+
+.xl-321-2 {
+    width: calc( 100% - 200px );
+    height: 100%;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font-size: 14px;
+    font-weight: 300;
+    white-space: pre-wrap;
+    text-align: justify;
+}
+
+.xl-stock-table {
+    display: flex;
+    position: relative;
+    overflow-x: scroll;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.xl-st-title {
+    display: flex;
+    position: relative;
+    white-space: nowrap;
+
+    height: 60px;
+    background-color: #1A4067;
+
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.xl-stt-1 {
+    width: 150px;
+    height: 100%;
+    border-right: #E1E1E1 solid 1px;
+}
+
+.xl-stt-2 {
+    width: 100px;
+    height: 100%;
+    border-right: #E1E1E1 solid 1px;
+}
+
+.xl-stt-3 {
+    width: 100px;
+    height: 100%;
+}
+
+.xl-st-row {
+    display: flex;
+    position: relative;
+    white-space: nowrap;
+
+    height: 40px;
+    background-color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.xl-str-g {
+    background-color: #F2F2F2;
+}
+
+.xl-str-1 {
+    width: 150px;
+    height: 100%;
+    border-right: #E1E1E1 solid 1px;
+    border-bottom: #E1E1E1 solid 1px;
+}
+
+.xl-str-2 {
+    width: 100px;
+    height: 100%;
+    border-right: #E1E1E1 solid 1px;
+    border-bottom: #E1E1E1 solid 1px;
+}
+
+.xl-str-3 {
+    width: 100px;
+    height: 100%;
+    border-bottom: #E1E1E1 solid 1px;
+}
+

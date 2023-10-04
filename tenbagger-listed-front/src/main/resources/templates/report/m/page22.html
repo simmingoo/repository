@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page22 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page22">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">22</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<div class="colb">
+						<h3>현금흐름표</h3><span>(단위:억원)</span>
+					</div>
+					<table class="tbl type1">
+						<colgroup>
+							<col width="190"/>
+						</colgroup>
+						<thead id="thead">
+						</thead>
+						<tbody id="tbody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage22 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage22 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/finance/cashflow',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				let table_html = '<tr>\
+						<th rowspan="2">IFRS (연결)</th>'
+					if (data.fiscalDate.t1 != null) {
+						table_html += '<th>'+data.fiscalDate.t1+'</th>'
+					}
+					if (data.fiscalDate.t2 != null) {
+						table_html += '<th>'+data.fiscalDate.t2+'</th></tr>'
+					}
+					if (data.fiscalDate.t3 != null) {
+						table_html += '<tr><th>'+data.fiscalDate.t3+'</th>'
+					}
+					if (data.fiscalDate.t4 != null) {
+						table_html += '<th>'+data.fiscalDate.t4+'</th></tr>'
+					}
+					$("#reportPage22 #thead").append(table_html);
+				
+				$.each(data.financeItems, function(index, item) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr class="bg_blue">\
+							<th rowspan="2">'+item.itemName+'</th>\
+							<td class="right"></td>\
+							<td class="right">'+addComma(item.t2)+'</td></tr>\
+							<tr class="bg_blue"><td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+							$("#reportPage22 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr class="bg_blue">\
+							<th rowspan="2">'+item.itemName+'</th>\
+							<td class="right"></td>\
+							<td class="right"></td></tr>\
+							<tr class="bg_blue"><td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+							$("#reportPage22 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr class="bg_blue">\
+							<th rowspan="2">'+item.itemName+'</th>\
+							<td class="right"></td>\
+							<td class="right"></td></tr>\
+							<tr class="bg_blue"><td class="right"></td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+							$("#reportPage22 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr class="bg_blue">\
+							<th rowspan="2">'+item.itemName+'</th>\
+							<td class="right"></td>\
+							<td class="right"></td></tr>\
+							<tr class="bg_blue"><td class="right"></td>\
+							<td class="right"></td>\
+							</tr>'
+							$("#reportPage22 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr class="bg_blue">\
+							<th rowspan="2">'+item.itemName+'</th>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td></tr>\
+							<tr class="bg_blue"><td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+							$("#reportPage22 #tbody").append(table_html);
+					}
+					
+					$.each(item.subLevel, function(index, item) {
+						if (data.fiscalDate.t1 == null) {
+							let table_html = '<tr>\
+								<th rowspan="2">'+item.itemName+'</th>\
+								<td class="right"></td>\
+								<td class="right">'+addComma(item.t2)+'</td></tr>\
+								<tr><td class="right">'+addComma(item.t3)+'</td>\
+								<td class="right">'+addComma(item.t4)+'</td>\
+								</tr>'
+								$("#reportPage22 #tbody").append(table_html);
+						}
+						else if (data.fiscalDate.t2 == null) {
+							let table_html = '<tr>\
+								<th rowspan="2">'+item.itemName+'</th>\
+								<td class="right"></td>\
+								<td class="right"></td></tr>\
+								<tr><td class="right">'+addComma(item.t3)+'</td>\
+								<td class="right">'+addComma(item.t4)+'</td>\
+								</tr>'
+								$("#reportPage22 #tbody").append(table_html);
+						}
+						else if (data.fiscalDate.t3 == null) {
+							let table_html = '<tr>\
+								<th>'+item.itemName+'</th>\
+								<td class="right"></td>\
+								<td class="right"></td></tr>\
+								<tr><td class="right"></td>\
+								<td class="right">'+addComma(item.t4)+'</td>\
+								</tr>'
+								$("#reportPage22 #tbody").append(table_html);
+						}
+						else if (data.fiscalDate.t4 == null) {
+							let table_html = '<tr>\
+								<th>'+item.itemName+'</th>\
+								<td class="right"></td>\
+								<td class="right"></td></tr>\
+								<tr><td class="right"></td>\
+								<td class="right"></td>\
+								</tr>'
+								$("#reportPage22 #tbody").append(table_html);
+						}
+						else {
+							let table_html = '<tr>\
+								<th rowspan="2">'+item.itemName+'</th>\
+								<td class="right">'+addComma(item.t1)+'</td>\
+								<td class="right">'+addComma(item.t2)+'</td></tr>\
+								<tr><td class="right">'+addComma(item.t3)+'</td>\
+								<td class="right">'+addComma(item.t4)+'</td>\
+								</tr>'
+								$("#reportPage22 #tbody").append(table_html);
+						}	
+					})
+				})
+				$("#reportPage22 .right").each(function (index, item) {
+					if (item.innerHTML < 0) {
+						$(item).css("color", "#AE2318");
+					}
+				})
+			}
+		});
+	});
+</script>
+</body>
+</html>

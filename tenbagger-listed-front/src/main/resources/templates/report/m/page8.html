@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page8 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page8">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">8</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit showUnit" style="display: none;">
+					<h3 class="p8"><u></u></h3>
+					<div class="desc p8_1">
+					</div>
+					<ul class="list_patent">
+						<!-- <li>
+							<dl>
+								<dt>특허번호.</dt>
+								<dd><a href="#" target="_blank"></a></dd>
+							</dl>
+							<p>
+							</p>
+							<p class="data"></p>
+						<li> -->
+					</ul>
+				</div>
+				<div class="unit showUnit" style="display: none;">
+					<h3 class="p8"><u></u></h3>
+					<div class="desc p8_1">
+					</div>
+					<ul class="list_patent">
+						<!-- <li>
+							<dl>
+								<dt>특허번호.</dt>
+								<dd><a href="#" target="_blank"></a></dd>
+							</dl>
+							<p>
+							</p>
+							<p class="data"></p>
+						<li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		$("#reportPage8 .label_type").html(response.mktCapScale);
+		// 		$("#reportPage8 .label_type").parent().append(response.isuKorNm + " (" + response.mkt + " " + response.industry + ")");
+		// 	}
+		// })
+      	$.ajax({
+         	type: 'GET',
+         	url: '/report/technology',
+         	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+         	success: function(response) {
+				 var json = JSON.parse(response);
+				 if (json.ipcs.length <=2) {
+					 $("#reportPage8").css("display", "none")
+				 }
+				$.each(json.ipcs, function(index, row) {
+								$("#reportPage8 .p8").eq(index).children()
+								if(index >= 2){
+									$("#reportPage8 .p8").eq(index-2).children().html("["+row.ic+"] "+row.icName)
+									$("#reportPage8 .showUnit").eq(index-2).show()
+								}
+							});
+
+            	$.each(json.ipcs, function (index, a) {
+            		if(index>=2){
+            			$("#reportPage8 .desc.p8_1").eq(index-2).html(a.icDesc)
+               			$.each(a.patents, function(b, c){
+               				let t_html = '<li>\
+               					<dl>\
+								<dt>특허번호.</dt>\
+								<dd><a href='+ c.link + ' target="_blank">' + c.patnv + '</a></dd>\
+								</dl>\
+								<p>\
+								' + c.ttl +'\
+								</p>\
+								<p class="date">' + c.apd +'</p>\
+								</li>'
+               	               	$("#reportPage8 .list_patent").eq(index-2).append(t_html);
+               			})
+            		
+            		}
+            	});
+            	
+         	}
+      	});
+   	});
+	</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="p_detail">
+<head>
+    <meta charset="UTF-8">
+    <title>10 bagger</title>
+    <link href="/extstatic/css/style_v1.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <div class="inner">
+            <div class="p_top"><h1>기업 기술 비교</h1></div>
+            <section class="content"><h2>기업 기술비교 개요</h2>
+                <ul class="list">
+                    <li>경쟁기업들의 기술 관련 항목을 상대적으로 비교한 결과를 확인할 수 있습니다.</li>
+                    <li>아래 입력 박스에 비교하고자하는 기업detailCorp명을 직접 입력하여 검색하여 추가하실 수 있습니다.</li>
+                    <li>최대 5개의 기업을 검색하여 추가하실 수 있으며, 미 입력 시 기술 기준 동종 분야에서 규모가 유사한 기업을 기본으로 비교하게 됩니다.</li>
+                </ul>
+                <h2>기업 기술비교 기업 선택</h2>
+                <p class="desc">미 입력 시 자동으로 기업이 선택됩니다.</p>
+                <div class="area_form">
+                    <div class="bx_search"><input type="text" placeholder="비교 대상 기업명 또는 기업코드 입력" class="ipt">
+                        <button type="button">검색</button>
+                    </div>
+                    <div class="bx_search"><input type="text" placeholder="비교 대상 기업명 또는 기업코드 입력" class="ipt">
+                        <button type="button">검색</button>
+                    </div>
+                    <div class="bx_search"><input type="text" placeholder="비교 대상 기업명 또는 기업코드 입력" class="ipt">
+                        <button type="button">검색</button>
+                    </div>
+                    <div class="bx_search"><input type="text" placeholder="비교 대상 기업명 또는 기업코드 입력" class="ipt">
+                        <button type="button">검색</button>
+                    </div>
+                    <div class="bx_search"><input type="text" placeholder="비교 대상 기업명 또는 기업코드 입력" class="ipt">
+                        <button type="button">검색</button>
+                    </div>
+                </div>
+                <div class="btns">
+                    <button class="btn"><strong>기업 기술비교 조회</strong></button>
+                </div>
+                <h2>기업 기술비교 결과</h2>
+                <ul class="list">
+                    <li>경쟁 기업들의 등록 특허를 대상으로 <strong class="txt_point">기술 수준을 상대적으로 비교</strong> 한 결과입니다.</li>
+                    <li>아래 경쟁력 분석 차트에서 수평 축은 기술분야 특허의 평균점수(APES)를 나타내며 수직 축은 각 기술 분야에서 보유한 등록 특허 수를 표시합니다.</li>
+                    <li>고급 기술을 많이 보유할 수록 오른쪽 상단에 표시되고 보유한 기술이 작고 기술 수준이 낮을 수록 왼쪽 아래쪽에 위치하게 됩니다.</li>
+                </ul>
+                <div class="bx_chart chart_prepare"><h3>기업 기술력 비교</h3>
+                    <div data-highcharts-chart="8" style="overflow: hidden;">
+                        <div id="highcharts-1c7a03h-480" dir="ltr" class="highcharts-container "
+                             style="position: relative; overflow: hidden; width: 1100px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); user-select: none; touch-action: manipulation; outline: none;">
+                            <svg version="1.1" class="highcharts-root"
+                                 style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Arial, Helvetica, sans-serif;font-size:12px;"
+                                 xmlns="http://www.w3.org/2000/svg" width="1100" height="400" viewBox="0 0 1100 400">
+                                <desc>Created with Highcharts 9.3.3</desc>
+                                <defs>
+                                    <clipPath id="highcharts-1c7a03h-481-">
+                                        <rect x="0" y="0" width="700" height="338" fill="none"></rect>
+                                    </clipPath>
+                                    <clipPath id="highcharts-1c7a03h-482-">
+                                        <rect x="0" y="0" width="700" height="338" fill="none"></rect>
+                                    </clipPath>
+                                </defs>
+                                <rect fill="#F2F2F2" class="highcharts-background" x="0" y="0" width="1100" height="400"
+                                      rx="0" ry="0"></rect>
+                                <rect fill="none" class="highcharts-plot-background" x="200" y="10" width="700"
+                                      height="338"></rect>
+                                <g class="highcharts-label" transform="translate(10,10)" style="letter-spacing:-0.5px;">
+                                    <text x="3" data-z-index="1" y="14"
+                                          style="color:#595959;font-family:NanumSquare;font-size:10px;fill:#595959;">
+                                        <tspan style="font-weight:bold;fill:black;font-size:11px">다기술보유기업</tspan>
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기술 수준은 높지 않지만
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        특허를 많이 보유하고 있는
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기업
+                                    </text>
+                                </g>
+                                <g class="highcharts-label" transform="translate(10,300)" style="letter-spacing:-0.5px;">
+                                    <text x="3" data-z-index="1" y="14"
+                                          style="color:#595959;font-family:NanumSquare;font-size:10px;fill:#595959;">
+                                        <tspan style="font-weight:bold;fill:black;font-size:11px">악세 기업</tspan>
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기술 수준은 높지않고
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        보유한 특허 수도 많지 않은
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기업
+                                    </text>
+                                </g>
+                                <g class="highcharts-label" transform="translate(950,10)" style="letter-spacing:-0.5px;">
+                                    <text x="3" data-z-index="1" y="14"
+                                          style="color:#595959;font-family:NanumSquare;font-size:10px;fill:#595959;">
+                                        <tspan style="font-weight:bold;fill:black;font-size:11px">선도 기업</tspan>
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기술 수준이 높고
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        특허를 많이 보유한
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기업
+                                    </text>
+                                </g>
+                                <g class="highcharts-label" transform="translate(950,300)" style="letter-spacing:-0.5px;">
+                                    <text x="3" data-z-index="1" y="14"
+                                          style="color:#595959;font-family:NanumSquare;font-size:10px;fill:#595959;">
+                                        <tspan style="font-weight:bold;fill:black;font-size:11px">전문 기업</tspan>
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        상대적으로 보유한 특허가
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        많지는 않지만 높은 수준의
+                                        <tspan class="highcharts-br" dy="13" x="3">​</tspan>
+                                        기술을 보유한 기업
+                                    </text>
+                                </g>
+                                <g class="highcharts-plot-lines-0" data-z-index="0">
+                                    <path fill="none" class="highcharts-plot-line " stroke="#999999" stroke-width="1"
+                                          d="M 200 348.5 L 900 348.5"></path>
+                                </g>
+                                <rect fill="none" class="highcharts-plot-border" data-z-index="1" stroke="#cccccc"
+                                      stroke-width="1" x="199.5" y="9.5" width="701" height="339"></rect>
+                                <g class="highcharts-grid highcharts-xaxis-grid" data-z-index="1">
+                                    <path fill="none" stroke="#808080" stroke-width="0.7" stroke-dasharray="none"
+                                          data-z-index="1" class="highcharts-grid-line" d="M 199.65 10 L 199.65 348"
+                                          opacity="1"></path>
+                                    <path fill="none" stroke="#808080" stroke-width="0.7" stroke-dasharray="none"
+                                          data-z-index="1" class="highcharts-grid-line" d="M 549.65 10 L 549.65 348"
+                                          opacity="1"></path>
+                                    <path fill="none" stroke="#808080" stroke-width="0.7" stroke-dasharray="none"
+                                          data-z-index="1" class="highcharts-grid-line" d="M 900.35 10 L 900.35 348"
+                                          opacity="1"></path>
+                                </g>
+                                <g class="highcharts-grid highcharts-yaxis-grid" data-z-index="1">
+                                    <path fill="none" stroke="#808080" stroke-width="0.7" stroke-dasharray="none"
+                                          data-z-index="1" class="highcharts-grid-line" d="M 200 348.35 L 900 348.35"
+                                          opacity="1"></path>
+                                    <path fill="none" stroke="#808080" stroke-width="0.7" stroke-dasharray="none"
+                                          data-z-index="1" class="highcharts-grid-line" d="M 200 179.35 L 900 179.35"
+                                          opacity="1"></path>
+                                    <path fill="none" stroke="#808080" stroke-width="0.7" stroke-dasharray="none"
+                                          data-z-index="1" class="highcharts-grid-line" d="M 200 9.65 L 900 9.65"
+                                          opacity="1"></path>
+                                </g>
+                                <g class="highcharts-axis highcharts-xaxis" data-z-index="2">
+                                    <text x="550" data-z-index="7" text-anchor="middle" transform="translate(0,0)"
+                                          class="highcharts-axis-title"
+                                          style="color:#595959;font-family:NanumSquare;font-size:13px;letter-spacing:-0.5px;fill:#595959;"
+                                          y="382.5">특허평가 평균점수(APES)
+                                    </text>
+                                    <path fill="none" class="highcharts-axis-line" data-z-index="7"
+                                          d="M 200 348 L 900 348"></path>
+                                </g>
+                                <g class="highcharts-axis highcharts-yaxis" data-z-index="2">
+                                    <text x="161.71875" data-z-index="7" text-anchor="middle"
+                                          transform="translate(0,0) rotate(270 161.71875 179)" class="highcharts-axis-title"
+                                          style="color:#595959;font-family:NanumSquare;font-size:10px;letter-spacing:-0.5px;fill:#595959;"
+                                          y="179">특허보유건수
+                                    </text>
+                                    <path fill="none" class="highcharts-axis-line" data-z-index="7"
+                                          d="M 200 10 L 200 348"></path>
+                                </g>
+                                <g class="highcharts-series-group" data-z-index="3">
+                                    <g class="highcharts-series highcharts-series-0 highcharts-bubble-series highcharts-color-0 highcharts-tracker"
+                                       data-z-index="0.1" opacity="1" transform="translate(200,10) scale(1 1)"
+                                       clip-path="url(#highcharts-1c7a03h-482-)">
+                                        <path fill="#7cb5ec" d="M 308 317.72 A 0 0 0 1 1 308 317.72 Z"
+                                              class="highcharts-halo highcharts-color-0" data-z-index="-1"
+                                              fill-opacity="0.25" style="cursor:auto;" visibility="hidden"></path>
+                                        <path fill="rgba(124,181,236,0.5)"
+                                              d="M 392.5 63.26999999999998 A 7.5 7.5 0 1 1 392.50749999875 63.2699962500003 Z"
+                                              stroke="#7cb5ec" stroke-width="1" opacity="1"
+                                              class="highcharts-point highcharts-color-0"></path>
+                                        <path fill="rgba(124,181,236,0.5)"
+                                              d="M 244.5 310.01 A 7.5 7.5 0 1 1 244.50749999875 310.0099962500003 Z"
+                                              stroke="#7cb5ec" stroke-width="1" opacity="1"
+                                              class="highcharts-point highcharts-color-0"></path>
+                                        <path fill="rgba(124,181,236,0.5)"
+                                              d="M 362.5 282.97 A 7.5 7.5 0 1 1 362.50749999875 282.96999625000035 Z"
+                                              stroke="#7cb5ec" stroke-width="1" opacity="1"
+                                              class="highcharts-point highcharts-color-0"></path>
+                                        <path fill="rgba(124,181,236,0.5)"
+                                              d="M 419.5 310.01 A 7.5 7.5 0 1 1 419.50749999875 310.0099962500003 Z"
+                                              stroke="#7cb5ec" stroke-width="1" opacity="1"
+                                              class="highcharts-point highcharts-color-0"></path>
+                                        <path fill="rgba(124,181,236,0.5)"
+                                              d="M 308.5 325.22 A 7.5 7.5 0 1 1 308.50749999875 325.21999625000035 Z"
+                                              stroke="#7cb5ec" stroke-width="1" opacity="1"
+                                              class="highcharts-point highcharts-color-0"></path>
+                                        <path fill="rgba(124,181,236,0.5)"
+                                              d="M 365.5 323.53 A 7.5 7.5 0 1 1 365.50749999875 323.5299962500003 Z"
+                                              stroke="#7cb5ec" stroke-width="1" opacity="1"
+                                              class="highcharts-point highcharts-color-0"></path>
+                                    </g>
+                                    <g class="highcharts-markers highcharts-series-0 highcharts-bubble-series highcharts-color-0"
+                                       data-z-index="0.1" opacity="1" transform="translate(200,10) scale(1 1)"
+                                       clip-path="none"></g>
+                                </g>
+                                <text x="550" text-anchor="middle" class="highcharts-title" data-z-index="4"
+                                      style="color:#333333;font-size:18px;fill:#333333;" y="24"></text>
+                                <text x="550" text-anchor="middle" class="highcharts-subtitle" data-z-index="4"
+                                      style="color:#666666;fill:#666666;" y="24"></text>
+                                <text x="10" text-anchor="start" class="highcharts-caption" data-z-index="4"
+                                      style="color:#666666;fill:#666666;" y="397"></text>
+                                <g class="highcharts-data-labels highcharts-series-0 highcharts-bubble-series highcharts-color-0 highcharts-tracker"
+                                   data-z-index="6" opacity="1" transform="translate(200,10) scale(1 1)">
+                                    <g class="highcharts-label highcharts-data-label highcharts-data-label-color-0"
+                                       data-z-index="1" transform="translate(362,33)">
+                                        <text x="5" data-z-index="1" y="19"
+                                              style="color:#000000;font-size:15px;font-weight:bold;fill:#000000;">
+                                            <tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF"
+                                                   stroke-width="2px" stroke-linejoin="round" style="">인베니아
+                                                <tspan x="5" y="19">​</tspan>
+                                            </tspan>
+                                            인베니아
+                                        </text>
+                                    </g>
+                                    <g class="highcharts-label highcharts-data-label highcharts-data-label-color-0"
+                                       data-z-index="1" transform="translate(228,280)">
+                                        <text x="5" data-z-index="1" y="19"
+                                              style="color:#000000;font-size:15px;font-weight:bold;fill:#000000;">
+                                            <tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF"
+                                                   stroke-width="2px" stroke-linejoin="round" style="">베셀
+                                                <tspan x="5" y="19">​</tspan>
+                                            </tspan>
+                                            베셀
+                                        </text>
+                                    </g>
+                                    <g class="highcharts-label highcharts-data-label highcharts-data-label-color-0"
+                                       data-z-index="1" transform="translate(338,253)">
+                                        <text x="5" data-z-index="1" y="19"
+                                              style="color:#000000;font-size:15px;font-weight:bold;fill:#000000;">
+                                            <tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF"
+                                                   stroke-width="2px" stroke-linejoin="round" style="">파인텍
+                                                <tspan x="5" y="19">​</tspan>
+                                            </tspan>
+                                            파인텍
+                                        </text>
+                                    </g>
+                                    <g class="highcharts-label highcharts-data-label highcharts-data-label-color-0"
+                                       data-z-index="1" transform="translate(389,280)">
+                                        <text x="5" data-z-index="1" y="19"
+                                              style="color:#000000;font-size:15px;font-weight:bold;fill:#000000;">
+                                            <tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF"
+                                                   stroke-width="2px" stroke-linejoin="round" style="">신도기연
+                                                <tspan x="5" y="19">​</tspan>
+                                            </tspan>
+                                            신도기연
+                                        </text>
+                                    </g>
+                                    <g class="highcharts-label highcharts-data-label highcharts-data-label-color-0"
+                                       data-z-index="1" transform="translate(284,295)">
+                                        <text x="5" data-z-index="1" y="19"
+                                              style="color:#000000;font-size:15px;font-weight:bold;fill:#000000;">
+                                            <tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF"
+                                                   stroke-width="2px" stroke-linejoin="round" style="">이엘피
+                                                <tspan x="5" y="19">​</tspan>
+                                            </tspan>
+                                            이엘피
+                                        </text>
+                                    </g>
+                                    <g class="highcharts-label highcharts-data-label highcharts-data-label-color-0"
+                                       data-z-index="1" transform="translate(348,293)">
+                                        <text x="5" data-z-index="1" y="19"
+                                              style="color:#000000;font-size:15px;font-weight:bold;fill:#000000;">
+                                            <tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF"
+                                                   stroke-width="2px" stroke-linejoin="round" style="">윈텍
+                                                <tspan x="5" y="19">​</tspan>
+                                            </tspan>
+                                            윈텍
+                                        </text>
+                                    </g>
+                                </g>
+                                <g class="highcharts-axis-labels highcharts-xaxis-labels" data-z-index="7">
+                                    <text x="200" style="color:#BFBFBF;cursor:default;font-size:7px;fill:#BFBFBF;"
+                                          text-anchor="middle" transform="translate(0,0)" y="364" opacity="1">-50
+                                    </text>
+                                    <text x="550" style="color:#BFBFBF;cursor:default;font-size:7px;fill:#BFBFBF;"
+                                          text-anchor="middle" transform="translate(0,0)" y="364" opacity="1">50
+                                    </text>
+                                    <text x="900" style="color:#BFBFBF;cursor:default;font-size:7px;fill:#BFBFBF;"
+                                          text-anchor="middle" transform="translate(0,0)" y="364" opacity="1">150
+                                    </text>
+                                </g>
+                                <g class="highcharts-axis-labels highcharts-yaxis-labels" data-z-index="7">
+                                    <text x="185" style="color:#BFBFBF;cursor:default;font-size:7px;fill:#BFBFBF;"
+                                          text-anchor="end" transform="translate(0,0)" y="352" opacity="1">0
+                                    </text>
+                                    <text x="185" style="color:#BFBFBF;cursor:default;font-size:7px;fill:#BFBFBF;"
+                                          text-anchor="end" transform="translate(0,0)" y="183" opacity="1">100
+                                    </text>
+                                    <text x="185" style="color:#BFBFBF;cursor:default;font-size:7px;fill:#BFBFBF;"
+                                          text-anchor="end" transform="translate(0,0)" y="14" opacity="1">200
+                                    </text>
+                                </g>
+                                <g class="highcharts-label highcharts-tooltip highcharts-color-0"
+                                   style="cursor:default;white-space:nowrap;pointer-events:none;" data-z-index="8"
+                                   transform="translate(429,-9999)" opacity="0" visibility="hidden">
+                                    <path fill="none" class="highcharts-label-box highcharts-tooltip-box highcharts-shadow"
+                                          d="M 3.5 0.5 L 157.5 0.5 C 160.5 0.5 160.5 0.5 160.5 3.5 L 160.5 58.5 C 160.5 61.5 160.5 61.5 157.5 61.5 L 85.5 61.5 L 79.5 67.5 L 73.5 61.5 L 3.5 61.5 C 0.5 61.5 0.5 61.5 0.5 58.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                          stroke="#000000" stroke-opacity="0.049999999999999996" stroke-width="5"
+                                          transform="translate(1, 1)"></path>
+                                    <path fill="none" class="highcharts-label-box highcharts-tooltip-box highcharts-shadow"
+                                          d="M 3.5 0.5 L 157.5 0.5 C 160.5 0.5 160.5 0.5 160.5 3.5 L 160.5 58.5 C 160.5 61.5 160.5 61.5 157.5 61.5 L 85.5 61.5 L 79.5 67.5 L 73.5 61.5 L 3.5 61.5 C 0.5 61.5 0.5 61.5 0.5 58.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                          stroke="#000000" stroke-opacity="0.09999999999999999" stroke-width="3"
+                                          transform="translate(1, 1)"></path>
+                                    <path fill="none" class="highcharts-label-box highcharts-tooltip-box highcharts-shadow"
+                                          d="M 3.5 0.5 L 157.5 0.5 C 160.5 0.5 160.5 0.5 160.5 3.5 L 160.5 58.5 C 160.5 61.5 160.5 61.5 157.5 61.5 L 85.5 61.5 L 79.5 67.5 L 73.5 61.5 L 3.5 61.5 C 0.5 61.5 0.5 61.5 0.5 58.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                          stroke="#000000" stroke-opacity="0.15" stroke-width="1"
+                                          transform="translate(1, 1)"></path>
+                                    <path fill="rgba(247,247,247,0.85)" class="highcharts-label-box highcharts-tooltip-box"
+                                          d="M 3.5 0.5 L 157.5 0.5 C 160.5 0.5 160.5 0.5 160.5 3.5 L 160.5 58.5 C 160.5 61.5 160.5 61.5 157.5 61.5 L 85.5 61.5 L 79.5 67.5 L 73.5 61.5 L 3.5 61.5 C 0.5 61.5 0.5 61.5 0.5 58.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                          stroke="#7cb5ec" stroke-width="1"></path>
+                                </g>
+                            </svg>
+                            <div class="highcharts-label highcharts-tooltip highcharts-color-0"
+                                 style="position: absolute; left: 429px; top: -9999px; opacity: 0; cursor: default; pointer-events: none; visibility: hidden;">
+                            <span data-z-index="1"
+                                  style="position: absolute; font-family: &quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;"><div><p>기업명: 이엘피</p><p>특허평가 평균점수: 38.2129</p><p>특허보유건수: 12</p></div></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="tbl">
+                    <colgroup>
+                        <col width="80">
+                        <col>
+                        <col id="border_red">
+                        <col>
+                        <col width="150">
+                        <col width="160">
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>기업명</th>
+                        <th>기술투자 지수
+                            <div class="tooltip"><em>?</em><span class="desc"> 기술투자지수란 기업의 시가총액을 TSS 점수(위즈도메인이 개발한 통계기법으로 산출)로 나눈 값입니다. 보유한 기술력대비 주기가 어느정도인지 가늠하는 수치로 동종기술로 분류된 테마내에서 상대비교를 통해 기업이 가치를 평가할 수 있는 보조지표입니다.  기술투자자가 낮을수록 "기술력대비 저평가" 되어있어 기술력관점에서 투자매력도가 높습니다. 즉, 기술투자지수가 낮다면 기업이 보유한 기술력보다 주가가 상대적으로 싸다는 의미인 것입니다. </span>
+                            </div>
+                            <span class="txt_gray">(시총/TSS)</span></th>
+                        <th>기술력점수
+                            <div class="tooltip"><em>?</em><span class="desc"> TSS는 기업이 가진 특허의 규모(quantity)와 기술 수준(quality)를 동시에 측정한 기술 경쟁력 지수입니다. 기업이 보유한 전체 특허를 점수화한 것으로 수치가 클 수록 수록 기술 경쟁력이 높음을 의미하며 다른 기업의 수치와 비교하여 상대적으로 평가할 수 있습니다. </span>
+                            </div>
+                            <span class="txt_gray">(TSS)</span></th>
+                        <th>기술경쟁력등급
+                            <div class="tooltip"><em>?</em><span class="desc"> TCG는 기업이 취득한 특허들을 평가하여 합산한 점수와 이 점수를 기반으로 한 업계 순위에 근거하여 생성되었습니다. 특허 평가 점수는 ㈜위즈도메인이 개발한 통계기법에 의해 계산된 값입니다. 이 점수는 객관적인 평가기준에 따라 동종 기술분야의 특허들과 상대 비교하여 산출됩니다. </span>
+                            </div>
+                            <span class="txt_gray">(TCG)</span></th>
+                        <th>특허평가평균점수
+                            <div class="tooltip"><em>?</em><span class="desc"> APES는 각 기술부문별 특허의 점수를 평균한 것으로, 개별 특허의 평가 점수는 특허 빅데이터 및 ㈜위즈도메인의 특허평가엔진(Patent Evaluation Engine)을 이용하여 산출합니다. 특허 평가 요소는 10여 가지가 있으며 평가 요소 중 하나를 예로 들면 다른 특허들로부터 인용을 많이 당한 특허는 좋은 점수를 받습니다. </span>
+                            </div>
+                            <span class="txt_gray">(APES)</span></th>
+                        <th>특허등록<span class="txt_gray">(건)</span></th>
+                        <th>시가총액<span class="txt_gray">(억원)</span></th>
+                        <th>추가추이<span class="txt_gray">(최근30일)</span></th>
+                    </tr>
+                    </thead>
+                    <tbody><!---->
+                    <tr>
+                        <td>1</td>
+                        <td>파인텍</td>
+                        <td>8.30</td>
+                        <td>66.68</td>
+                        <td>B+</td>
+                        <td>53.6785</td>
+                        <td>37</td>
+                        <td>553</td>
+                        <td><span class="txt_blue"> -4% </span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>신도기연</td>
+                        <td>36.26</td>
+                        <td>15.90</td>
+                        <td>B-</td>
+                        <td>69.922</td>
+                        <td>21</td>
+                        <td>576</td>
+                        <td><span class="txt_blue"> -59% </span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>윈텍</td>
+                        <td>65.10</td>
+                        <td>7.47</td>
+                        <td>C+</td>
+                        <td>54.6031</td>
+                        <td>13</td>
+                        <td>486</td>
+                        <td><span class="txt_blue"> -7% </span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>베셀</td>
+                        <td>302.73</td>
+                        <td>4.29</td>
+                        <td>C</td>
+                        <td>20.1367</td>
+                        <td>21</td>
+                        <td>1,297</td>
+                        <td><span class="txt_red"> +93% </span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>이엘피</td>
+                        <td>166.35</td>
+                        <td>3.87</td>
+                        <td>C</td>
+                        <td>38.2129</td>
+                        <td>12</td>
+                        <td>643</td>
+                        <td><span class="txt_blue"> -3% </span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

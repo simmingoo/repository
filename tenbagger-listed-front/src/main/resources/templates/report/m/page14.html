@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page14 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page14">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">14</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>키워드 변동</h3>
+						<table class="tbl type2">
+							<colgroup>
+								<col width="55"/>
+								<col/>
+								<col width="78"/>
+							</colgroup>
+							<thead>
+								<tr class="top">
+									<th colspan="3">2011년 - 2015년</th>
+								</tr>
+								<tr class="sub_top">
+									<th>순위</th>
+									<th>키워드</th>
+									<th>변동구분</th>
+								</tr>
+							</thead>
+							<tbody id = "t_body1">
+							</tbody>
+						</table>
+						<table class="tbl type2">
+							<colgroup>
+								<col width="55"/>
+								<col/>
+								<col width="78"/>
+							</colgroup>
+							<thead>
+								<tr class="top">
+									<th colspan="3">2016년 - 2020년</th>
+								</tr>
+								<tr class="sub_top">
+									<th>순위</th>
+									<th>키워드</th>
+									<th>변동구분</th>
+								</tr>
+							</thead>
+							<tbody id = "t_body2">
+							</tbody>
+						</table>
+				</div>
+				<div class="unit">
+					<div class="bx_blue">
+						<h2>변동구분</h2>
+						<ul class="list_ico">
+							<li><em class="ico">◎</em>2015년 이후 상위 20위의 키워드에 진입</li>
+							<li><em class="ico">X</em>2015년 이후 상위 20위의 키워드에 제외</li>
+							<li><em class="ico">=</em>2015년 이후 키워드 순위 등률</li>
+							<li><em class="ico">▲</em>2015년 이후 키워드 순위 상승</li>
+							<li><em class="ico">▼</em>2015년 이후 키워드 순위 하락</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage18 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage18 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/keyword',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				$.each(data.beforeWords, function(index, a) {
+					let table_html = '<tr>\
+						<td>'+a.rank+'</td>\
+						<td>'+a.word+'</td>\
+						<td><span></span></td>\
+						</tr>'
+						$("#reportPage14 #t_body1").append(table_html);
+
+					if(a.wordChangeType == "Same"){
+						$("#reportPage14 #t_body1").find("span").eq(index).html("=");
+					}
+					else if(a.wordChangeType == "Down"){
+						$("#reportPage14 #t_body1").find("span").eq(index).html("▼");
+					}
+					else if(a.wordChangeType == "Up"){
+						$("#reportPage14 #t_body1").find("span").eq(index).html("▲");
+					}
+					else if(a.wordChangeType == "Except"){
+						$("#reportPage14 #t_body1").find("span").eq(index).html("X");
+					}
+					else if(a.wordChangeType == "New"){
+						$("#reportPage14 #t_body1").find("span").eq(index).html("◎");
+					}
+				})
+				$.each(data.afterWords, function(index, a) {
+					let table_html = '<tr>\
+						<td>'+a.rank+'</td>\
+						<td>'+a.word+'</td>\
+						<td><span></span></td>\
+						</tr>'
+						$("#reportPage14 #t_body2").append(table_html);
+						
+					if(a.wordChangeType == "Same"){
+						$("#reportPage14 #t_body2").find("span").eq(index).html("=");
+					}
+					else if(a.wordChangeType == "Down"){
+						$("#reportPage14 #t_body2").find("span").eq(index).html("▼");
+					}
+					else if(a.wordChangeType == "Up"){
+						$("#reportPage14 #t_body2").find("span").eq(index).html("▲");
+					}
+					else if(a.wordChangeType == "Except"){
+						$("#reportPage14 #t_body2").find("span").eq(index).html("X");
+					}
+					else if(a.wordChangeType == "New"){
+						$("#reportPage14 #t_body2").find("span").eq(index).html("◎");
+					}
+				})
+			}
+		});
+	});
+</script>
+</body>
+</html>

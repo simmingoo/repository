@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page15 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page15">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">15</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+				<h3>(6) 주요 특허</h3>
+				<p class="desc">바이오니아의 등록특허를 대상으로 평가 점수가 가장 높은 상위 20개 특허입니다.</p>
+				<ul class="list_patent">
+					<!-- <li>
+						<dl>
+							<dt>특허번호.</dt>
+							<dd class="colb">
+								<a href="#" target="_blank"></a>
+								<p><span>등급.</span><strong></strong></p>
+							</dd>
+						</dl>
+						<p>
+							
+						</p>
+						<p class="date"></p>
+					</li> -->
+				</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+   	$(document).ready(function(){
+   		// $.ajax({
+		// 	type: 'GET',
+		// 	url: 'report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response);
+		// 		$("#reportPage15 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage15 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+      	$.ajax({
+         	type: 'GET',
+         	url: '/report/keypatent',
+         	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+         	success: function(response) {
+				 var data = JSON.parse(response);
+            	$.each(data, function (index, a) {
+               	let t_html = '<li style="page-break-inside:avoid; page-break-after:auto">\
+               					<dl>\
+               						<dt>특허번호.</dt>\
+               						<dd class="colb">\
+               							<a href='+a.link+' target="_blank">'+a.patnv+'</a>\
+               							<p><span>등급.<span><strong>'+a.grade+'</strong></p>\
+               						</dd>\
+               					</dl>\
+               					<p>\
+               					'+a.ttl+'\
+               					</p>\
+               					<p class="date">'+a.apd+'</p>\
+               				</li>'
+               	$("#reportPage15 .list_patent").append(t_html);
+            	});
+         	}
+      	});
+   	});
+	</script>
+	
+</body>
+</html>

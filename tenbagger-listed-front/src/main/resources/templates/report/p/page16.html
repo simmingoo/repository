@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=1180, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page16 Report</title> <!-- [페이지명 | 사이트명] -->
+	  
+
+	</head>
+<body>
+	<div class="page page16" style="page-break-before:always">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">16</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(7) 특허매입 현황</h3>
+					<p class="desc"><span class="isuKorNm"></span>의 최근 10년간 특허 매입 동향입니다. 기업은 특허 라이선스 매출을 증대시키려는 목적이나 기술력의 보강 또는 목표시장에 신속하게 진입하기 위해서 특허를 매입하게 됩니다. 특허 매입 현황을 모니터링하면 그 기업의 경영 전략과 비즈니스 방향을 파악할 수 있습니다.</p>
+				</div>
+				<div class="bx_chart">
+					<h3 class="tit">최근 10년간 특허 매입 동향</h3>
+					<div id="chart16"></div>
+				</div>
+				<div class="unit">
+					<h3>매입특허 (최근 매입 특허 순 30개 특허)</h3>
+					<table class="tbl">
+						<colgroup>
+							<col width="15.8%">
+							<col width="15.12%">
+							<col>
+							<col width="11.5%">
+							<col width="11.5%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>특허번호</th> 
+								<th>출원인</th>
+								<th>발명의 명칭</th>
+								<th>출원일</th>
+								<th>매입일</th>
+							</tr>
+						</thead>
+						<tbody id="tbody1">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage16 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage16 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/transfer',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				var data1 = data.transferPatents.slice(0,10)
+				$.each(data1, function(index, item) {
+					let table_html = '<tr style="page-break-inside:avoid; page-break-after:auto">\
+						<td><u class="txt_blue"><a href='+item.link+' target="_blank">'+item.patnv+'</a></u></td>\
+						<td class="left">'+item.nname+'</td>\
+						<td class="left">'+replaceIpName(item.ttl)+'</td>\
+						<td>'+item.apd+'</td>\
+						<td>'+item.assignDate+'</td>\
+						</tr>'
+						$("#reportPage16 #tbody1").append(table_html);
+				})
+				Highcharts.chart('chart16', {
+				    chart: {
+				        type: 'column',
+				        /* width: 480,
+				        height: 130, */
+				        backgroundColor:'rgba(255, 255, 255, 0)',
+				        events: {
+				            load: function() {
+				              var chart = this;
+				              var bottom = chart.plotHeight+21;
+				              
+				              $.each(chart.series[0].data,function(i,data){
+				              
+				                  data.dataLabel.attr({
+				                      y: bottom
+				                  });
+				              });
+				             
+				            }
+				          }
+				    },
+				    title: {
+				    	text: ''
+				    },
+				    tooltip: {
+				    	enabled: true
+				    },
+				    legend: {
+				    	enabled: true,
+				    	layout: 'vertical',
+				    	floating:true,
+	  				    align: 'left',
+	  				    verticalAlign: 'bottom',	
+		  				symbolHeight: 10,
+					    symbolWidth: 10,
+					    symbolPadding: 2,
+					    symbolRadius: 0,
+	  			    	itemStyle: {
+	  						fontFamily: 'NanumSquare',
+	  					  	fontSize: '16px',
+	  					 	color: '#BFBFBF',
+	  					 	fontWeight:'bold'
+	  					  },
+				    	x:-15,
+  						y:20
+				    },
+				    exporting: {
+                        enabled: false
+                    },
+                    credits: {
+                    	enabled: false
+                    },
+				    xAxis: {
+				        type: 'category',
+				        labels:{
+  					    	style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '16px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold'
+  							  }
+  					    }
+				    },
+				    yAxis: {				    	
+				        min: 0,
+				        tickInterval: 5,
+				        title: {
+				            text: '특허매입건수',
+			            	style: {
+						    	  fontFamily: 'NanumSquare',
+						    	  color: '#595959',
+						    	  fontSize: '20px',
+						    	  letterSpacing: '-0.5px',									    	 
+						    	  }
+				        },
+				        labels:{
+  					    	style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '16px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold'
+  							  }
+  					    }
+				    },
+				    plotOptions:{
+				    	series: {
+					        states: {
+					            inactive: {
+					                opacity: 1
+					            },
+				  				hover:{
+				  					enabled:true
+				  				},
+					        },
+					        events: {
+			  		            legendItemClick: function() {
+			  		              return false;
+			  		            }
+			  				},
+							animation:false
+					    }
+				    },
+				    series: [{
+				        name: '매입특허수',
+				        color: "#395592",
+				        data: [
+				            [data.transferByYear[0].year, data.transferByYear[0].tranferCnt],
+				            [data.transferByYear[1].year, data.transferByYear[1].tranferCnt],
+				            [data.transferByYear[2].year, data.transferByYear[2].tranferCnt],
+				            [data.transferByYear[3].year, data.transferByYear[3].tranferCnt],
+				            [data.transferByYear[4].year, data.transferByYear[4].tranferCnt],
+				            [data.transferByYear[5].year, data.transferByYear[5].tranferCnt],
+				            [data.transferByYear[6].year, data.transferByYear[6].tranferCnt],
+				            [data.transferByYear[7].year, data.transferByYear[7].tranferCnt],
+				            [data.transferByYear[8].year, data.transferByYear[8].tranferCnt],
+				            [data.transferByYear[9].year, data.transferByYear[9].tranferCnt]
+				        ],
+				        dataLabels: {
+				            enabled: true,	
+				            style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '16px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold',
+  							 	textOutline:'0px'
+  							  }
+				        }
+				    }]
+				});
+			}
+		});
+		
+	});
+</script>
+
+	<div class="page page16_2" style="page-break-before:always">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">16</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<table class="tbl">
+						<colgroup>
+							<col width="15.8%">
+							<col width="15.12%">
+							<col>
+							<col width="11.5%">
+							<col width="11.5%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>특허번호</th> 
+								<th>출원인</th>
+								<th>발명의 명칭</th>
+								<th>출원일</th>
+								<th>매입일</th>
+							</tr>
+						</thead>
+						<tbody id="tbody2">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage16 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage16 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/transfer',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				var data2 = data.transferPatents.slice(10,31)
+				if (data2.length == 0) {
+					$("#reportPage16 .page16_2").css("display", "none");
+					$("#reportPage16 .page16_2").children("header").remove();
+				}
+				$.each(data2, function(index, item) {
+					let table_html = '<tr style="page-break-inside:avoid; page-break-after:auto">\
+						<td><u class="txt_blue"><a href='+item.link+' target="_blank">'+item.patnv+'</a></u></td>\
+						<td class="left">'+item.nname+'</td>\
+						<td class="left">'+replaceIpName(item.ttl)+'</td>\
+						<td>'+item.apd+'</td>\
+						<td>'+item.assignDate+'</td>\
+						</tr>'
+						$("#reportPage16 #tbody2").append(table_html);
+				})
+				
+			}
+		});
+		
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=1180, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page7 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page" id="content_ipcs">
+
+	</div>
+	<script type="text/javascript">
+		let mktCapScalePage7,  descriptionPage7 , industry, isuKorNmPage7;
+		let pageId = "";
+		let tbodyId = "";
+
+		  $(function(){
+			    let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")}; 
+				let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&'); 
+				let url1 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+				let url2 = 'https://c-api.10bagger.co.kr/v1/report/technology?' + query;
+
+				let pageCnt = 1;
+				let maxPageSize = 1400;
+
+			  fetch(url1)
+					  .then(res => res.json())
+					  .then(data => {
+						  industry = data.industry==null?'':data.industry;
+						  isuKorNmPage7 = data.isuKorNm;
+						  mktCapScalePage7 = data.mktCapScale;
+						  descriptionPage7 = data.isuKorNm + " (" + data.mkt + " " +industry+ ")";
+						  $("#reportPage7 .desc:eq(0)").html(data.isuKorNm + "(이)가 기술부문별로 출원한 최근 특허를 표시합니다.")
+
+						  let ipcsHtml = "";
+						  fetch(url2)
+								  .then(res => res.json())
+								  .then(data => {
+									  let rtvMap = getPageHtml(pageCnt);
+									  $("#content_ipcs").html(rtvMap.get('html'));
+									  ipcsHtml = "";
+									  $.each(data.ipcs, function(index, row) {
+										if(row.patents.length > 0) {
+											if($("#"+pageId).height() > maxPageSize) {
+												pageCnt++;
+												let pageHtmlMap = getPageHtml(pageCnt);
+												$("#"+pageId).append(pageHtmlMap.get("html"));
+											}
+											ipcsHtml = "";
+											ipcsHtml += "			<div class='unit'>";
+											ipcsHtml += "				<span class='tit'><u>"+"["+row.ic+"] "+row.icName+"</u></span>";
+											ipcsHtml += "				<div class='desc sm'>"+row.icDesc+"</div>";
+											ipcsHtml += "			</div>";
+											if($("#"+pageId).height() > maxPageSize) {
+												pageCnt++;
+												let pageHtmlMap = getPageHtml(pageCnt);
+												$("#content_ipcs").append(pageHtmlMap.get('html'));
+												rtvIcMap = getTbodyHtml(row.ic);
+												$("#"+pageId).append(rtvIcMap.get("html"));
+											}
+											let rtvIcMap = getTbodyHtml(row.ic);
+											$("#"+pageId).append(ipcsHtml);
+											$("#"+pageId).append(rtvIcMap.get("html"));
+											$.each(row.patents, function(index, row) {
+												if($("#"+pageId).height() > maxPageSize) {
+													pageCnt++;
+													let pageHtmlMap = getPageHtml(pageCnt);
+													$("#content_ipcs").append(pageHtmlMap.get('html'));
+													rtvIcMap = getTbodyHtml(row.ic);
+													$("#"+pageId).append(rtvIcMap.get("html"));
+												}
+												console.log($("#"+pageId).height())
+												ipcsHtml = "";
+												ipcsHtml += "					<tr>";
+												ipcsHtml += "						<td><a href="+ row.link + " target='_blank'><u class='txt_blue'>" + row.patnv + "</u></a></td>";
+												ipcsHtml += "						<td style='text-align:left'>"+replaceIpName(row.ttl)+"</td>";
+												ipcsHtml += "						<td>"+row.apd+"</td>";
+												ipcsHtml += "					</tr>";
+												$("#"+tbodyId).append(ipcsHtml);
+											});
+										}
+									  });
+									  checkPageNum();
+								  })
+					  .catch(function (error) {
+						  console.log('request failed', error)
+					  });
+
+					});
+
+		  });
+
+		  function getPageHtml(index) {
+			  let rtvMap = new HashMap();
+			  let rtvHtml;
+			  rtvHtml = "";
+			  pageId = "page7_"+index;
+			  if(index == 1) {
+				  rtvHtml += "<div class='page' id="+pageId+" style='page-break-before:always'>";
+				  rtvHtml += "	<header>";
+				  rtvHtml += "		<h1><span class='label_type'>"+mktCapScalePage7+"</span>"+descriptionPage7+"</h1>";
+				  rtvHtml += "		<span class='num'></span>";
+				  rtvHtml += "	</header>";
+				  rtvHtml += "	<div class='container'>";
+				  rtvHtml += "		<div class='content'>";
+				  rtvHtml +="			<div class='unit'>";
+				  rtvHtml +="				<h3>(4) 주요기술부문별 최신 출원특허</h3>";
+				  rtvHtml +="				<div class='desc'>";
+				  rtvHtml +="				"+isuKorNmPage7 + "(이)가 기술부문별로 출원한 최근 특허를 표시합니다.";
+				  rtvHtml +="			</div>";
+				  rtvHtml +="		</div>";
+				  rtvHtml += "	</div>";
+				  rtvHtml += "</div>";
+			  } else {
+				  rtvHtml += "<div class='page' id="+pageId+" style='page-break-before:always'>";
+				  rtvHtml += "	<header>";
+				  rtvHtml += "		<h1><span class='label_type'>"+mktCapScalePage7+"</span>"+descriptionPage7+"</h1>";
+				  rtvHtml += "		<span class='num'></span>";
+				  rtvHtml += "	</header>";
+				  rtvHtml += "	<div class='container'>";
+				  rtvHtml += "		<div class='content'>";
+				  rtvHtml +="		</div>";
+				  rtvHtml += "	</div>";
+				  rtvHtml += "</div>";
+			  }
+			  rtvMap.put('html',rtvHtml);
+			  return rtvMap;
+		  }
+		  function getTbodyHtml(ic) {
+			  let rtvMap = new HashMap();
+			  let rtvHtml = "";
+			  tbodyId = "tbody_ic_"+ic;
+			  rtvHtml += "			<div class='unit'>";
+			  rtvHtml += "				<table class='tbl'>";
+			  rtvHtml += "					<colgroup>";
+			  rtvHtml += "						<col width='18.48%'>";
+			  rtvHtml += "						<col>";
+			  rtvHtml += "						<col width='13.44%'>";
+			  rtvHtml += "					</colgroup>";
+			  rtvHtml += "					<thead>";
+			  rtvHtml += "						<tr>";
+			  rtvHtml += "							<th>특허번호</th>";
+			  rtvHtml += "							<th>발명의 명칭</th>";
+			  rtvHtml += "							<th>출원일</th>";
+			  rtvHtml += "						</tr>";
+			  rtvHtml += "					</thead>";
+			  rtvHtml += "					<tbody id='"+tbodyId+"'>";
+			  rtvHtml += "					</tbody>";
+			  rtvHtml += "				</table>";
+			  rtvHtml += "			</div>";
+			  rtvHtml += "			<p class='noti'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;※ 특허번호를 클릭하면 자세한 정보를 확인할 수 있습니다.</p>";
+			  rtvMap.put("html",rtvHtml);
+			  return rtvMap;
+		  }
+
+	  </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page11 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+   <div class="page page11">
+   	  <div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+	  </div>
+      <header>
+        <h1><span class="label_type"></span></h1>
+        <span class="num">11</span>
+      </header>
+      <div class="container">
+         <div class="content">
+            <div class="unit">
+               <h3>(3) 특허 포트폴리오 현황</h3>
+               <p class="desc">
+                  <span class="isuKorNm"></span>의 기술 부문별 특허 현황으로 보유특허를 대상으로 합니다. 특허권을 획득하거나 특허 권리를 유지하기 위해서는 많은 비용이 소요되기 때문에 기업이 필요한 분야에 집중하여 특허를 보유 하게 됩니다. 따라서 기업이 보유하고 있는 특허의 기술 분포를 통해 그 기업이 집중하고 있는 기술 분야와 R&D 집중 분야를 추측할 수 있습니다.
+               </p>
+            </div>
+            <div class="bx_chart">
+               <div class="tit"><strong>기술 부문별 특허 현황</strong></div>
+               <div id="container"></div>
+            </div>
+            <div class="unit">
+               <table class="tbl type2">
+                  <colgroup>
+                    <col/>
+					<col width="75px"/>
+					<col width="75px"/>
+                  </colgroup>
+                  <thead>
+                     <tr>
+                        <th>[IPC 코드] 기술 부문</th> 
+                        <th>비율 <em>(%)</em></th>
+                        <th>특허수</th>
+                     </tr>
+                  </thead>
+                  <tbody id = t_body>
+                     
+                  </tbody>
+               </table>
+               </div>
+               <div class="unit">
+	               <div class="desc">
+	                  기술부문은 주 국제특허분류(Primary IPC Subclass)를 기준으로 분류 하였습니다. 주 국제특허분류는 하나의 특허에 여러 개의 분류 코드가 부여되어 있을 때 제일 먼저 기재된 것을 의미 합니다.
+	               </div>
+               </div>
+         </div>
+      </div>
+   </div>
+   <script>
+      $(document).ready(function(){
+         // $.ajax({
+      //    type: 'GET',
+      //    url: '/report/outline',
+      //    data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+      //    success: function(response) {
+      //       var data = JSON.parse(response);
+      //       $("#reportPage11 .label_type").html(data.mktCapScale);
+      //       $("#reportPage11 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+      //    }
+      // })
+         $.ajax({
+            type: 'GET',
+            url: '/report/patentactivity',
+            data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+            success: function(response) {
+            var data = JSON.parse(response);
+            var list = [];
+               $.each(data.portfolios, function (index, a) {
+            	   let object = {};
+                   object.name = a.ic;
+                   object.y=a.ratio;
+                   list.push(object);
+                  let t_html = '<tr>\
+                  <td>['+a.ic+']'+a.icName+'</td>\
+                  <td>'+a.ratio+'%</td>\
+                  <td>'+a.cnt+'</td>\
+                  </tr>'
+                  $("#reportPage11 #t_body").append(t_html);
+               });
+               
+               
+               Highcharts.chart('container', {
+                     chart: {
+                       width: 300,
+					   height: 207,
+					   backgroundColor:'rgba(255, 255, 255, 0)',
+                       type: 'pie'
+                     },
+                     exporting: {
+                          enabled: false
+                        },
+                     credits: {enabled: false},
+                     title: {
+                       text: ''
+                     },
+                     tooltip: {
+                       enabled: false
+                     },
+                     accessibility: {
+                       point: {
+                         valueSuffix: '%'
+                       }
+                     },
+                     plotOptions: {
+                       pie: {
+                         allowPointSelect: false,                         
+                         dataLabels: {
+                           enabled: true,
+                           distance: 5,
+                           format: '<b>{point.name}</b>, {point.percentage:.2f} %',
+                           padding: 0,
+                           style: {                        	   
+                        	   fontWeight:"900",
+                        	   fontSize: '10px'
+                           },
+                         },
+                          animation:false
+                       }
+                     },
+                     series: [{                       
+                       data: list
+                     }]
+                   });
+            }
+         });
+         
+      });
+   </script>
+</body>
+</html>

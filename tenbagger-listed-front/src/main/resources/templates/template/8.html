@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>technology trend</title>
+<script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+<script src="/extstatic/ext/Highcharts-9.2.2/code/highcharts.js"></script>
+<script src="/extstatic/js/template-util.js"></script>
+</head>
+<body style="background-color: white;">
+  <style type="text/css">
+h2 {
+  margin: 25px;
+  margin-left: 0px;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 500;
+}
+</style>
+  <div style="width: 600px">
+    <h2>[표] <span class="sectorNm"></span> 업종 최근 10년간 특허 등록 동향</h2>
+    <div id="container1" style="height: 200px"></div>
+  </div>
+  <div style="width: 600px">
+    <h2>[표] <span class="sectorNm"></span> 업종 기술주기</h2>
+    <div style="background-color: #f9f9f9; border-bottom: 3px solid; padding-top: 5px; padding-bottom: 5px">
+      <div style="width: 250px; font-size: 13px">[<span class="sectorNm"></span>]분야 기술 주기</div>
+    </div>
+    <div>
+      <div style="font-size: 21px; display: inline-block; margin-left: 50px; position: relative; bottom: 8px">
+        <b class="techCycle" style="color: #f16767; font-weight: 500"></b>&nbsp;년
+      </div>
+      <div style="font-size: 13px; display: inline-block; margin-left: 100px; text-align: center; letter-spacing: -1px; font-weight: 500; padding-top: 15px; padding-bottom: 15px;">
+        [<span class="sectorNm"></span>] 시장에서 개별 기술의 평균적인 유효기간입니다.<br>기술주기가 짧을 수록 기술 변화 속도가 빠르다고 볼 수 있습니다.
+      </div>
+    </div>
+    <div id="container2" style="height: 200px;"></div>
+  </div>
+  <script>
+            $(document).ready(function() {
+                $.ajax({
+                    type : "GET",
+                    url : "https://c-api.10bagger.co.kr/v1/news/sectorTechnologyTrend",
+                    data : {
+                        sectorNo : parseInt(getParameter("sectorNo"))
+                    },
+                    success : function(data) {
+                        var sectorNm = data.sectorNm;
+                        var techCycle = data.techCycle.filter(function(el){ return el.selYn == "Y"})[0] ? data.techCycle.filter(function(el){ return el.selYn == "Y"})[0].cycle : "";
+                        var years = data.patentRegistTrend.map(function(el) {
+                            return el.year
+                        });
+                        var counts = data.patentRegistTrend.map(function(el) {
+                            return el.count
+                        });
+                        var fields = data.techCycle.map(function(el) {
+                            if (el.selYn == "Y") {
+                                return "해당업체";
+                            }
+                            return el.field;
+                        });
+                        var cycles = data.techCycle.map(function(el) {
+                            if (el.selYn == "Y") {
+                                return {
+                                    y : el.cycle,
+                                    color : '#ef4d4d'
+                                }
+                            }
+                            return {
+                                y : el.cycle
+                            }
+                        });
+
+                        $(".sectorNm").html(sectorNm);
+                        $(".techCycle").html(techCycle);
+                        Highcharts.setOptions({
+                            lang: {
+                            thousandsSep: ','
+                          }
+                        })
+                        Highcharts.chart('container1', {
+                            chart : {
+                                backgroundColor : '#f9f9f9',
+                            },
+
+                            title : {
+                                text : ''
+
+                            },
+
+                            credits : {
+                                enabled : false
+                            },
+
+                            subtitle : {
+                                text : '최근 10년간 특허 등록 동향',
+                                style : {
+                                    fontFamily : 'Noto Sans KR',
+                                    color : 'black',
+                                    fontSize : '12px',
+                                }
+                            },
+
+                            yAxis : {
+                                lineWidth : 1,
+                                lineColor : "black",
+                                min : 0,
+                                tickInterval : 800,
+                                title : {
+                                    text : '등록특허건수',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            },
+
+                            xAxis : {
+                                gridLineWidth : 1,
+                                lineColor : "black",
+                                categories : years,
+                                title : {
+                                    text : '등록연도',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            },
+
+                            legend : {
+                                enabled : false
+                            },
+
+                            plotOptions : {
+                                series : {
+                                    states : {
+                                        inactive : {
+                                            opacity : 1
+                                        },
+                                        hover : {
+                                            enabled : true
+                                        },
+                                    },
+                                    events : {
+                                        legendItemClick : function() {
+                                            return false;
+                                        }
+                                    },
+                                    animation : false
+                                }
+                            },
+                            series : [{
+                                lineWidth : 1,
+                                label : {
+                                    enabled : false
+                                },
+                                marker : {
+                                    enabled : true,
+                                    symbol : 'circle',
+                                    radius : 4,
+                                },
+                                color : '#ef4d4d',
+                                data : counts,
+                                dataLabels : {
+                                    enabled : true,
+                                    style : {
+                                        fontFamily : 'NanumSquare',
+                                        fontSize : '10px',
+                                        color : 'black',
+                                    }
+                                }
+                            }
+                            ],
+                        });
+
+                        Highcharts.chart('container2', {
+                            chart : {
+                                type : 'column',
+                                backgroundColor : '#f9f9f9',
+                            },
+
+                            title : {
+                                text : ''
+                            },
+
+                            credits : {
+                                enabled : false
+                            },
+
+                            subtitle : {
+                                text : ''
+                            },
+
+                            legend : {
+                                enabled : false
+                            },
+
+                            yAxis : {
+                                min : 0,
+                                max : 9,
+                                tickInterval : 3,
+                                title : {
+                                    text : '기술주기(년)',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : '#191919',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '12px',
+                                        color : '#191919',
+                                    }
+                                }
+                            },
+
+                            xAxis : {
+                                categories : fields,
+                                title : {
+                                    text : '업종',
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '10px',
+                                        color : '#191919',
+                                    }
+                                },
+                                labels : {
+                                    style : {
+                                        fontFamily : 'Noto Sans KR',
+                                        fontSize : '12px',
+                                        color : '#191919',
+                                    }
+                                }
+                            },
+
+                            plotOptions : {
+                                series : {
+                                    dataLabels : {
+                                        enabled : true
+                                    },
+                                    states : {
+                                        inactive : {
+                                            opacity : 1
+                                        },
+                                        hover : {
+                                            enabled : false
+                                        },
+                                    },
+                                }
+                            },
+
+                            series : [{
+                                color : '#4f7ce6',
+                                data : cycles,
+                            }],
+                        });
+                    },
+                    error : function(request, status, error) {
+                        console.error("code = " + request.status + "\nmessage = " + request.responseText + "\nerror = " + error);
+                    }
+                });
+
+            });
+        </script>
+
+</body>
+</html>

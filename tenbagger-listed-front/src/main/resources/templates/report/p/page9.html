@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=1180, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page9 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page page9" style="page-break-before:always">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">9</span>
+		</header>
+		<div class="container">
+			<h2>5.Stock Data</h2>
+			<div class="content">
+				<div class="unit col2">
+					<div class="col">
+						<h4>Stock Data</h4>
+						<table class="tbl2 column">
+							<colgroup>
+								<col width="50%;"/> 
+							</colgroup>
+							<tr>
+								<th>시가총액</th>
+								<td><!-- 411십억원/중형주 --></td>
+							</tr>
+							<tr>
+								<th>발행주식수</th>
+								<td><!-- 3,200만주 --></td>
+							</tr>
+							<tr>
+								<th>52주 최고가/최저가</th>
+								<td><!-- 33,600원/5,470원 --></td>
+							</tr>
+							<tr>
+								<th>외국인지분율</th>
+								<td><!-- 9.4% --></td>
+							</tr>
+						</table>
+						<h4>국내 주요 지수 등락률</h4>
+						<table class="tbl2">
+							<colgroup>
+								<col width="12%"/>
+								<col width="7%"/>
+								<col width="7%"/>
+								<col width="7%"/>
+								<col width="7%"/>
+								<col width="7%"/>
+								<col width="7%"/>
+							</colgroup>
+							<thead>
+								<tr>
+									<th>구분</th>
+									<th>종가<em>(PT)</em></th>
+									<th>1D<em>(%)</em></th>
+									<th>5D<em>(%)</em></th>
+									<th>1M<em>(%)</em></th>
+									<th>6M<em>(%)</em></th>  
+									<th>YTD<em>(%)</em></th>
+								</tr>
+							</thead>
+							<tbody id="tbody">
+							</tbody>
+						</table>
+					</div>
+					<div class="col">
+						<h4>Stock Price</h4>
+						<table class="tbl2">
+							<thead>
+								<tr>
+									<th class="th_tit">주가 추이</th>
+								</tr>
+							</thead>
+							<tr>
+								<td class="td_chart" id="page9Chart">
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="unit">
+					<h4>Financial Data</h4>
+					<table class="tbl">
+						<colgroup>
+							<col width="15.12%">
+							<col width="15.12%">
+							<col width="8.4%">
+							<col>
+							<col>
+							<col>
+							<col>
+						</colgroup>
+						<thead id="thead">
+						</thead>
+						<tbody>					
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		  $(function(){
+			let today = new Date();
+			let date = new Date();
+		    let year = date.getFullYear();
+		    let month = ("0" + (1 + date.getMonth())).slice(-2);
+		    let day = ("0" + date.getDate()).slice(-2);
+			let endDd = year + month + day
+			let startDd = (year-1) + month + day
+			
+			let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")};
+			let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
+			let url0 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+			let url1 = 'https://c-api.10bagger.co.kr/v1/report/stock?' + query;
+			let url2 = 'https://c-api.10bagger.co.kr/v1/finance/investment/annual?' + query;
+			let url3 = 'https://c-api.10bagger.co.kr/v1/stk/pr/Q1?endDd='+endDd+'&startDd='+startDd;
+			let url4 = 'https://c-api.10bagger.co.kr/v1/stk/pr/K1?endDd='+endDd+'&startDd='+startDd;
+			let url5 = 'https://c-api.10bagger.co.kr/v1/stk/pr/'+params.isuSrtCd+'?endDd='+endDd+'&startDd='+startDd;
+			
+			
+			
+			fetch(url1)
+				.then(res => res.json())
+				.then(data => {
+					let mktCap = addComma(data.mktCap) + "억원/" + data.mktCapScale + "주"; 
+					$("#reportPage9 .tbl2.column").find("td:eq(0)").html(mktCap);
+					
+					let listShrs = addComma(data.listShrs) + "주"
+					$("#reportPage9 .tbl2.column").find("td:eq(1)").html(listShrs);
+					
+					let Prc52w = addComma(data.hgPrc52w) + "원/" + addComma(data.lwPrc52w) + "원"
+					$("#reportPage9 .tbl2.column").find("td:eq(2)").html(Prc52w);
+					
+					let fornHdVolRt = data.fornHdVolRt + "%"
+					$("#reportPage9 .tbl2.column").find("td:eq(3)").html(fornHdVolRt);
+					
+					$.each(data.indexPriceRates, function(index, item) {
+						let table_html = '<tr>\
+							<td>'+item.category+'</td>\
+							<td>'+addComma(item.closePrice)+'</td>\
+							<td><span class="font9">'+item.stkPriceRate1d.toFixed(1)+'</span></td>\
+							<td><span class="font9">'+item.stkPriceRate5d.toFixed(1)+'</span></td>\
+							<td><span class="font9">'+item.stkPriceRate1m.toFixed(1)+'</span></td>\
+							<td><span class="font9">'+item.stkPriceRate6m.toFixed(1)+'</span></td>\
+							<td><span class="font9">'+item.stkPriceRate1y.toFixed(1)+'</span></td>\
+							</tr>'
+						$("#reportPage9 #tbody").append(table_html);
+					})
+					
+				})
+				.catch(function (error) { 
+						console.log('request failed', error) 
+					});
+				
+			
+			fetch(url2) 
+				.then(res => res.json()) 
+				.then(data => {
+					var seq1001_empty1 = findSeq(data.finItemVOS, 1001)? addComma(((findSeq(data.finItemVOS, 1001).t1)/100000000).toFixed(0)):'N/A';
+					var seq1001_empty2 = findSeq(data.finItemVOS, 1001)? addComma(((findSeq(data.finItemVOS, 1001).t2)/100000000).toFixed(0)):'N/A';
+					var seq1001_empty3 = findSeq(data.finItemVOS, 1001)? addComma(((findSeq(data.finItemVOS, 1001).t3)/100000000).toFixed(0)):'N/A';
+					var seq1001_empty4 = findSeq(data.finItemVOS, 1001)? addComma(((findSeq(data.finItemVOS, 1001).lq)/100000000).toFixed(0)):'N/A';
+
+						
+					var seq1002_empty1 = findSeq(data.finItemVOS, 1002)? addComma(((findSeq(data.finItemVOS, 1002).t1)/100000000).toFixed(0)):'N/A';
+					var seq1002_empty2 = findSeq(data.finItemVOS, 1002)? addComma(((findSeq(data.finItemVOS, 1002).t2)/100000000).toFixed(0)):'N/A';
+					var seq1002_empty3 = findSeq(data.finItemVOS, 1002)? addComma(((findSeq(data.finItemVOS, 1002).t3)/100000000).toFixed(0)):'N/A';
+					var seq1002_empty4 = findSeq(data.finItemVOS, 1002)? addComma(((findSeq(data.finItemVOS, 1002).lq)/100000000).toFixed(0)):'N/A';
+					
+					var seq1003_empty1 = findSeq(data.finItemVOS, 1003)? addComma(((findSeq(data.finItemVOS, 1003).t1)/100000000).toFixed(0)):'N/A';
+					var seq1003_empty2 = findSeq(data.finItemVOS, 1003)? addComma(((findSeq(data.finItemVOS, 1003).t2)/100000000).toFixed(0)):'N/A';
+					var seq1003_empty3 = findSeq(data.finItemVOS, 1003)? addComma(((findSeq(data.finItemVOS, 1003).t3)/100000000).toFixed(0)):'N/A';
+					var seq1003_empty4 = findSeq(data.finItemVOS, 1003)? addComma(((findSeq(data.finItemVOS, 1003).lq)/100000000).toFixed(0)):'N/A';
+					
+					var seq1005_empty1 = findSeq(data.finItemVOS, 1005)? addComma(((findSeq(data.finItemVOS, 1005).t1)/100000000).toFixed(0)):'N/A';
+					var seq1005_empty2 = findSeq(data.finItemVOS, 1005)? addComma(((findSeq(data.finItemVOS, 1005).t2)/100000000).toFixed(0)):'N/A';
+					var seq1005_empty3 = findSeq(data.finItemVOS, 1005)? addComma(((findSeq(data.finItemVOS, 1005).t3)/100000000).toFixed(0)):'N/A';
+					var seq1005_empty4 = findSeq(data.finItemVOS, 1005)? addComma(((findSeq(data.finItemVOS, 1005).lq)/100000000).toFixed(0)):'N/A';
+
+					var seq1111_empty1 = findSeq(data.finItemVOS, 1111)? addComma(findSeq(data.finItemVOS, 1111).t1.toFixed(2)):'N/A';
+					var seq1111_empty2 = findSeq(data.finItemVOS, 1111)? addComma(findSeq(data.finItemVOS, 1111).t2.toFixed(2)):'N/A';
+					var seq1111_empty3 = findSeq(data.finItemVOS, 1111)? addComma(findSeq(data.finItemVOS, 1111).t3.toFixed(2)):'N/A';
+					var seq1111_empty4 = findSeq(data.finItemVOS, 1111)? addComma(findSeq(data.finItemVOS, 1111).lq.toFixed(2)):'N/A';
+					
+					var seq1112_empty1 = findSeq(data.finItemVOS, 1112)? addComma(findSeq(data.finItemVOS, 1112).t1.toFixed(2)):'N/A';
+					var seq1112_empty2 = findSeq(data.finItemVOS, 1112)? addComma(findSeq(data.finItemVOS, 1112).t2.toFixed(2)):'N/A';
+					var seq1112_empty3 = findSeq(data.finItemVOS, 1112)? addComma(findSeq(data.finItemVOS, 1112).t3.toFixed(2)):'N/A';
+					var seq1112_empty4 = findSeq(data.finItemVOS, 1112)? addComma(findSeq(data.finItemVOS, 1112).lq.toFixed(2)):'N/A';
+					
+					var seq1101_empty1 = findSeq(data.finItemVOS, 1101)? addComma(findSeq(data.finItemVOS, 1101).t1.toFixed(1)):'N/A';
+					var seq1101_empty2 = findSeq(data.finItemVOS, 1101)? addComma(findSeq(data.finItemVOS, 1101).t2.toFixed(1)):'N/A';
+					var seq1101_empty3 = findSeq(data.finItemVOS, 1101)? addComma(findSeq(data.finItemVOS, 1101).t3.toFixed(1)):'N/A';
+					var seq1101_empty4 = findSeq(data.finItemVOS, 1101)? addComma(findSeq(data.finItemVOS, 1101).lq.toFixed(1)):'N/A';
+					
+					var seq1102_empty1 = findSeq(data.finItemVOS, 1102)? addComma(findSeq(data.finItemVOS, 1102).t1.toFixed(1)):'N/A';
+					var seq1102_empty2 = findSeq(data.finItemVOS, 1102)? addComma(findSeq(data.finItemVOS, 1102).t2.toFixed(1)):'N/A';
+					var seq1102_empty3 = findSeq(data.finItemVOS, 1102)? addComma(findSeq(data.finItemVOS, 1102).t3.toFixed(1)):'N/A';
+					var seq1102_empty4 = findSeq(data.finItemVOS, 1102)? addComma(findSeq(data.finItemVOS, 1102).lq.toFixed(1)):'N/A';
+					
+					var seq1103_empty1 = findSeq(data.finItemVOS, 1103)? addComma(findSeq(data.finItemVOS, 1103).t1.toFixed(1)):'N/A';
+					var seq1103_empty2 = findSeq(data.finItemVOS, 1103)? addComma(findSeq(data.finItemVOS, 1103).t2.toFixed(1)):'N/A';
+					var seq1103_empty3 = findSeq(data.finItemVOS, 1103)? addComma(findSeq(data.finItemVOS, 1103).t3.toFixed(1)):'N/A';
+					var seq1103_empty4 = findSeq(data.finItemVOS, 1103)? addComma(findSeq(data.finItemVOS, 1103).lq.toFixed(1)):'N/A';
+					
+					var seq1104_empty1 = findSeq(data.finItemVOS, 1104)? addComma(findSeq(data.finItemVOS, 1104).t1.toFixed(1)):'N/A';
+					var seq1104_empty2 = findSeq(data.finItemVOS, 1104)? addComma(findSeq(data.finItemVOS, 1104).t2.toFixed(1)):'N/A';
+					var seq1104_empty3 = findSeq(data.finItemVOS, 1104)? addComma(findSeq(data.finItemVOS, 1104).t3.toFixed(1)):'N/A';
+					var seq1104_empty4 = findSeq(data.finItemVOS, 1104)? addComma(findSeq(data.finItemVOS, 1104).lq.toFixed(1)):'N/A';
+					
+					var seq1105_empty1 = findSeq(data.finItemVOS, 1105)? addComma(findSeq(data.finItemVOS, 1105).t1.toFixed(1)):'N/A';
+					var seq1105_empty2 = findSeq(data.finItemVOS, 1105)? addComma(findSeq(data.finItemVOS, 1105).t2.toFixed(1)):'N/A';
+					var seq1105_empty3 = findSeq(data.finItemVOS, 1105)? addComma(findSeq(data.finItemVOS, 1105).t3.toFixed(1)):'N/A';
+					var seq1105_empty4 = findSeq(data.finItemVOS, 1105)? addComma(findSeq(data.finItemVOS, 1105).lq.toFixed(1)):'N/A';
+					
+					var roe_empty1 = findSeq(data.finItemVOS, 1106)? addComma(findSeq(data.finItemVOS, 1106).t1.toFixed(1)):'N/A';
+					var roe_empty2 = findSeq(data.finItemVOS, 1106)? addComma(findSeq(data.finItemVOS, 1106).t2.toFixed(1)):'N/A';
+					var roe_empty3 = findSeq(data.finItemVOS, 1106)? addComma(findSeq(data.finItemVOS, 1106).t3.toFixed(1)):'N/A';
+					var roe_empty4 = findSeq(data.finItemVOS, 1106)? addComma(findSeq(data.finItemVOS, 1106).lq.toFixed(1)):'N/A';
+					
+					var roa_empty1 = findSeq(data.finItemVOS, 1107)? addComma(findSeq(data.finItemVOS, 1107).t1.toFixed(1)):'N/A';
+					var roa_empty2 = findSeq(data.finItemVOS, 1107)? addComma(findSeq(data.finItemVOS, 1107).t2.toFixed(1)):'N/A';
+					var roa_empty3 = findSeq(data.finItemVOS, 1107)? addComma(findSeq(data.finItemVOS, 1107).t3.toFixed(1)):'N/A';
+					var roa_empty4 = findSeq(data.finItemVOS, 1107)? addComma(findSeq(data.finItemVOS, 1107).lq.toFixed(1)):'N/A';
+					
+					var seq1108_empty1 = findSeq(data.finItemVOS, 1108)? addComma(findSeq(data.finItemVOS, 1108).t1.toFixed(1)):'N/A';
+					var seq1108_empty2 = findSeq(data.finItemVOS, 1108)? addComma(findSeq(data.finItemVOS, 1108).t2.toFixed(1)):'N/A';
+					var seq1108_empty3 = findSeq(data.finItemVOS, 1108)? addComma(findSeq(data.finItemVOS, 1108).t3.toFixed(1)):'N/A';
+					var seq1108_empty4 = findSeq(data.finItemVOS, 1108)? addComma(findSeq(data.finItemVOS, 1108).lq.toFixed(1)):'N/A';
+					
+					var seq1113_empty1 = findSeq(data.finItemVOS, 1113)? addComma(findSeq(data.finItemVOS, 1113).t1.toFixed(1)):'N/A';
+					var seq1113_empty2 = findSeq(data.finItemVOS, 1113)? addComma(findSeq(data.finItemVOS, 1113).t2.toFixed(1)):'N/A';
+					var seq1113_empty3 = findSeq(data.finItemVOS, 1113)? addComma(findSeq(data.finItemVOS, 1113).t3.toFixed(1)):'N/A';
+					var seq1113_empty4 = findSeq(data.finItemVOS, 1113)? addComma(findSeq(data.finItemVOS, 1113).lq.toFixed(1)):'N/A';						
+					
+						let th_html = '<tr>\
+										<th>구분</th>\
+										<th>투자지표</th>\
+										<th>단위</th>'
+									if (data.finHeaderVO.t1 != null) {
+										th_html += '<th>'+data.finHeaderVO.t1+'</th>'
+									}
+									if (data.finHeaderVO.t2 != null) {
+										th_html += '<th>'+data.finHeaderVO.t2+'</th>'
+									}
+									if (data.finHeaderVO.t3 != null) {
+										th_html += '<th>'+data.finHeaderVO.t3+'</th>'
+									}
+									if (data.finHeaderVO.lq != null) {
+										th_html += '<th>'+data.finHeaderVO.lq+'</th>'
+									}
+									$("#reportPage9 #thead").append(th_html);
+
+
+					if (data.finHeaderVO.t1 == null) {
+						let tr_html = '<tr>\
+										<td rowspan="4"><strong>영업지표</strong></td>\
+										<td class="left"><strong>매출액</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1001_empty2+'</td>\
+										<td class="right">'+seq1001_empty3+'</td>\
+										<td class="right">'+seq1001_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1002_empty2+'</td>\
+										<td class="right">'+seq1002_empty3+'</td>\
+										<td class="right">'+seq1002_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>세전이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1003_empty2+'</td>\
+										<td class="right">'+seq1003_empty3+'</td>\
+										<td class="right">'+seq1003_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>당기순이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1005_empty2+'</td>\
+										<td class="right">'+seq1005_empty3+'</td>\
+										<td class="right">'+seq1005_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>내재가치</strong></td>\
+										<td class="left"><strong>PER</strong></td>\
+										<td class="left">배</td>\
+										<td class="right" id="p">'+seq1111_empty2+'</td>\
+										<td class="right" id="p">'+seq1111_empty3+'</td>\
+										<td class="right" id="p">'+seq1111_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>PBR</strong></td>\
+										<td class="left">배</td>\
+										<td class="right" id="p">'+seq1112_empty2+'</td>\
+										<td class="right" id="p">'+seq1112_empty3+'</td>\
+										<td class="right" id="p">'+seq1112_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>안정성</strong></td>\
+										<td class="left"><strong>부채비율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1101_empty2+'</td>\
+										<td class="right">'+seq1101_empty3+'</td>\
+										<td class="right">'+seq1101_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>유동비율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1102_empty2+'</td>\
+										<td class="right">'+seq1102_empty3+'</td>\
+										<td class="right">'+seq1102_empty4+'</td>\
+									</tr>\
+									<tr>\
+									<td rowspan="3"><strong>성장성</strong></td>\
+										<td class="left"><strong>매출액증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1103_empty2+'</td>\
+										<td class="right">'+seq1103_empty3+'</td>\
+										<td class="right">'+seq1103_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1104_empty2+'</td>\
+										<td class="right">'+seq1104_empty3+'</td>\
+										<td class="right">'+seq1104_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>자기자본증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1105_empty2+'</td>\
+										<td class="right">'+seq1105_empty3+'</td>\
+										<td class="right">'+seq1105_empty4+'</td>\
+									</tr>\
+										<td rowspan="3" style="background: #FFFFFF"><strong>수익성</strong></td>\
+										<td class="left"><strong>ROE (자기자본이익율)</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+roe_empty2+'</td>\
+										<td class="right">'+roe_empty3+'</td>\
+										<td class="right">'+roe_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>ROA (총자산이익율)</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+roa_empty2+'</td>\
+										<td class="right">'+roa_empty3+'</td>\
+										<td class="right">'+roa_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1108_empty2+'</td>\
+										<td class="right">'+seq1108_empty3+'</td>\
+										<td class="right">'+seq1108_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td><strong>활동성</strong></td>\
+										<td class="left"><strong>총자산회전율</strong></td>\
+										<td class="left">회</td>\
+										<td class="right">'+seq1113_empty2+'</td>\
+										<td class="right">'+seq1113_empty3+'</td>\
+										<td class="right">'+seq1113_empty4+'</td>\
+									</tr>'
+						$("#reportPage9 .tbl").find("tbody").append(tr_html);
+					}
+
+
+					else if (data.finHeaderVO.t2 == null) {
+						let tr_html = '<tr>\
+										<td rowspan="4"><strong>영업지표</strong></td>\
+										<td class="left"><strong>매출액</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1001_empty3+'</td>\
+										<td class="right">'+seq1001_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1002_empty3+'</td>\
+										<td class="right">'+seq1002_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>세전이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1003_empty3+'</td>\
+										<td class="right">'+seq1003_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>당기순이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1005_empty3+'</td>\
+										<td class="right">'+seq1005_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>내재가치</strong></td>\
+										<td class="left"><strong>PER</strong></td>\
+										<td class="left">배</td>\
+										<td class="right" id="p">'+seq1111_empty3+'</td>\
+										<td class="right" id="p">'+seq1111_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>PBR</strong></td>\
+										<td class="left">배</td>\
+										<td class="right" id="p">'+seq1112_empty3+'</td>\
+										<td class="right" id="p">'+seq1112_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>안정성</strong></td>\
+										<td class="left"><strong>부채비율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1101_empty3+'</td>\
+										<td class="right">'+seq1101_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>유동비율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1102_empty3+'</td>\
+										<td class="right">'+seq1102_empty4+'</td>\
+									</tr>\
+									<tr>\
+									<td rowspan="3"><strong>성장성</strong></td>\
+										<td class="left"><strong>매출액증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1103_empty3+'</td>\
+										<td class="right">'+seq1103_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1104_empty3+'</td>\
+										<td class="right">'+seq1104_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>자기자본증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1105_empty3+'</td>\
+										<td class="right">'+seq1105_empty4+'</td>\
+									</tr>\
+										<td rowspan="3" style="background: #FFFFFF"><strong>수익성</strong></td>\
+										<td class="left"><strong>ROE (자기자본이익율)</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+roe_empty3+'</td>\
+										<td class="right">'+roe_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>ROA (총자산이익율)</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+roa_empty3+'</td>\
+										<td class="right">'+roa_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1108_empty3+'</td>\
+										<td class="right">'+seq1108_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td><strong>활동성</strong></td>\
+										<td class="left"><strong>총자산회전율</strong></td>\
+										<td class="left">회</td>\
+										<td class="right">'+seq1113_empty3+'</td>\
+										<td class="right">'+seq1113_empty4+'</td>\
+									</tr>'
+						$("#reportPage9 .tbl").find("tbody").append(tr_html);
+					}
+
+					else if (data.finHeaderVO.t3 == null) {
+						let tr_html = '<tr>\
+										<td rowspan="4"><strong>영업지표</strong></td>\
+										<td class="left"><strong>매출액</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1001_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1002_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>세전이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1003_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>당기순이익</strong></td>\
+										<td class="left">억원</td>\
+										<td class="right">'+seq1005_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>내재가치</strong></td>\
+										<td class="left"><strong>PER</strong></td>\
+										<td class="left">배</td>\
+										<td class="right" id="p">'+seq1111_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>PBR</strong></td>\
+										<td class="left">배</td>\
+										<td class="right" id="p">'+seq1112_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>안정성</strong></td>\
+										<td class="left"><strong>부채비율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1101_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>유동비율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1102_empty4+'</td>\
+									</tr>\
+									<tr>\
+									<td rowspan="3"><strong>성장성</strong></td>\
+										<td class="left"><strong>매출액증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1103_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1104_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>자기자본증가율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1105_empty4+'</td>\
+									</tr>\
+										<td rowspan="3" style="background: #FFFFFF"><strong>수익성</strong></td>\
+										<td class="left"><strong>ROE (자기자본이익율)</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+roe_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>ROA (총자산이익율)</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+roa_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익율</strong></td>\
+										<td class="left">%</td>\
+										<td class="right">'+seq1108_empty4+'</td>\
+									</tr>\
+									<tr>\
+										<td><strong>활동성</strong></td>\
+										<td class="left"><strong>총자산회전율</strong></td>\
+										<td class="left">회</td>\
+										<td class="right">'+seq1113_empty4+'</td>\
+									</tr>'
+						$("#reportPage9 .tbl").find("tbody").append(tr_html);
+					}
+
+
+					else if (data.finHeaderVO.lq == null) {
+						let tr_html = '<tr>\
+										<td rowspan="4"><strong>영업지표</strong></td>\
+										<td class="left"><strong>매출액</strong></td>\
+										<td class="left">억원</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익</strong></td>\
+										<td class="left">억원</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>세전이익</strong></td>\
+										<td class="left">억원</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>당기순이익</strong></td>\
+										<td class="left">억원</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>내재가치</strong></td>\
+										<td class="left"><strong>PER</strong></td>\
+										<td class="left">배</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>PBR</strong></td>\
+										<td class="left">배</td>\
+									</tr>\
+									<tr>\
+										<td rowspan="2"><strong>안정성</strong></td>\
+										<td class="left"><strong>부채비율</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>유동비율</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+									<td rowspan="3"><strong>성장성</strong></td>\
+										<td class="left"><strong>매출액증가율</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익증가율</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>자기자본증가율</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+										<td rowspan="3" style="background: #FFFFFF"><strong>수익성</strong></td>\
+										<td class="left"><strong>ROE (자기자본이익율)</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>ROA (총자산이익율)</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+										<td class="left bl"><strong>영업이익율</strong></td>\
+										<td class="left">%</td>\
+									</tr>\
+									<tr>\
+										<td><strong>활동성</strong></td>\
+										<td class="left"><strong>총자산회전율</strong></td>\
+										<td class="left">회</td>\
+									</tr>'
+						$("#reportPage9 .tbl").find("tbody").append(tr_html);
+					}
+
+
+					else {
+						let tr_html = '<tr>\
+								<td rowspan="4"><strong>영업지표</strong></td>\
+								<td class="left"><strong>매출액</strong></td>\
+								<td class="left">억원</td>\
+								<td class="right">'+seq1001_empty1+'</td>\
+								<td class="right">'+seq1001_empty2+'</td>\
+								<td class="right">'+seq1001_empty3+'</td>\
+								<td class="right">'+seq1001_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>영업이익</strong></td>\
+								<td class="left">억원</td>\
+								<td class="right">'+seq1002_empty1+'</td>\
+								<td class="right">'+seq1002_empty2+'</td>\
+								<td class="right">'+seq1002_empty3+'</td>\
+								<td class="right">'+seq1002_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>세전이익</strong></td>\
+								<td class="left">억원</td>\
+								<td class="right">'+seq1003_empty1+'</td>\
+								<td class="right">'+seq1003_empty2+'</td>\
+								<td class="right">'+seq1003_empty3+'</td>\
+								<td class="right">'+seq1003_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>당기순이익</strong></td>\
+								<td class="left">억원</td>\
+								<td class="right">'+seq1005_empty1+'</td>\
+								<td class="right">'+seq1005_empty2+'</td>\
+								<td class="right">'+seq1005_empty3+'</td>\
+								<td class="right">'+seq1005_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td rowspan="2"><strong>내재가치</strong></td>\
+								<td class="left"><strong>PER</strong></td>\
+								<td class="left">배</td>\
+								<td class="right" id="p">'+seq1111_empty1+'</td>\
+								<td class="right" id="p">'+seq1111_empty2+'</td>\
+								<td class="right" id="p">'+seq1111_empty3+'</td>\
+								<td class="right" id="p">'+seq1111_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>PBR</strong></td>\
+								<td class="left">배</td>\
+								<td class="right" id="p">'+seq1112_empty1+'</td>\
+								<td class="right" id="p">'+seq1112_empty2+'</td>\
+								<td class="right" id="p">'+seq1112_empty3+'</td>\
+								<td class="right" id="p">'+seq1112_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td rowspan="2"><strong>안정성</strong></td>\
+								<td class="left"><strong>부채비율</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+seq1101_empty1+'</td>\
+								<td class="right">'+seq1101_empty2+'</td>\
+								<td class="right">'+seq1101_empty3+'</td>\
+								<td class="right">'+seq1101_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>유동비율</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+seq1102_empty1+'</td>\
+								<td class="right">'+seq1102_empty2+'</td>\
+								<td class="right">'+seq1102_empty3+'</td>\
+								<td class="right">'+seq1102_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td rowspan="3"><strong>성장성</strong></td>\
+								<td class="left"><strong>매출액증가율</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+seq1103_empty1+'</td>\
+								<td class="right">'+seq1103_empty2+'</td>\
+								<td class="right">'+seq1103_empty3+'</td>\
+								<td class="right">'+seq1103_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>영업이익증가율</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+seq1104_empty1+'</td>\
+								<td class="right">'+seq1104_empty2+'</td>\
+								<td class="right">'+seq1104_empty3+'</td>\
+								<td class="right">'+seq1104_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>자기자본증가율</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+seq1105_empty1+'</td>\
+								<td class="right">'+seq1105_empty2+'</td>\
+								<td class="right">'+seq1105_empty3+'</td>\
+								<td class="right">'+seq1105_empty4+'</td>\
+							</tr>\
+								<td rowspan="3" style="background: #FFFFFF"><strong>수익성</strong></td>\
+								<td class="left"><strong>ROE (자기자본이익율)</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+roe_empty1+'</td>\
+								<td class="right">'+roe_empty2+'</td>\
+								<td class="right">'+roe_empty3+'</td>\
+								<td class="right">'+roe_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>ROA (총자산이익율)</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+roa_empty1+'</td>\
+								<td class="right">'+roa_empty2+'</td>\
+								<td class="right">'+roa_empty3+'</td>\
+								<td class="right">'+roa_empty4+'</td>\
+							</tr>\
+							<tr>\
+								<td class="left bl"><strong>영업이익율</strong></td>\
+								<td class="left">%</td>\
+								<td class="right">'+seq1108_empty1+'</td>\
+								<td class="right">'+seq1108_empty2+'</td>\
+								<td class="right">'+seq1108_empty3+'</td>\
+								<td class="right">'+seq1108_empty4+'</td>\
+							</tr>\
+							 <tr>\
+							 	<td><strong>활동성</strong></td>\
+							 	<td class="left"><strong>총자산회전율</strong></td>\
+							 	<td class="left">회</td>\
+							 	<td class="right">'+seq1113_empty1+'</td>\
+							 	<td class="right">'+seq1113_empty2+'</td>\
+							 	<td class="right">'+seq1113_empty3+'</td>\
+							 	<td class="right">'+seq1113_empty4+'</td>\
+							 </tr>'
+
+						$("#reportPage9 .tbl").find("tbody").append(tr_html);
+
+					}
+
+					/* $("#reportPage9 .right").each(function (index, data) {
+                        if (data.innerHTML < 0) {
+                            $(data).addClass("txt_red");
+                        }
+                    }) */
+					$("#reportPage9 #p").each(function (index, data) {
+						if (data.innerHTML < 0 || data.innerHTML == 0) {
+							data.innerHTML = 'N/A';
+						}
+					})
+					$("#reportPage9 .right").each(function (index, data) {
+						if (data.innerHTML == 0) {
+							data.innerHTML = 'N/A';
+						}
+					})
+				})
+					.catch(function (error) {
+						console.log('request failed', error)
+					});
+
+			  fetch(url0)
+					  .then(res => res.json())
+					  .then(data => {
+						  $.each(data.fundamentalItems, function(index,row){
+							  if(index > 3){
+								  let tr_html = '<tr>\
+											<td><strong>'+ row.itemName +'</strong></td>\
+											<td>%</td>\
+											<td class="right">'+ row.t1 +'</td>\
+											<td class="right">'+ row.t2 +'</td>\
+											<td class="right">'+ row.t3 +'</td>\
+											<td class="right">'+ row.t4 +'</td>\
+				 			   			  </tr>'
+								  $("#reportPage9 .tbl").find("tbody").append(tr_html);
+							  }
+						  })
+						  $("#reportPage9 .right").each(function (index, item) {
+							  if (parseFloat(item.innerHTML) < 0) {
+								  $(item).addClass("txt_red");
+							  }
+						  })
+					  })
+					  .catch(function (error) {
+						  console.log('request failed', error)
+					  });
+
+		fetch(url0)
+				.then(res => res.json())
+				.then(data1 => {
+					fetch(url3)
+							.then(res => res.json())
+							.then(data4 => {
+								fetch(url4)
+										.then(res => res.json())
+										.then(data2 => {
+											fetch(url5)
+													.then(res => res.json())
+													.then(data3 => {
+														var chartData1 = []
+														var chartData2 = []
+														var chartData3 = []
+														var name = data1.isuKorNm
+														for(var idxKospi in data2) {
+															chartData1.push([fnGetTime(data2[idxKospi].trdDd),data2[idxKospi].priceRate]);
+														}
+														for(var idxKospi in data3) {
+															chartData2.push([fnGetTime(data3[idxKospi].trdDd),data3[idxKospi].priceRate]);
+														}
+														for(var idxKospi in data4) {
+															chartData3.push([fnGetTime(data4[idxKospi].trdDd),data4[idxKospi].priceRate]);
+														}
+		
+														Highcharts.chart('page9Chart', {
+		
+															title:'종목추이',
+															yAxis: {
+																title: {
+																	text: ''
+																},
+															},
+															xAxis:{
+																type:'datetime',
+																labels: {
+																	format: '{value:%Y-%m-%d}'
+																},
+															},
+															tooltip: {
+																split: true,
+																valueSuffix: '%'
+															},
+															plotOptions: {
+																series: {
+																	allowOverlap: true,
+																	marker: {
+																		enabled: false
+																	},
+																animation:false
+																}
+															},
+															labels: {
+																enabled: false
+															},
+															series: [
+																{
+																	name:'KOSPI',
+																	data: chartData1,
+																	lineWidth: 1
+																},
+																{
+																	name: name,
+																	data: chartData2,
+																	lineWidth: 1
+																},
+																{
+																	name:'KOSDAQ',
+																	data: chartData3,
+																	lineWidth: 1
+																},
+		
+															],
+															credits: {
+																enabled: false
+															},
+		
+		
+														});
+													})
+													.catch(function (error) {
+														console.log('request failed', error)
+													});
+		
+								})
+								.catch(function (error) { 
+										console.log('request failed', error) 
+									});
+							})
+							.catch(function (error) { 
+								console.log('request failed', error) 
+							});
+					
+				})
+				.catch(function (error) { 
+						console.log('request failed', error) 
+					});
+			
+			
+
+			
+		  })
+		  function fnGetTime(date_str){
+						return Date.UTC(
+							parseInt(date_str.substring(0,4)),
+							parseInt(date_str.substring(4,6))-1,
+							parseInt(date_str.substring(6,8)),
+							0,
+							0
+						)
+						}
+		  
+		  function findSeq(list, element) {
+			  return list.find(function (data){
+				  return data.itemSeq == element})
+		  }
+	  </script>
+</body>
+</html>

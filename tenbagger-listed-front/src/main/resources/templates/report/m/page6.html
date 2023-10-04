@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page6 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	 <!--  <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page6">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">6</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(2) 주요기술부문별 경쟁력 수준</h3>
+					<ul class="list">
+						<li>아래의 사분면 분석차트는 <span class="isuKorNm"></span>의 등록 특허를 대상으로 주요 기술 부문별 집중도 및 기술 수준을 비교한 것입니다. 수평축 은 해당 기업의 특허평가 평균점수(APES)를 나타내고, 수직축은 등록특허 수를 나타냅니다. APES가 높은 분야는 다른 분야에 비해 기술 수준이 높다는 뜻이고, 등록 특허수가 많은 분야는 연구개발이 활발한 분야를 뜻합니다.</li>
+						<li>이 두 가지 척도를 가지고 각 분야는 네 영역으로 구분할 수 있습니다.</li>
+					</ul>
+				</div>
+				<div class="bx_chart full" id="chart_page6_comp">
+				</div>
+				<div class="unit">
+					<div class="desc">
+						APES (Average Patent Evaluation Score, 특허 평가 평균 점수) 는 각 기술부문별 특허의 점수를 평균한 것으로, 개별 특허의 평가 점수는 (주)위즈도메인에서 개발된 통계적 특허 평가 방법으로 계산된 것입니다.
+					</div>
+				</div>
+				<div class="unit">
+					<h3>(3) 주요기술부문별 특허 출원 동향</h3>
+					<div class="desc">최근 10년간, <span class="isuKorNm"></span>의 주요기술부문별 출원 동향을 표시합니다.</div>
+				</div>
+				<div class="bx_chart full" id="chart_page6_patent">
+				</div>
+					<div class="unit">
+					<table class="tbl type1">
+						<colgroup>
+							<col width="120"/>
+						</colgroup>
+						<thead>
+							<!-- <tr class="top">
+								<th colspan="2">기술부분</th>
+								<th colspan="10">출원건수</th>
+							</tr>
+							<tr class="sub_top">
+								<th>IRC코드</th>
+								<th>기술부문명</th>
+								<th>2011</th>
+								<th>2012</th>
+								<th>2013</th>
+								<th>2014</th>
+								<th>2015</th>
+								<th>2016</th>
+								<th>2017</th>
+								<th>2018</th>
+								<th>2019</th>
+								<th>2020</th>
+							</tr> -->
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		  $(function(){
+			  	let params = {bizNo: getParameter("bizNo") , isuSrtCd: getParameter("isuSrtCd")};
+				let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&'); 
+				let url1 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+				let url2 = 'https://c-api.10bagger.co.kr/v1/report/technology?' + query;
+				
+				fetch(url2) 
+					.then(res => res.json()) 
+					.then(data => { 
+							var series = [];	
+							let tr_html = '<tr class="top">\
+								<th>기술부분</th>\
+								<th colspan="5">출원건수</th>\
+								</tr>\
+								<tr class="sub_top">\
+								<th rowspan="2">[IRC코드]<br/>기술부문명</th>\
+								<th>'+data.ipcs[0].annuals[9].year+'</th>\
+								<th>'+data.ipcs[0].annuals[8].year+'</th>\
+								<th>'+data.ipcs[0].annuals[7].year+'</th>\
+								<th>'+data.ipcs[0].annuals[6].year+'</th>\
+								<th>'+data.ipcs[0].annuals[5].year+'</th>\
+								</tr>\
+								<tr class="sub_top">\
+								<th>'+data.ipcs[0].annuals[4].year+'</th>\
+								<th>'+data.ipcs[0].annuals[3].year+'</th>\
+								<th>'+data.ipcs[0].annuals[2].year+'</th>\
+								<th>'+data.ipcs[0].annuals[1].year+'</th>\
+								<th>'+data.ipcs[0].annuals[0].year+'</th>\
+							</tr>'
+						$("#reportPage6 .tbl").find("thead").append(tr_html);
+							$.each(data.ipcs, function(index, row){
+								let tr_html = '<tr>\
+									<td rowspan="2">'+row.ic+'<br/>'+row.icName+'</td>\
+									<td class="t">'+row.annuals[9].cnt+'</td>\
+									<td class="t">'+row.annuals[8].cnt+'</td>\
+									<td class="t">'+row.annuals[7].cnt+'</td>\
+									<td class="t">'+row.annuals[6].cnt+'</td>\
+									<td class="t">'+row.annuals[5].cnt+'</td>\
+									</tr>\
+									<tr>\
+									<td class="t">'+row.annuals[4].cnt+'</td>\
+									<td class="t">'+row.annuals[3].cnt+'</td>\
+									<td class="t">'+row.annuals[2].cnt+'</td>\
+									<td class="t">'+row.annuals[1].cnt+'</td>\
+									<td class="t">'+row.annuals[0].cnt+'</td>\
+									</tr>'
+								$("#reportPage6 .tbl").find("tbody").append(tr_html);
+								$("#reportPage6 .t").each(function (index, item) {
+									if(item.innerHTML == 0) {
+										item.innerHTML = '';
+									}
+								})
+								let data = {
+											label: {
+						             					enabled: false
+						        					},
+											marker: {
+				                        		enabled: true,
+				                        		symbol: 'circle',
+				                        		radius: 6,
+				                        		states: {
+				                           					hover: {
+				                                				enabled: false,
+				                            				}
+				                        				}
+								 				}
+						        			};
+								data.name = row.icName;
+								data.data = []
+								for(var i = 0 ; i < 10 ; i++){
+									data.data.unshift(row.annuals[i].cnt);
+								}
+								series.push(data)
+							});							
+							Highcharts.chart('chart_page6_patent', {
+								chart: {
+									backgroundColor: '#F2F2F2',
+									width:900,
+								    height:300,
+								    marginLeft:200,
+								    marginRight:100,
+								    marginTop:-300,
+								    marginBottom:400,
+									},
+								  title: {
+								       text: ''
+								  },
+
+								  yAxis: {
+								    title: {
+								      text: '특허출원건수',
+								      style: {
+								    	  fontFamily: 'NanumSquare',
+								    	  color: '#595959',
+								    	  fontSize: '40px',
+								    	  letterSpacing: '-0.5px'
+								    	  }
+								    },
+								  	min:0,
+									tickInterval:1,
+								  	labels: {
+										  style: {
+										  fontSize: '28px',
+										  color: '#BFBFBF'
+										  }
+									  }
+								  	
+								  },
+
+								  xAxis: {
+									  title: {
+									      text: '특허출원연도',
+									      style: {
+									    	  fontFamily: 'NanumSquare',
+									    	  color: '#595959',
+									    	  fontSize: '40px',
+									    	  letterSpacing: '-0.5px',									    	 
+									    	  }
+									    },
+									  categories:["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"],
+									  labels: {
+										  style: {
+										  fontSize: '28px',
+										  color: '#BFBFBF'
+										  }
+									  },
+									  lineWidth: 0,
+								  },
+
+								  legend: {
+								    layout: 'vertical',
+								    align: 'right',
+								    itemMarginBottom:10,
+								    verticalAlign: 'middle',
+								    itemStyle:{
+								    	fontFamily: 'NanumSquare',
+								    	fontSize: "30px",
+								    	color: '#595959',
+								    	letterSpacing: '-0.4px',
+								    }
+								  },
+								  tooltip: { enabled: false },
+								  
+
+								  series: series,
+									
+								  credits: {
+									    enabled: false
+									  },
+								  exporting: {
+									    enabled: false
+									  },
+								  plotOptions: {
+										    series: {
+										        states: {
+										            inactive: {
+										                opacity: 1
+										            },
+									  				hover:{
+									  					enabled:false
+									  				},
+										        },
+										        events: {
+								  		            legendItemClick: function() {
+								  		              return false;
+								  		            }
+								  				},
+												animation:false
+										    }
+										}
+								 	
+
+
+							});
+							
+							let series_comp = [{z:2}];
+							$.each(data.quadrantIcs, function(index, row){
+								let data = {};
+								data.name = row.quadrant;
+								data.x = row.pes;
+								data.y = row.patentCnt;
+								data.z = 1;
+								series_comp.push(data);
+							});
+							
+							Highcharts.chart('chart_page6_comp', {
+							    chart: {
+							        type: 'bubble', 
+							        backgroundColor:'#F2F2F2',
+							        plotBorderWidth: 1,
+							        width:900,
+							        height:300,
+							        marginLeft:200,
+							        marginRight:90,
+							        marginTop:-400,
+							        events: {
+							            load: function() {	
+							              var chart = this;
+							              /* this.yAxis[0].addPlotLine({
+							                  value: this.yAxis[0].max/2,
+							                  width: 1
+							                }); */
+							              chart.renderer.label('<strong style="color:black;font-size:22px">다기술보유분야</strong></br>기술 수준은 높지 않지만</br> 특허를 많이 보유하고 있는</br> 분야', 10, -350)
+								                .add()
+								                .css({
+								                  fontFamily:"NanumSquare",
+								                  color:"#595959",
+								                  fontSize:"15px",
+								                  letterSpacing:"-0.5px"
+								                })
+								          chart.renderer.label('<strong style="color:black;font-size:22px">악세 분야</strong></br>기술 수준은 높지않고</br> 보유한 특허 수도 많지 않은</br> 분야', 10, 50)
+								                .add()
+								                .css({				
+								                  fontFamily:"NanumSquare",
+								                  color:"#595959",
+								                  fontSize:"15px",
+								                  letterSpacing:"-0.5px"
+								                })
+								          chart.renderer.label('<strong style="color:black;font-size:22px">선도 분야</strong></br>기술 수준이 높고</br> 특허를 많이 보유한</br> 분야', 815, -350)
+								                .add()
+								                .css({			
+								                  fontFamily:"NanumSquare",
+								                  color:"#595959",
+								                  fontSize:"15px",	
+								                  letterSpacing:"-0.5px"
+								                })
+								          chart.renderer.label('<strong style="color:black;font-size:22px">전문 분야</strong></br>상대적으로 보유한 특허가</br> 많지는 않지만 높은 수준의</br> 기술을 보유한 분야', 815, 50)
+								                .add()
+								                .css({		
+								                  fontFamily:"NanumSquare",
+								                  color:"#595959",
+								                  fontSize:"15px",
+								                  letterSpacing:"-0.5px"
+								                })    
+							            }						  
+							         },
+
+							    },
+
+							    legend: {
+							        enabled: false
+							    },
+
+							    title: {
+							        text: ''
+							    },
+							    exporting: {
+								    enabled: false
+								  },
+							  	credits: {enabled: false},				    
+							  	tooltip: { enabled: false },
+							    xAxis: {
+							    	gridLineColor: '#808080',
+							    	gridLineWidth: 0.7,
+							        lineWidth: 0,
+							        minorGridLineWidth: 0,
+							        minorTickLength: 0,						        
+							        tickLength: 0,
+							        min:0,
+							        max:100,
+							        tickInterval:50,
+							        title: {
+							            text: '특허평가 평균점수(APES)',
+						            	style: {
+						            		  fontFamily: 'NanumSquare',
+									    	  color: '#595959',
+									    	  fontSize: '40px',
+									    	  letterSpacing: '-0.5px',
+									    	  }
+							        },	
+							        labels: {
+										  style: {
+										  fontSize: '28px',
+										  color: '#BFBFBF'
+										  }
+									  }
+							        
+							    },
+
+							    yAxis: {
+							    	gridLineColor: '#808080',
+							        min:0,
+							        tickAmount: 3,
+							        gridLineWidth: 0.5,
+							        minorGridLineWidth: 0,
+							        title: {
+							            text: '특허보유건수',
+						            	style: {
+						            		  fontFamily: 'NanumSquare',
+									    	  color: '#595959',
+									    	  fontSize: '40px',
+									    	  letterSpacing: '-0.5px',
+									    	  }
+							        },	     
+							        labels: {
+										  style: {
+										  fontSize: '28px',
+										  color: '#BFBFBF'
+										  }
+									  }
+							        						        
+							    },
+							    tooltip: {
+							        useHTML: true,
+							        headerFormat: '<div>',
+							        pointFormat: '<p>기업명: {point.name}</p>'+
+							        	'<p>특허평가 평균점수: {point.x}</p>' +
+							            '<p>특허보유건수: {point.y}</p>',
+							        footerFormat: '</div>',
+							        
+							    },
+							    plotOptions: {
+							        series: {
+							            dataLabels: {
+							                enabled: true,
+							                format: '{point.name}',
+							                style: {
+												  fontSize: '24px',										  
+												  },
+							                allowOverlap:true,
+							                y:-16
+							            },
+										animation:false
+							        },
+							  		bubble: {
+							  			minSize:20,
+							  	      maxSize:20,
+							  		},
+							    },
+
+							    series: [{
+						 	       data: series_comp
+							    }],						   
+							});
+						
+						})
+				.catch(function (error) { 
+					console.log('request failed', error) 
+					});
+				
+				
+		  });
+	  </script>
+</body>
+</html>

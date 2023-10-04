@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page16 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page16">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">16</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(7) 특허매입 현황</h3>
+					<p class="desc"><span class="isuKorNm"></span>의 최근 10년간 특허 매입 동향입니다. 기업은 특허 라이선스 매출을 증대시키려는 목적이나 기술력의 보강 또는 목표시장에 신속하게 진입하기 위해서 특허를 매입하 게 됩니다. 특허 매입 현황을 모니터링하면 그 기업의 경영 전략과 비즈니스 방향을 파악할 수 있습니다.</p>
+				</div>
+				<div class="bx_chart">
+					<div class="tit"><span>최근 10년간 특허 매입 동향</span></div>
+					<div id="chart16">
+					</div>
+				</div>
+				<div class="unit">
+					<h3>매입특허 (최근 매입 특허 순 30개 특허)</h3>
+					<ul class="list_patent">
+						<!-- <li>
+							<dl>
+								<dt>특허번호.</dt>
+								<dd class="colb">
+									<a href="#" target="_blank"></a>
+									<p><strong></strong></p>
+								</dd>
+							</dl>
+							<p>
+								
+							</p>
+							<div class="colb">
+								<p class="date">매입일: </p>
+								<p class="date">매입일: </p>
+							</div>
+						</li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage16 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage16 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/transfer',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				$.each(data.transferPatents, function(index, item) {
+					let table_html = '<li>\
+										<dl>\
+											<dt>특허번호.</dt>\
+											<dd class="colb">\
+												<a href='+item.link+' target="_blank">'+item.patnv+'</a>\
+												<p><strong>'+item.nname+'</strong></p>\
+											</dd>\
+										</dl>\
+										<p>\
+										'+item.ttl+'\
+										</p>\
+										<div class="colb">\
+											<p class="date">출원일: '+item.apd+'</p>\
+											<p class="date">매입일: '+item.assignDate+'</p>\
+										</div>\
+									</li>'
+						$("#reportPage16 .list_patent").append(table_html);
+				})
+				Highcharts.chart('chart16', {
+				    chart: {
+				        type: 'column',
+				        width: 240,
+				        height: 130,
+				        backgroundColor:'rgba(255, 255, 255, 0)',
+				        events: {
+				            load: function() {
+				              var chart = this;
+				              var bottom = chart.plotHeight+25;
+				              
+				              $.each(chart.series[0].data,function(i,data){
+				              
+				                  data.dataLabel.attr({
+				                      y: bottom
+				                  });
+				              });
+				             
+				            }
+				          }
+				    },
+				    title: {
+				    	text: ''
+				    },
+				    tooltip: {
+				    	enabled: true
+				    },
+				    legend: {
+				    	enabled: true,
+				    	layout: 'vertical',
+				    	floating:true,
+	  				    align: 'left',
+	  				    verticalAlign: 'bottom',	
+		  				symbolHeight: 10,
+					    symbolWidth: 10,
+					    symbolPadding: 2,
+					    symbolRadius: 0,
+	  			    	itemStyle: {
+	  						fontFamily: 'NanumSquare',
+	  					  	fontSize: '7px',
+	  					 	color: '#BFBFBF',
+	  					 	fontWeight:'bold'
+	  					  },
+				    	x:-15,
+  						y:20
+				    },
+				    exporting: {
+                        enabled: false
+                    },
+                    credits: {
+                    	enabled: false
+                    },
+				    xAxis: {
+				        type: 'category',
+				        labels:{
+  					    	style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '8px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold'
+  							  }
+  					    }
+				    },
+				    yAxis: {				    	
+				        min: 0,
+				        tickInterval: 5,
+				        title: {
+				            text: '특허매입건수',
+			            	style: {
+						    	  fontFamily: 'NanumSquare',
+						    	  color: '#595959',
+						    	  fontSize: '10px',
+						    	  letterSpacing: '-0.5px',									    	 
+						    	  }
+				        },
+				        labels:{
+  					    	style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '8px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold'
+  							  }
+  					    }
+				    },
+				    plotOptions:{
+				    	series: {
+					        states: {
+					            inactive: {
+					                opacity: 1
+					            },
+				  				hover:{
+				  					enabled:true
+				  				},
+					        },
+					        events: {
+			  		            legendItemClick: function() {
+			  		              return false;
+			  		            }
+			  				},
+							animation:false
+					    }
+				    },
+				    series: [{
+				        name: '매입특허수',
+				        color: "#395592",
+				        data: [
+				            [data.transferByYear[0].year, data.transferByYear[0].tranferCnt],
+				            [data.transferByYear[1].year, data.transferByYear[1].tranferCnt],
+				            [data.transferByYear[2].year, data.transferByYear[2].tranferCnt],
+				            [data.transferByYear[3].year, data.transferByYear[3].tranferCnt],
+				            [data.transferByYear[4].year, data.transferByYear[4].tranferCnt],
+				            [data.transferByYear[5].year, data.transferByYear[5].tranferCnt],
+				            [data.transferByYear[6].year, data.transferByYear[6].tranferCnt],
+				            [data.transferByYear[7].year, data.transferByYear[7].tranferCnt],
+				            [data.transferByYear[8].year, data.transferByYear[8].tranferCnt],
+				            [data.transferByYear[9].year, data.transferByYear[9].tranferCnt]
+				        ],
+				        dataLabels: {
+				            enabled: true,	
+				            style: {
+  								fontFamily: 'NanumSquare',
+  							  	fontSize: '8px',
+  							 	color: '#BFBFBF',
+  							 	fontWeight:'bold',
+  							 	textOutline:'0px'
+  							  }
+				        }
+				    }]
+				});
+			}
+		});
+		
+	});
+</script>
+</body>
+</html>

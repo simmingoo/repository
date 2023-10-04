@@ -1,0 +1,92 @@
+<script>
+    $(document).ready( function () {
+        sectorOutline(sectorNo);
+        $("#save_outline_btn").click(function () {
+            saveOutline();
+        })
+    });
+</script>
+<div style="page-break-before:always">
+    <!-- 날짜 //-->
+    <div class="xl-date xl-flex-row xl-right">
+        Weekly Report Date : 2022.02.17
+    </div>
+
+    <div class="xl-note-1">
+        <input type="text" id="" class="xl-note-1-input">
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" class="xl-btn-i" value="날짜 적용">
+    </div>
+
+    <!-- 1. 개요 //-->
+    <div class="xl-title-s1">
+        1. 개요
+    </div>
+
+    <div class="xl-note-1" id="outline_div">
+    </div>
+
+    <div class="xl-note-1">
+        <textarea id="outline" class="xl-note-1-textarea"></textarea>
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button"  id="save_outline_btn" class="xl-btn-i" value="개요 내용 적용">
+    </div>
+
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- 2. 업계 주간 이슈 및 기술 트렌드 //-->
+    <div class="xl-title-s1">
+        2. 업계 주간 이슈 및 기술 트렌드
+    </div>
+    <div id="issue_div" class="xl-note-1">
+
+<!--        반도체는 2020년 기준 시총 연간증가율이 0.58%로 성장 추세에 있는 분야입니다.-->
+
+<!--        최근 1년 반도체 분야에서 등록된 특허건수는 6,094건으로 증가 추세에 있고, 반도체 기술 분야에 신규로 진입한 기업의 수도 426社로 증가 추세입니다. 시장이 성장할 경우 신규 진입하는 기업수는 증가합니다.-->
+
+<!--        업계 동향을 살펴보면 SK하이닉스가 연산 기능을 갖춘 차세대 메모리반도체인 PIM(Processing-In-Memory)을 개발했다고 16일 밝혔습니다.-->
+
+<!--        PIM은 메모리 반도체에 연산 기능을 더해 인공지능(AI)과 빅데이터 처리 분야에서 데이터 이동 정체 문제를 풀어낼 수 있는 차세대 기술로 꼽힙니다. 그동안 메모리 반도체는 데이터 저장 역할을 맡고, 사람의 뇌와 같은 기능인 연산(Processing) 기능은 비메모리 반도체인 중앙처리장치(CPU)나 그래픽처리장치(GPU)가 담당한다는 것이 일반적인 인식이었습니다. 그러나 SK하이닉스는 연산도 할 수 있는 '차세대 스마트 메모리'를 꾸준히 연구해왔고, 이번에 첫 결과물을 선보이게 됐습니다.-->
+
+<!--        SK하이닉스는 PIM이 적용된 첫 제품으로 'GDDR6-AiM'(Accelerator in Memory) 샘플을 개발했습니다. 이는 초당 16기가비트(Gbps) 속도로 데이터를 처리하는 GDDR6 메모리에 연산 기능이 더해진 제품입니다. 일반 D램 대신 이 제품을 CPU·GPU와 함께 탑재하면 특정 연산의 속도는 최대 16배까지 빨라져 머신러닝, 고성능 컴퓨팅, 빅데이터의 연산과 저장 등에 활용될 수 있을 전망입니다. 이 제품은 GDDR6의 기존 동작 전압인 1.35V보다 낮은 1.25V에서 구동되며, 데이터 이동을 줄여 기존 제품 대비 에너지 소모는 80%가량 줄어든다고 회사 측은 설명했습니다.-->
+
+<!--        SK하이닉스는 이달 말 미국 샌프란시스코에서 열리는 반도체 분야 세계 최고 권위 학회인 '2022 국제 고체 회로 학술회의(ISSCC)'에서 PIM 개발 성과를 공개할 예정입니다. 향후 이 기술이 진화하면 스마트폰 등 정보통신기술(ICT) 기기에서 메모리반도체가 중심적인 역할을 하는 '메모리 센트릭(Memory Centric) 컴퓨팅'도 가능해질 것으로 회사는 기대하고 있습니다.-->
+<!--        -->
+<!--        -->
+    </div>
+    <i>※출처 : <a id="sourceLink_a" href="https://www.yna.co.kr/view/AKR20220216038600003?input=1195m">https://www.yna.co.kr/</a></i>
+
+    <div class="xl-note-1">
+        <textarea id="issue" class="xl-note-1-textarea"></textarea>
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" id="outline_save_btn" class="xl-btn-i" value="이슈/트랜드 내용 적용">
+    </div>
+
+    <div class="xl-note-1">
+        <input type="text" id="sourceLink" class="xl-note-1-input">
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" class="xl-btn-i" value="출처 적용">
+    </div>
+
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- ### 푸터 ### //-->
+    <div class="xl-footer xl-flex-row xl-left">
+        <div class="xl-pageno xl-flex-row xl-center">- 1 -</div>
+        <div class="xl-logobg xl-flex-col xl-center">
+            <img class="xl-logo" src="/extstatic/img/l/logo-10bagger-tp01.png">
+        </div>
+    </div>
+
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-page-bar">&nbsp;</div>
+
+</div>

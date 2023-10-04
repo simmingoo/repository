@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=595, user-scalable=yes"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"><!--s : v04 반응형 추가 -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="Description" content="사이트 설명">
+    <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+    <title>cover Report</title> <!-- [페이지명 | 사이트명] -->
+    <script>
+
+        $(document).ready(function (){
+            let isuKorNm, isuSrtCd;
+            isuKorNm =  sessionStorage.getItem('isuKorNm');
+            isuSrtCd = sessionStorage.getItem('detailIsuSrtCd');
+
+            if(isuSrtCd == null|| isuSrtCd == '') {
+                isuSrtCd = getParameter("isuSrtCd")
+                if(isuSrtCd == null || isuSrtCd == '') {
+                    $("#title_name").text(isuKorNm)
+                }else {
+                    $("#title_name").text(isuKorNm+'('+isuSrtCd+')')
+                }
+            } else {
+                $("#title_name").text(isuKorNm+'('+isuSrtCd+')')
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="page cover" style="page-break-before:always;" >
+    <h1 id="title_name"></h1>
+    <!-- <img src="../../img/cover.jpg" alt="기술분석리포트"/> -->
+</div>
+</body>
+</html>

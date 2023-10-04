@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+    <title>native call test page</title>
+    <script type='text/javascript'>
+
+        function getCookie(name) {
+            var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return value? value[2] : "";
+        }
+        function nativeFuntion(json){
+            var device = getCookie("device-welcomepay");
+            if (device == "android"){
+                //�ȵ���̵� ��
+                var params = JSON.stringify(json);
+                window.AndroidNative.callFunction(params);
+            }else if (device == "ios"){
+                //ios ��
+                var params = json
+                webkit.messageHandlers.callFunction.postMessage(params);
+            }else{
+                //��
+            }
+        }
+
+        function getToken() {
+            //Ǫ�� ��ū�� �������� ���� ȣ���ϴ� �Լ�
+            var json = {
+                callMethod : "getToken",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            //��� :{"callMethod":"getToken","resultData":{"token":"dHhmv4A8gyg:APA91bEqqOHAwXGlOOlaENI8v3s9AjM_My2c1pMSsvsXfGwLVxEjdRQ8Y3d7tZY9BT0ZGuOqeGbDYz_GFjCSVW3at-7vAowHkdYXNepjUIpWANa2gRykdDGrLxPtIlpmIOYimUcyASf9"}}
+            //token Ǫ�� ��ū
+        }
+
+        function getDeviceInfo() {
+            //����̽� ������ �������� ���� ȣ���ϴ� �Լ�
+            var json = {
+                callMethod : "getDeviceInfo",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            //��� :{"callMethod":"getDeviceInfo","resultData":{"id":"be0460b56161459e","device_name":"SM-N950N","device_version":"9","app_version":"1.0"}}
+            //id ����̽� id
+            //device_name ����̽� ����
+            //device_version �ȵ���̵� ����
+            //app_version �۹���
+        }
+
+        function appleLogin() {
+            //���� �α��� ����
+            var json = {
+                callMethod : "appleLogin",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            //��� : {"callMethod":"appleLogin","resultData":{"result":"-2","resultMessage":"cancelled.","user_id":"","user_email":"","user_nickname":"","user_profile":""}}
+            //��� : {"callMethod":"appleLogin","resultData":{"result":"1","resultMessage":"Success","user_id":1702421215,"user_email":"mnk@kakao.com","user_nickname":"������","user_profile":""}}
+            // result -1 ����, -2 ��������, 1 ����
+            // user_id �������̵�
+            // user_email �����̸���
+            // user_nickname �����г���
+            // user_profile ������ �̹��� ���
+        }
+        function kakaoLogin() {
+            //īī�� �α��� ����
+            var json = {
+                callMethod : "kakaoLogin",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            //��� : {"callMethod":"kakaoLogin","resultData":{"result":"-2","resultMessage":"cancelled.","user_id":"","user_email":"","user_nickname":"","user_profile":""}}
+            //��� : {"callMethod":"kakaoLogin","resultData":{"result":"1","resultMessage":"Success","user_id":1702421215,"user_email":"mnk@kakao.com","user_nickname":"������","user_profile":"https:\/\/k.kakaocdn.net\/dn\/6OZBB\/btq2feRqbaJ\/tCgVOdktkThbtb6Pc5oa10\/img_110x110.jpg"}}
+            // result -1 ����, -2 ��������, 1 ����
+            // user_id �������̵�
+            // user_email �����̸���
+            // user_nickname �����г���
+            // user_profile ������ �̹��� ���
+        }
+
+        function naverLogin() {
+            //īī�� �α��� ����
+            var json = {
+                callMethod : "naverLogin",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            //��� : {"callMethod":"naverLogin","resultData":{"result":"-2","resultMessage":"cancelled.","user_id":"","user_email":"","user_nickname":"","user_profile":""}}
+            //��� : {"callMethod":"naverLogin","resultData":{"result":"1","resultMessage":"Success","user_id":1702421215,"user_email":"mnk@kakao.com","user_nickname":"������","user_profile":"https:\/\/k.kakaocdn.net\/dn\/6OZBB\/btq2feRqbaJ\/tCgVOdktkThbtb6Pc5oa10\/img_110x110.jpg"}}
+            // result -1 ����, -2 ��������, 1 ����
+            // user_id �������̵�
+            // user_email �����̸���
+            // user_nickname �����г���
+            // user_profile ������ �̹��� ���
+        }
+
+        function biometricPrompt() {
+            //��ü���� ��û
+            var json = {
+                callMethod : "biometricPrompt",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            //��� : {"callMethod":"biometricPrompt","resultData":{"result":"-1","resultMessage":"Biometric authentication is not supported or biometric authentication is not registered"}}
+            //��� : {"callMethod":"biometricPrompt","resultData":{"result":"1","resultMessage":"Success"}}
+            //result -1 ����, -2 ��������, 1 ����
+            //resultMessage
+        }
+
+        function biometricPromptCancel() {
+            //��ü���� ��û
+            var json = {
+                callMethod : "biometricPromptCancel"
+            };
+            nativeFuntion(json);
+            //��� ����
+        }
+
+        function checkPermission() {
+            //���ѿ�û
+            var json = {
+                callMethod : "checkPermission",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            // ��� : {"callMethod":"checkPermission","resultData":{"result":"-1"}
+            // ��� : {"callMethod":"checkPermission","resultData":{"result":"1"}
+            // result -1 �ϳ��� ���� ����, 1 ��� �������
+            //resultMessage
+        }
+        function requestPermission() {
+            //���ѿ�û
+            var json = {
+                callMethod : "requestPermission",
+                message : "���ѿ�û �޽���123",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            // ��� : {"callMethod":"requestPermission","resultData":{"result":"-1","resultMessage":"not allow permission"}}
+            // ��� : {"callMethod":"requestPermission","resultData":{"result":"1","resultMessage":"Success"}}
+            // result -1 ���� ��û �ź�, 1 ����
+            //resultMessage
+        }
+        function getAddressBook(){
+            //�ּҷ� ��������
+            var json = {
+                callMethod : "getAddressBook",
+                callPage : 'test'
+            };
+            nativeFuntion(json);
+            // ��� : {"callMethod":"getAdressBook","resultData":{"result":"-1","resultMessage":"not allow permission"}}
+            // ��� : {"callMethod":"requestPermission","resultData":{"result":"1","resultMessage":"Success"}}
+            // result -1 ���� ��û �ź�, 1 ����
+            //resultMessage
+        }
+
+
+        function openWebBrowser() {
+            //�ܺ� �������� ���ͳ������� ����
+            var json = {
+                callMethod : "openWebBrowser",
+                url : "http://www.naver.com"
+            };
+            nativeFuntion(json);
+            //��� ����
+        }
+
+        function setInitUrl() {
+            //�ܺ� �������� ���ͳ������� ����
+            var url = document.getElementById("init_url").value;
+
+            var json = {
+                callMethod : "setInitUrl",
+                url : url
+            };
+            nativeFuntion(json);
+            //��� ����
+        }
+
+        function saveData() {
+            //key, value�� �����͸� ����
+            //value�� json���� ����� string���� �����ϸ� ���� �����͸� ������ �� �ִ�
+            var data = {
+                id : "userid",
+                pw : "user_password"
+            };
+            var value = JSON.stringify(data);
+            var json = {
+                callMethod : "saveData",
+                key : "user_id_pw",
+                value : value
+            };
+            nativeFuntion(json);
+            //��� ����
+        }
+
+        function loadData() {
+            //�ش�key�� ����� �����͸� ������
+            var json = {
+                callMethod : "loadData",
+                key : "user_id_pw"
+            };
+            nativeFuntion(json);
+            //��� {"callMethod":"loadData","resultData":{"key":"user_id_pw","value":"{\"id\":\"userid\",\"pw\":\"user_password\"}"}}
+            //json�� string���� ����������� key�� ������ value�� json���� ������ ����Ѵ�
+        }
+
+        function footerButton1() {
+            //���ι�ư�� ������ ȿ���� ����
+            var json = {
+                callMethod : "footerButton",
+                no : "1"
+            };
+            nativeFuntion(json);
+        }
+        function footerButton2() {
+            //���ι�ư�� ������ ȿ���� ����
+            var json = {
+                callMethod : "footerButton",
+                no : "2"
+            };
+            nativeFuntion(json);
+        }
+        function footerButton3() {
+            //���ι�ư�� ������ ȿ���� ����
+            var json = {
+                callMethod : "footerButton",
+                no : "3"
+            };
+            nativeFuntion(json);
+        }
+        function footerButton4() {
+            //���ι�ư�� ������ ȿ���� ����
+            var json = {
+                callMethod : "footerButton",
+                no : "4"
+            };
+            nativeFuntion(json);
+        }
+        function footerButton5() {
+            //���ι�ư�� ������ ȿ���� ����
+            var json = {
+                callMethod : "footerButton",
+                no : "5"
+            };
+            nativeFuntion(json);
+        }
+        function footerButtonShow() {
+            //���ι�ư�� ȭ���� ���δ�
+            var json = {
+                callMethod : "footerButtonShow",
+                isShow : true
+            };
+            nativeFuntion(json);
+        }
+        function footerButtonHide() {
+            //���ι�ư�� ȭ���� �����
+            var json = {
+                callMethod : "footerButtonShow",
+                isShow : false
+            };
+            nativeFuntion(json);
+        }
+        function footerQRButtonShow() {
+            //���ι�ư�� QR��ư�� ȭ���� ���δ�
+            var json = {
+                callMethod : "footerQRButtonShow",
+                isShow : true
+            };
+            nativeFuntion(json);
+        }
+        function footerQRButtonHide() {
+            //���ι�ư�� QR��ư�� ȭ���� �����
+            var json = {
+                callMethod : "footerQRButtonShow",
+                isShow : false
+            };
+            nativeFuntion(json);
+        }
+        function headerBackButtonShow() {
+            //��� �ڷΰ��� ��ư�� ȭ���� ���δ�
+            //�ڷ� ��ư�� ���� welcomepay_url �� ���ԵǸ� ��������.
+            //���� Ÿ����Ʈ��JS�� �ڷο� ���� �ۿ��� �ڵ����� �� ����
+            var json = {
+                callMethod : "headerBackButtonShow",
+                welcomepay_url : "www.chatbook.co.kr",  //url�� �Ϻκи� �����ص���
+                isShow : true
+            };
+            nativeFuntion(json);
+            location.href="https://m.naver.com"
+        }
+        function headerBackButtonHide() {
+            //��� �ڷΰ��� ��ư�� ȭ���� �����
+            var json = {
+                callMethod : "headerBackButtonShow",
+                isShow : false
+            };
+            nativeFuntion(json);
+        }
+        function QRShow() {
+            //QR ȭ���� ���δ�
+            //���� ����� �� ���� ������ ��ư, ����ư ����, ��밡�� �Ӵ� ���� �� �ʿ�
+            var json = {
+                callMethod : "QRShow",
+                isShow : true,
+                money : 20000, //true �ϰ�츸 ���� ��밡�ɸӴ�
+                gift : 2, //true �ϰ�츸 ���� ��������
+                bell : 12, //true �ϰ�츸 ���� �˸� ����
+                banner : [{  //true �ϰ�츸 ���� ��ʸ��
+                    image : "https://www.chatbook.co.kr/test/uinetworks/img/qr_noti1.png",  //����̹��� URL
+                    type : "1" //����̹��� Ŭ�������� ���޵Ǵ� ��
+                },{
+                    image : "https://www.chatbook.co.kr/test/uinetworks/img/qr_noti2.png",
+                    type : "2"
+                },{
+                    image : "https://www.chatbook.co.kr/test/uinetworks/img/qr_noti3.png",
+                    type : "3"
+                },{
+                    image : "https://www.chatbook.co.kr/test/uinetworks/img/qr_noti4.png",
+                    type : "4"
+                },{
+                    image : "https://www.chatbook.co.kr/test/uinetworks/img/qr_noti5.png",
+                    type : "5"
+                }
+                ]
+            };
+            //QR�ڵ� �Կ��� ���� {"callMethod":"QRCodeResult","resultData":{"qr":"QR �Կ��� ��"}}
+            //QR�ڵ� ������ Ŭ���� ���� {"callMethod":"QRCodeButtonResult","resultData":{"button" : "gift"}}
+            //QR�ڵ� �� Ŭ���� ���� {"callMethod":"QRCodeButtonResult","resultData":{"button" : "bell"}}
+            //QR�ڵ� ��밡�ɸӴ� more Ŭ���� ���� {"callMethod":"QRCodeButtonResult","resultData":{"button" : "money"}}
+            //QR�ڵ� ��� Ŭ���� ���� {"callMethod":"QRCodeButtonResult","resultData":{"button" : "banner", "type":"4"}}
+            nativeFuntion(json);
+
+            var json2 = {
+                callMethod : "footerButtonShow",
+                isShow : true
+            };
+            nativeFuntion(json2);
+        }
+
+        function QRShowFranchisee() {
+            //�������� QR ȭ���� ���δ�
+            //����� isShow �� false��
+            var json = {
+                callMethod : "QRShowFranchisee",
+                isShow : true,
+                bell : 12, // �˸� ����
+            };
+            //QR�ڵ� �Կ��� ���� {"callMethod":"QRCodeResult","resultData":{"qr":"QR �Կ��� ��"}}
+            //QR�ڵ� �� Ŭ���� ���� {"callMethod":"QRCodeButtonResult","resultData":{"button" : "bell"}}
+            nativeFuntion(json);
+        }
+        function QRHide() {
+            //QR ȭ���� �����
+            var json = {
+                callMethod : "QRShow",
+                isShow : false
+            };
+            nativeFuntion(json);
+        }
+        function PinNumberShow() {
+            //Pin ��ȣ �Է�â �� ���δ�
+            var type_text = "key" + Math.floor(Math.random() * 100);
+            var json = {
+                callMethod : "PinNumberShow",
+                isShow : true,
+                title : "������й�ȣ �Է�",
+                content : "����� 6�ڸ� ��й�ȣ�� �Է����ּ���."+type_text,
+                bottomText : "�ٸ� �α��� ��� ����",
+                type : type_text
+            };
+            //type�ǰ�� ��� ����, bottomText Ŭ���� ȣ��Ǵ� �Լ��� ���� ���ԵǴ� ������ ���� pin��ȣ â������ �Է°��� �����ϴµ� ���
+            //���Է� �Ϸ�� ���� {"callMethod":"PINNumberResult","resultData":{"pin":"123444","type":"key123"}}
+            //�ϴܹ�ư��ġ �� ���� {"callMethod":"PINBottomButtonResult","resultData":{"type":"key123"}}
+            nativeFuntion(json);
+        }
+        function PinNumberHide() {
+            //Pin ��ȣ �Է�â �� �����
+            var json = {
+                callMethod : "PinNumberShow",
+                isShow : false
+            };
+            nativeFuntion(json);
+        }
+        function PinNumberError() {
+            //Pin ��ȣ ���� ������ �ؽ�Ʈ�� �ٲٸ� �Էµ� �ɹ�ȣ�� ��� ����
+            var json = {
+                callMethod : "PinNumberError",
+                message : "��й�ȣ�� Ʋ�Ƚ��ϴ�"
+            };
+            nativeFuntion(json);
+        }
+
+        function goToSetting() {
+            //����ȭ������ ���� ios�� ����
+            var json = {
+                callMethod : "goToSetting"
+            };
+            nativeFuntion(json);
+        }
+
+        function setHeaderList() {
+            //������ ȣ��� ���� ����� ���Խ�Ų��
+            //(��ȣ��� ����)
+            var json = {
+                callMethod : "setHeaderList",
+                headerList : [
+                    { key : "header_key1", value : "header_value1" },
+                    { key : "header_key2", value : "header_value2" },
+                    { key : "header_key3", value : "header_value3" }
+                ]
+            };
+            nativeFuntion(json);
+        }
+
+        function setOtherSiteTokenAuth() {
+            //������ ȣ��� ���� welcomepay_url�� �����ϴ��� üũ�ϰ� �ƴѰ�� token_auth_url���� token�� �����Ѵ�
+            //(��ȣ��� ����)
+            var json = {
+                callMethod : "setOtherSiteTokenAuth",
+                welcomepay_url : "tm.welcomepay.co.kr",  //url�� �Ϻκи� �����ص���
+                token_auth_url : "https://tm.welcomepay.co.kr/api/v1/account/web/token/authorize", //http, https �� ������ Ǯ url �ʿ�
+                token : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDUzE2MjY3NjA2NTAxOTgiLCJpc3MiOiJ3ZWxjb21lcGF5bWVudHMuY28ua3IiLCJtZ3RJZCI6IkNTMTYyNjc2MDY1MDE5OCIsIm1tYnJJZCI6InRlc3RpZCIsIm1tYnJObSI6Iuyepe2aqOyEsSIsIm9hdXRoVHBDZCI6Ijk5IiwiYmlydGhkdCI6IjE5OTEwNjE2IiwibXBubyI6IjAxMDQzMjM4NTY1IiwiZW1haWwiOiJ0ZXN0QHRlc3RldHMuY29tIiwiZGZwbVVzZVluIjoiWSIsIm9yZ25tQ3RmY3RuVXNlWW4iOiJZIiwibW1ickN0ZmN0blluIjoiWSIsImlhdCI6MTYyOTg4MDU1OCwiZXhwIjoxNjI5ODkxMzU4fQ.oKr55pAfVdp4zfwFVfoPdDNKA7BQMyKJDpaikXXf7gY"
+            };
+            nativeFuntion(json);
+        }
+
+        function SelectorShow() {
+            //����â �� ���δ�
+            var json = {
+                callMethod : "SelectorShow",
+                isShow : true,
+                title : "����",
+                buttons : [{  //���ø��
+                    title : "����1",  //���� �޴� �̸�
+                    type : "1" //���� Ŭ�������� ���޵Ǵ� ��
+                },{  //���ø��
+                    title : "����2",  //���� �޴� �̸�
+                    type : "2" //���� Ŭ�������� ���޵Ǵ� ��
+                },{  //���ø��
+                    title : "����3",  //���� �޴� �̸�
+                    type : "3" //���� Ŭ�������� ���޵Ǵ� ��
+                },{  //���ø��
+                    title : "����4",  //���� �޴� �̸�
+                    type : "4" //���� Ŭ�������� ���޵Ǵ� ��
+                }
+                ]
+            };
+            //type�ǰ�� ��� ����, bottomText Ŭ���� ȣ��Ǵ� �Լ��� ���� ���ԵǴ� ������ ���� pin��ȣ â������ �Է°��� �����ϴµ� ���
+            //��ҽ� ���� {"callMethod":"SelectorHide","resultData":{}}
+            //��ư ���� �� ���� {"callMethod":"SelectorResult","resultData":{"type":"1"}}
+            nativeFuntion(json);
+        }
+        function SelectorHide() {
+            //����â �� �����
+            var json = {
+                callMethod : "SelectorShow",
+                isShow : false
+            };
+            nativeFuntion(json);
+        }
+
+        function exitApp() {
+            //�� �����ϱ�
+            var json = {
+                callMethod : "exitApp"
+            };
+            nativeFuntion(json);
+        }
+
+        function saveData_getAccessToken() {
+            var json = {
+                callMethod : "saveData",
+                key : "getAccessTokenUrl",
+                value : "https://tm.welcomepay.co.kr/api/v1/account/web/token"
+            };
+            nativeFuntion(json);
+            var json2 = {
+                callMethod : "saveData",
+                key : "refreshToken",
+                value : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDUzE2MjY3NjA2NTAxOTgiLCJpc3MiOiJ3ZWxjb21lcGF5bWVudHMuY28ua3IiLCJtZ3RJZCI6IkNTMTYyNjc2MDY1MDE5OCIsIm1tYnJJZCI6InRlc3RpZCIsIm1tYnJObSI6Iuyepe2aqOyEsSIsIm9hdXRoVHBDZCI6Ijk5IiwiYmlydGhkdCI6IjE5OTEwNjE2IiwibXBubyI6IjAxMDQzMjM4NTY1IiwiZW1haWwiOiJ0ZXN0QHRlc3RldHMuY29tIiwiZGZwbVVzZVluIjoiWSIsIm9yZ25tQ3RmY3RuVXNlWW4iOiJZIiwibW1ickN0ZmN0blluIjoiWSIsImlhdCI6MTYyOTg4MDU1OCwiZXhwIjoxNjI5ODkxMzU4fQ.oKr55pAfVdp4zfwFVfoPdDNKA7BQMyKJDpaikXXf7gY"
+            };
+            nativeFuntion(json2);
+        }
+
+        function saveData_getAccessToken2_faile() {
+            var json = {
+                callMethod : "saveData",
+                key : "getAccessTokenUrl",
+                value : "https://tm.welcomepay.co.kr/api/v1/account/web/token"
+            };
+            nativeFuntion(json);
+            var json2 = {
+                callMethod : "saveData",
+                key : "refreshToken",
+                value : "test"
+            };
+            nativeFuntion(json2);
+        }
+        function saveData_mgtId() {
+            var json = {
+                callMethod : "saveData",
+                key : "mgtId",
+                value : "CS1630456627437"
+            };
+            nativeFuntion(json);
+        }
+        function HideSplashIntro() {
+            var json = {
+                callMethod : "HideSplashIntro"
+            };
+            nativeFuntion(json);
+        }
+        function OfferwallAdpopcon() {
+            var json = {
+                callMethod : "OfferwallAdpopcon"
+            };
+            nativeFuntion(json);
+        }
+
+        function getAccessToken() {
+            //�� �����ϱ�
+            var json = {
+                callMethod : "getAccessToken",
+                link_cd : 'NFR_AK_001'
+            };
+            nativeFuntion(json);
+        }
+        function setStatusbarColor1(){
+            var json = {
+                callMethod : "setStatusbarColor",
+                color : "#d3d3d3"
+            };
+            nativeFuntion(json);
+        }
+
+        function setStatusbarColor2(){
+            var json = {
+                callMethod : "setStatusbarColor",
+                color : "#ff2222"
+            };
+            nativeFuntion(json);
+        }
+
+        function appRun() {
+            host = "content?param1=aaa&param2=bbb&param3=ccc&param4=ddd";
+            scheme = "welcomepay";
+
+            store_a = "com.welcomepayments.welcomepay";
+            store_i = "id704167894";
+
+            var userAgent = navigator.userAgent;
+            var visitedAt = (new Date()).getTime(); // �湮 �ð�
+            var appstoreUrl = "";
+
+            if(userAgent.match(".*Android.*")){
+                //�ȵ���̵� ��
+                appstoreUrl = 'intent://'+host+'#Intent;scheme='+scheme+';action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package='+store_a+';end;';
+                location.href = appstoreUrl;
+            }else if(userAgent.match(".*iPhone.*") || userAgent.match(".*iPad.*")){
+                //ios ��
+                setTimeout( function () {
+                    if((new Date()).getTime()-visitedAt < 3000 ) {
+                        location.href = 'https://apps.apple.com/kr/app/'+store_i;
+                        //location.href = 'https://apps.apple.com/kr/app/id704167894';
+                    }
+                }, 2500 );
+
+                setTimeout( function () {
+                    location.href = scheme+'://'+host;
+                }, 0 );
+
+            }
+        }
+        //////////////////////////////
+        //////////////////////////////
+
+        //�� -> �� ���� ȣ��Ǵ� ���
+        const event = document.createEvent('Event');
+        event.initEvent('nativeResult', true, true);
+
+        window.addEventListener('nativeResult', function(e){
+            const json = e.detail
+            var obj = JSON.parse(json)
+            var callMethod = obj["callMethod"] //ó�� ȣ���� callMethod�� Ȥ�� �ۿ��� ������ ������ ȣ�� �ϴ� �޼����
+            var resultData = obj["resultData"] //������޿� �ʿ��Ķ����
+            var resultDataStr = JSON.stringify(resultData);
+            window.nativeStr = resultDataStr;
+            document.getElementById("output").innerHTML = window.nativeStr;
+            if(callMethod == "loadData"){
+                var value = resultData["value"]
+                var value2 = JSON.parse(value)
+                var id = value2["id"]
+                var pw = value2["pw"]
+                console.log(id);
+                console.log(pw);
+            }if(callMethod == "PINNumberResult"){
+                var pin = resultData["pin"]
+                if(pin == "111111"){
+                    PinNumberHide()
+                }else{
+                    PinNumberError()
+                }
+            }if(callMethod == "biometricPrompt"){
+                var result = resultData["result"]
+                if(result = "-2"){
+                    biometricPromptCancel()
+                }
+            }
+        })
+
+    </script>
+</head>
+<body>
+<br>
+<div id="wrap" style="width:100%;">
+    <br>
+    <br>
+    <br><input id="init_url" type="text" value="https://tm.welcomepay.co.kr"/>
+    <br>
+    <input type="button" onclick="setInitUrl()" value="�ʱ� ����URL���� "/>
+    <br>
+    <br>
+    <br><a href="tel:010-1234-5678">010-1234-5678�� ��ȭ�ɱ�</a> </div>
+<br>
+<br>
+<br><input type="button" onclick="getToken()" value="Ǫ�� ��ū ��������"/>
+<br>
+<br>
+<br><input type="button" onclick="getDeviceInfo()" value="����̽� ���� ��������"/>
+<br>
+<br>
+<br><input type="button" onclick="kakaoLogin()" value="īī�� �α���"/>
+<br>
+<br>
+<br><input type="button" onclick="naverLogin()" value="���̹� �α���"/>
+<br>
+<br>
+<br><input type="button" onclick="appleLogin()" value="���� �α��� (ios����)"/>
+<br>
+<br>
+<br><input type="button" onclick="biometricPrompt()" value="��ü���� ��û"/>
+<br>
+<br><input type="button" onclick="biometricPromptCancel()" value="��ü���� ���"/>
+<br>
+<br>
+<br><input type="button" onclick="openWebBrowser()" value="�ܺ� �������� ������ ����"/>
+<br>
+<br>
+<br><input type="button" onclick="saveData()" value="������ �����ϱ�"/>
+<br>
+<br>
+<br><input type="button" onclick="loadData()" value="����� ������ �ҷ�����"/>
+<br>
+<br>
+<br><input type="button" onclick="checkPermission()" value="������� Ȯ���ϱ�"/>
+<br><input type="button" onclick="requestPermission()" value="������� ��û�ϱ�"/>
+<br>
+<br>
+<br><input type="button" onclick="setHeaderList()" value="������ �ε����� �ش� ����� ���Խ�Ű��"/>
+<br><input type="button" onclick="setOtherSiteTokenAuth()" value="�ٸ��������� ���������� ��ū����api ȣ���ϱ�"/>
+<br>
+<br>
+<br><input type="button" onclick="getAddressBook()" value="����ó ��� ��������"/>
+<br>
+<br>
+<br><input type="button" onclick="goToSetting()" value="����ȭ�� ���� (ios����)"/>
+<br>
+<br>
+<br><input type="button" onclick="footerButton1()" value="Ǫ�͹�ư1"/>
+<br><input type="button" onclick="footerButton2()" value="Ǫ�͹�ư2"/>
+<br><input type="button" onclick="footerButton3()" value="Ǫ�͹�ư3"/>
+<br><input type="button" onclick="footerButton4()" value="Ǫ�͹�ư4"/>
+<br><input type="button" onclick="footerButton5()" value="Ǫ�͹�ư5"/>
+<br>
+<br>
+<br><input type="button" onclick="footerButtonShow()" value="Ǫ�ͺ��̱�"/>
+<br><input type="button" onclick="footerButtonHide()" value="Ǫ�ͼ����"/>
+<br>
+<br>
+<br><input type="button" onclick="footerQRButtonShow()" value="Ǫ��QR�޴����̱�"/>
+<br><input type="button" onclick="footerQRButtonHide()" value="Ǫ��QR�޴������"/>
+<br>
+<br>
+<br><input type="button" onclick="QRShow()" value="QR�ڵ� ȭ�� ����"/>
+<br><input type="button" onclick="QRHide()" value="QR�ڵ� ȭ�� ����"/>
+<br>
+<br>
+<br><input type="button" onclick="PinNumberShow()" value="���� ��й�ȣ �Է� ����"/>
+<br><input type="button" onclick="PinNumberHide()" value="���� ��й�ȣ �Է� ����"/>
+<br><input type="button" onclick="PinNumberError()" value="���� ��й�ȣ �Է� ����"/>
+<br>
+<br>
+<br><input type="button" onclick="SelectorShow()" value="���ø޴� ����"/>
+<br><input type="button" onclick="SelectorHide()" value="���ø޴� ����"/>
+<br>
+<br>
+<br><input type="button" onclick="headerBackButtonShow()" value="��� �ڷΰ��� ��� ���̱�"/>
+<br><input type="button" onclick="headerBackButtonHide()" value="��� �ڷΰ��� ��� �����"/>
+<br>
+<br>
+<br><input type="button" onclick="exitApp()" value="�� ����(android����)"/>
+<br>
+<br>
+<br><input type="button" onclick="saveData_getAccessToken()" value="saveData(getAccessTokenUrl,refreshToken)"/>
+<br><input type="button" onclick="saveData_getAccessToken2_faile()" value="saveData faile(getAccessTokenUrl,refreshToken)"/>
+<br><input type="button" onclick="getAccessToken()" value="getAccessToken ȣ��"/>
+<br>
+<br>
+<br><input type="button" onclick="QRShowFranchisee()" value="�������� QR�ڵ� ȭ�� ����"/>
+<br>
+<br>
+<br><input type="button" onclick="saveData_mgtId()" value="saveData mgtId : CS1630456627437"/>
+<br><input type="button" onclick="OfferwallAdpopcon()" value="�ֵ����� ���ۿ�"/>
+<br>
+<br>
+<br><input type="button" onclick="HideSplashIntro()" value="���÷��� �̹��� �����"/>
+<br>
+<br>
+<br><input type="button" onclick="setStatusbarColor1()" value="���¹� �÷� ����1(ios)"/>
+<br><input type="button" onclick="setStatusbarColor2()" value="���¹� �÷� ����2(ios)"/>
+<br>
+<br>
+<br><a href="http://www.naver.com">���̹��� �̵�</a>
+<br>
+<br>
+<br><input type="file" accept="image/*;capture=camera">
+<br>
+<br>
+<br> <div id="output"> </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br><input type="button" onclick="appRun()" value="�ܺκ��������� �� �����ϱ�"/>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+</body>
+</html>

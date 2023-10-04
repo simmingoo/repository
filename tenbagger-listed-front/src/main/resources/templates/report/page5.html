@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=595, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page5 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page page5" style="page-break-before:always">
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">5</span>
+		</header>
+		<div class="container">
+			<h2>4.주요기술부문 분석</h2>
+			<div class="content">
+				<div class="unit">
+					<h3>(1) 주요기술부문</h3>
+					<div class="desc">
+						최근 5년간 <span class="isuKorNm"></span>의 출원특허를 대상으로 특허 활동을 분석하여, 출원이 활발한 상위 4개 분야를 주요 기술 분야로 선정합니다. <span class="isuKorNm"></span>의 주요 기술 분야는 아래와 같습니다.
+					</div>
+				</div>
+				<div class="unit">
+					<div class="col2">
+						<div class="bx_skill col" style="visibility: hidden;">
+							<div class="top">
+								<h4><span class="num">01</span></h4>
+							</div>
+							<div class="cont">
+								<ul>
+									<li><span>기술력점수(TSS)</span><strong></strong></li>
+									<li><span>기술력 순위</span><strong><em></em></strong></li>
+									<li><span>R&D 집중도</span><strong></strong></li>
+								</ul>
+								<div class="bar_gradient"><em class="fill"></em></div>
+							</div>
+						</div>
+						<div class="bx_skill col" style="visibility: hidden;">
+							<div class="top">
+								<h4><span class="num">02</span></h4>
+							</div>
+							<div class="cont">
+								<ul>
+									<li><span>기술력점수(TSS)</span><strong></strong></li>
+									<li><span>기술력 순위</span><strong><em></em></strong></li>
+									<li><span>R&D 집중도</span><strong></strong></li>
+								</ul>
+								<div class="bar_gradient"><em class="fill"></em></div>
+							</div>
+						</div>
+					</div>
+					<div class="col2 mt20">
+						<div class="bx_skill col" style="visibility: hidden;">
+							<div class="top">
+								<h4><span class="num">03</span></h4>
+							</div>
+							<div class="cont">
+								<ul>
+									<li><span>기술력점수(TSS)</span><strong></strong></li>
+									<li><span>기술력 순위</span><strong><em></em></strong></li>
+									<li><span>R&D 집중도</span><strong></strong></li>
+								</ul>
+								<div class="bar_gradient"><em class="fill"></em></div>
+							</div>
+						</div>
+						<div class="bx_skill col" style="visibility: hidden;">
+							<div class="top">
+								<h4><span class="num">04</span></h4>
+							</div>
+							<div class="cont">
+								<ul>
+									<li><span>기술력점수(TSS)</span><strong></strong></li>
+									<li><span>기술력 순위</span><strong><em></em></strong></li>
+									<li><span>R&D 집중도</span><strong></strong></li>
+								</ul>
+								<div class="bar_gradient"><em class="fill"></em></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="unit mt15">
+					<ul class="list big">
+						<li>
+							<h4 class="txt_blue">기술력 점수 <u>(Technology Strength Score: TSS)</u></h4>
+							TSS는 기업이 가진 특허의 규모(quantity)와 기술 수준(quality)를 동시에 측정한 기술 경쟁력 지수입니다.
+						</li>
+						<li>
+							기업이 보유한 전체 특허를 점수화 한 것으로 수치가 클 수록 기술 경쟁력이 높음을 의미하며 다른 기업의 수치와 비교하여 상대적으로 평가할 수 있습니다.
+						</li>
+						<li>
+							기술력 점수 순위 각 기술분야에서 다른 기업의 기술력 점수와 비교하여 산출한 등수이며, 기술력 점수를 보유하지 않은 기업은 비교 대상에서 제외됩니다.
+						</li>
+						<li>
+							R&D 집중도 최근 5년 동안 출원한 전체 특허에 대한 각 분야의 특허 출원 비율입니다.
+						</li>
+					</ul>
+				</div>
+				<div class="unit">
+					<img src="/extstatic/img/p5_img1.jpg" alt="기술 투자 지수"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		  $(function(){
+			    let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")};
+				let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&'); 
+				let url1 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+				let url2 = '/report/technology?' + query;
+				
+				// fetch(url1)
+				// 	.then(res => res.json())
+				// 	.then(data => {
+				// 			$("#reportPage5 .label_type").html(data.mktCapScale);
+				// 			$("#reportPage5 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+				// 		})
+				// 	.catch(function (error) {
+				// 		console.log('request failed', error)
+				// 		});
+				fetch(url2) 
+				.then(res => res.json()) 
+				.then(data => {
+					$.each(data.ipcs, function(index, row) {
+						$("#reportPage5 .bx_skill").eq(index).css('visibility', 'visible')
+					})
+					$('#reportPage5 .top:eq(0)').children().append(data.ipcs[0]== undefined ? "": data.ipcs[0].icName);
+					$('#reportPage5 .top:eq(1)').children().append(data.ipcs[1]== undefined ? "": data.ipcs[1].icName);
+					$('#reportPage5 .top:eq(2)').children().append(data.ipcs[2]== undefined ? "": data.ipcs[2].icName);
+					$('#reportPage5 .top:eq(3)').children().append(data.ipcs[3]== undefined ? "": data.ipcs[3].icName);
+					
+					$("#reportPage5 .cont:eq(0)").find("strong:eq(0)").html(data.ipcs[0]== undefined ? "":data.ipcs[0].tss.toFixed(2))
+					$("#reportPage5 .cont:eq(1)").find("strong:eq(0)").html(data.ipcs[1]== undefined ? "":data.ipcs[1].tss.toFixed(2))
+					$("#reportPage5 .cont:eq(2)").find("strong:eq(0)").html(data.ipcs[2]== undefined ? "":data.ipcs[2].tss.toFixed(2))
+					$("#reportPage5 .cont:eq(3)").find("strong:eq(0)").html(data.ipcs[3]== undefined ? "":data.ipcs[3].tss.toFixed(2))
+					
+					$("#reportPage5 .cont:eq(0)").find("em:eq(0)").html(data.ipcs[0]== undefined ? "":addComma(data.ipcs[0].countCompany) + " 기업 중")
+					$("#reportPage5 .cont:eq(1)").find("em:eq(0)").html(data.ipcs[1]== undefined ? "":addComma(data.ipcs[1].countCompany) + " 기업 중")
+					$("#reportPage5 .cont:eq(2)").find("em:eq(0)").html(data.ipcs[2]== undefined ? "":addComma(data.ipcs[2].countCompany) + " 기업 중")
+					$("#reportPage5 .cont:eq(3)").find("em:eq(0)").html(data.ipcs[3]== undefined ? "":addComma(data.ipcs[3].countCompany) + " 기업 중")
+					
+					$("#reportPage5 .cont:eq(0)").find("strong:eq(1)").append(data.ipcs[0]== undefined ? "":data.ipcs[0].rankTss + "위")
+					$("#reportPage5 .cont:eq(1)").find("strong:eq(1)").append(data.ipcs[1]== undefined ? "":data.ipcs[1].rankTss + "위")
+					$("#reportPage5 .cont:eq(2)").find("strong:eq(1)").append(data.ipcs[2]== undefined ? "":data.ipcs[2].rankTss + "위")
+					$("#reportPage5 .cont:eq(3)").find("strong:eq(1)").append(data.ipcs[3]== undefined ? "":data.ipcs[3].rankTss + "위")
+					
+					$("#reportPage5 .cont:eq(0)").find("strong:eq(2)").html(data.ipcs[0]== undefined ? "":data.ipcs[0].rnDConcentration + "%")
+					$("#reportPage5 .cont:eq(1)").find("strong:eq(2)").html(data.ipcs[1]== undefined ? "":data.ipcs[1].rnDConcentration + "%")
+					$("#reportPage5 .cont:eq(2)").find("strong:eq(2)").html(data.ipcs[2]== undefined ? "":data.ipcs[2].rnDConcentration + "%")
+					$("#reportPage5 .cont:eq(3)").find("strong:eq(2)").html(data.ipcs[3]== undefined ? "":data.ipcs[3].rnDConcentration + "%")
+					
+					$('#reportPage5 .fill:eq(0)').css('width', data.ipcs[0]== undefined ? "0":data.ipcs[0].rnDConcentration +'%');
+					$('#reportPage5 .fill:eq(1)').css('width', data.ipcs[1]== undefined ? "0":data.ipcs[1].rnDConcentration +'%'); 
+					$('#reportPage5 .fill:eq(2)').css('width', data.ipcs[2]== undefined ? "0":data.ipcs[2].rnDConcentration +'%'); 
+					$('#reportPage5 .fill:eq(3)').css('width', data.ipcs[3]== undefined ? "0":data.ipcs[3].rnDConcentration +'%');
+						
+					})
+				.catch(function (error) { 
+					console.log('request failed', error) 
+					});
+				
+			
+		  });
+		  
+	  </script>
+</body>
+</html>

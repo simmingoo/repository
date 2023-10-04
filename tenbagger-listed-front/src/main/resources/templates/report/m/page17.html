@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page17 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page17">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">17</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(8) 주요 발명자</h3>
+					<p class="desc">주요 발명자는 최근 10년간 특허 출원 활동이 있는 발명자 중, 출원한 특허 수와 특허 등급을 평가하여 산출합니다. 발명자의 경우, 기업의 기술력을 좌우하는 중요한 요소이기 때문에 기업 M&A시 주요 발명자가 해당 기업에 근속 중인지 확인하는 것이 필요합니다.</p>
+				</div>
+				<div class="unit">
+					<table class="tbl">
+						<thead>
+							<tr>
+								<th>발명자</th> 
+								<th>등록 특허수</th> 
+								<th>출원건수</th>
+							</tr>
+							<tr> 
+								<th>최초 출원일</th>
+								<th>최근 출원일</th>
+								<th>발명자 등급</th>
+							</tr>
+						</thead>
+						<tbody id="tbody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage17 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage17 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/keyinventor',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				$.each(data, function (index, item) {
+					let table_html = '<tr>\
+					<td>'+item.inventor+'</td>\
+					<td>'+item.patentCnt+'</td>\
+					<td>'+item.filingCnt+'</td>\
+					</tr>\
+					<tr>\
+					<td>'+item.firstApd+'</td>\
+					<td>'+item.lastApd+'</td>\
+					<td>'+item.grade+'</td>\
+					</tr>'
+					$("#reportPage17 #tbody").append(table_html);
+				});
+			}
+		});
+	});
+</script>
+</body>
+</html>

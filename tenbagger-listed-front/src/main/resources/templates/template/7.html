@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>mainTech</title>
+<link rel="stylesheet" type="text/css" href="/extstatic/css/style.css">
+<script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+<script src="/extstatic/js/template-util.js"></script>
+</head>
+<body style="background-color: white; float: left;">
+  <div style="width: 600px;">
+    <h2 style="margin-left: 0px">
+      [표] <span class="isuKorNm"></span> 최근 5년간 주요 기술부문
+    </h2>
+    <div class="col2">
+      <div class="bx_skill col">
+        <div class="top" style="padding-top: 8px">
+          <h4>
+            <span class="num">01</span>
+          </h4>
+        </div>
+        <div class="cont">
+          <ul>
+            <li><span>기술력점수(TSS)</span><strong></strong></li>
+            <li><span>기술력 순위</span><strong><em></em></strong></li>
+            <li><span>R&D 집중도</span><strong></strong></li>
+          </ul>
+          <div class="bar_gradient">
+            <em class="fill"></em>
+          </div>
+        </div>
+      </div>
+      <div class="bx_skill col">
+        <div class="top" style="padding-top: 8px">
+          <h4>
+            <span class="num">02</span>
+          </h4>
+        </div>
+        <div class="cont">
+          <ul>
+            <li><span>기술력점수(TSS)</span><strong></strong></li>
+            <li><span>기술력 순위</span><strong><em></em></strong></li>
+            <li><span>R&D 집중도</span><strong></strong></li>
+          </ul>
+          <div class="bar_gradient">
+            <em class="fill"></em>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col2 mt10">
+      <div class="bx_skill col">
+        <div class="top" style="padding-top: 8px">
+          <h4>
+            <span class="num">03</span>
+          </h4>
+        </div>
+        <div class="cont">
+          <ul>
+            <li><span>기술력점수(TSS)</span><strong></strong></li>
+            <li><span>기술력 순위</span><strong><em></em></strong></li>
+            <li><span>R&D 집중도</span><strong></strong></li>
+          </ul>
+          <div class="bar_gradient">
+            <em class="fill"></em>
+          </div>
+        </div>
+      </div>
+      <div class="bx_skill col">
+        <div class="top" style="padding-top: 8px">
+          <h4>
+            <span class="num">04</span>
+          </h4>
+        </div>
+        <div class="cont">
+          <ul>
+            <li><span>기술력점수(TSS)</span><strong></strong></li>
+            <li><span>기술력 순위</span><strong><em></em></strong></li>
+            <li><span>R&D 집중도</span><strong></strong></li>
+          </ul>
+          <div class="bar_gradient">
+            <em class="fill"></em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+            $(document).ready(function() {
+                $.ajax({
+                    type : "GET",
+                    url : "https://c-api.10bagger.co.kr/v1/news/mainTechnology",
+                    data : {
+                        isuSrtCd : getParameter("isuSrtCd")
+                    },
+                    success : function(data) {
+                        $(".isuKorNm").html(data.isuKorNm);
+                        $(".bx_skill").each(function(index) {
+                            if (data.ipcs[index] != undefined) {
+                                $(this).find("h4").append(data.ipcs[index].icName);
+                                $(this).find("li:eq(0) strong").html(addComma(data.ipcs[index].tss.toFixed(2)));
+                                $(this).find("li:eq(1) em").html(addComma(data.ipcs[index].countCompany) + " 기업 중");
+                                $(this).find("li:eq(1) strong").append(data.ipcs[index].rankTss + "위");
+                                $(this).find("li:eq(2) strong").html(data.ipcs[index].rnDConcentration + "%");
+                                $(this).find(".fill").css('width', data.ipcs[index].rnDConcentration + "%")
+                            } else {
+                                $(this).css('visibility', 'hidden')
+                            }
+                        });
+                    },
+                    error : function(request, status, error) {
+                        console.error("code = " + request.status + "\nmessage = " + request.responseText + "\nerror = " + error);
+                    }
+                });
+
+            });
+        </script>
+</body>
+</html>

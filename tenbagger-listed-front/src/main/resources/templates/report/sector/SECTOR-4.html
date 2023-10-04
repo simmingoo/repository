@@ -1,0 +1,137 @@
+
+
+<script>
+    $(document).ready(function(){
+        sectorRecommendStock1();
+        
+        let url = "https://c-api.10bagger.co.kr/v1/report/sector/"+sectorNo;
+	    $.ajax({
+	        type:"get",
+	        url:url,
+	        async : false,
+	        contentType: "application/json",
+	        dataType: "json",
+	        success:function(data) {	
+	        	$("#sectorName.xl-st-4.xl-flex-col.xl-center ").text(data[0].sectorName);
+	        	$("#sectorName3").text(data[0].sectorName);
+	        },
+	    });
+    });
+</script>
+
+<div class="page page4" style="page-break-before:always">
+<div class="xl-header xl-flex-row xl-left">
+                <div class="xl-st-4 xl-flex-col xl-center" id="sectorName">
+                    
+                </div>
+                <div class="xl-st-3">&nbsp;</div>
+                <div class="xl-st-2 xl-flex-col xl-center">
+                    기술가치투자 섹터 리포트
+                </div>
+                <div class="xl-st-1">&nbsp;</div>
+            </div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- 5. 투자매력도 상위 종목 Top5 //-->
+    <div class="xl-title-s1">
+        5. 투자매력도 상위 종목 Top5
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-title-s2" id="sectorName3">
+        
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-stock-table" id="_sector_list1-1">
+        <div class="xl-st-title">
+            <div class="xl-stt-1 xl-flex-col xl-center" style="border:none">기업명</div>
+            <div class="xl-stt-2 xl-flex-col xl-center" style="border-top:red solid 1px;border-left:red solid 1px;border-right:red solid 1px">기술투자지수</div>
+            <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">기술평가점수<br>(TSS)</div>
+            <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">기술경쟁력등급<br>(TCG)</div>
+            <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">특허평가평균점수<br>(APES)</div>
+            <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">특허보유건수</div>
+            <div class="xl-stt-2 xl-flex-col xl-center" style="text-align:center">시가총액<br>(억원)</div>
+            <div class="xl-stt-3 xl-flex-col xl-center" style="text-align:center">기업가치추정</div>
+        </div>
+    </div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <div class="xl-tab-title xl-flex-row xl-left">
+        <div class="xl-tt-1 xl-flex-col xl-center" style="width:165px">
+            기술투자지수(시가총액/TSS)
+        </div>
+        <div class="xl-tt-2">&nbsp;</div>
+    </div>
+    <div class="xl-note-1" style="background-color:#FBFBFB;border:#D9D9D9 solid 1px">
+        • &nbsp;기술투자지수란 기업의 시가총액을 TSS(기술평가점수 - 위즈도메인이 개발한 통계기법으로 산출)로 나눈값입니다.
+
+        • &nbsp;보유한 기술력대비 주가가 어느정도인지 가늠하는 수치로 동종기술로 분류된 테마내에서 상대비교를 통해 기업의 가치를 평가할 수 있는 보조지표입니다.
+
+        • &nbsp;기술투자지수가 낮을수록 "기술력대비 저평가" 되어있어 기술력관점에서 투자매력도가 높습니다.
+
+        <b>즉, 기술투자지수가 낮다면 기업이 보유한 기술력보다 주가가 상대적으로 저평가 되어있다는 의미인 것입니다.</b>
+    </div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-graph-title xl-flex-row xl-center">
+        <div class="xl-gt-1">&nbsp;</div>
+        <div class="xl-gt-2 xl-flex-col xl-center">
+            기술투자지수 = 시총/TSS
+        </div>
+        <div class="xl-gt-3">&nbsp;</div>
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div style="width:100%;min-height:100px;">
+        <img style="width:100%;height:auto" src="/extstatic/img/x/tii.png">
+    </div>
+    <div class="xl-gt-bottom">&nbsp;</div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-tab-title xl-flex-row xl-left">
+        <div class="xl-tt-1 xl-flex-col xl-center" style="width:420px">
+            TCG (Technology Competitiveness Grade : 기술경쟁력 등급)
+        </div>
+        <div class="xl-tt-2">&nbsp;</div>
+    </div>
+    <div class="xl-note-1" style="background-color:#FBFBFB;border:#D9D9D9 solid 1px">
+        • &nbsp;TCG 기업이 취득한 특허들을 평가하여 합산한 점수와 이 점수를 기반으로한 업계 순위에 근거하여 생성되었습니다.
+
+        • &nbsp;특허평가점수는 ㈜위즈도메인이 개발한 통계기법에 의해 계산된 값입니다.
+
+        • &nbsp;이 점수는 객관적인 평가 기준에 따라 동종기술분야의 특허들과 상대비교하여 산출됩니다.
+    </div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-tab-title xl-flex-row xl-left">
+        <div class="xl-tt-1 xl-flex-col xl-center" style="width:340px">
+            TSS (Technology Strength Score : 기술평가점수)
+        </div>
+        <div class="xl-tt-2">&nbsp;</div>
+    </div>
+    <div class="xl-note-1" style="background-color:#FBFBFB;border:#D9D9D9 solid 1px">
+        • &nbsp;TSS는기업이 가진 특허의 규모(quantity)와 기술수준(quality)를 동시에 측정한 기술경쟁력 지수입니다.
+
+        • &nbsp;기업이 보유한 전체특허를 점수화한것으로 수치가 클수록 기술경쟁력이 높음을 의미하며 다른 기업의 수치와 비교하여 상대적으로 평가할 수있습니다.
+    </div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-tab-title xl-flex-row xl-left">
+        <div class="xl-tt-1 xl-flex-col xl-center" style="width:420px">
+            APES (Awerage Patent Evaluation Scnre : 특허 평가평균점수)
+        </div>
+        <div class="xl-tt-2">&nbsp;</div>
+    </div>
+    <div class="xl-note-1" style="background-color:#FBFBFB;border:#D9D9D9 solid 1px">
+        • &nbsp;APES는 각 기술 부문별 특허의 점수를 평균한 것으로, 개별 특허의 평가 점수는 특허 빅데이터 및 ㈜위즈도메인의 특허평가엔진(Patent Evaluation Engine)을이용하여산출합니다.
+
+        • &nbsp;특허 평가 요소는 10여 가지가 있으며 평가 요소 중 하나를 예로 들면 다른 특허들로 부터 인용을 많이 당한 특허는 좋은 점수를 받습니다.
+    </div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- ### 푸터 ### //-->
+    <div class="xl-footer xl-flex-row xl-left">
+        <div class="xl-pageno xl-flex-row xl-center">- 5 -</div>
+        <div class="xl-logobg xl-flex-col xl-center">
+            <img class="xl-logo" src="/extstatic/img/l/logo-10bagger-tp01.png">
+        </div>
+    </div>
+
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-page-bar">&nbsp;</div>
+
+</div>

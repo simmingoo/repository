@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>sectorTop5</title>
+<script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+<script src="/extstatic/js/template-util.js"></script>
+</head>
+<body style="background-color: white;">
+  <style type="text/css">
+.tg {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 600px;
+}
+
+.tg td {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+  padding: 2px;
+  word-break: normal;
+}
+
+.tg th {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  overflow: hidden;
+  padding: 5px;
+  word-break: normal;
+}
+
+.tg .tg-lboi {
+  border-color: inherit;
+  text-align: left;
+  vertical-align: middle
+}
+
+.tg .tg-lboi2 {
+  border-color: inherit;
+  text-align: center;
+  vertical-align: middle
+}
+
+.tg .tg-9wq8 {
+  border-color: inherit;
+  text-align: center;
+  vertical-align: middle
+}
+
+.tg .tg-b74b {
+  background-color: #ddebf7;
+  border-color: inherit;
+  color: #000000;
+  text-align: center;
+  vertical-align: middle
+}
+
+.tg .tg-cwpa {
+  background-color: #1f4e78;
+  border-color: inherit;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle
+}
+
+.tg .tg-yz93 {
+  border-color: inherit;
+  text-align: right;
+  vertical-align: middle
+}
+
+h2 {
+  margin: 25px;
+  margin-left: 0px;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 500;
+}
+</style>
+  <div style="width: 600px">
+    <h2>
+      [표] <span class="sectorName"></span> 섹터 소속 기술주 5
+    </h2>
+    <small style="float: right">(원, 개)</small>
+    <table class="tg">
+      <thead>
+        <tr>
+          <th class="tg-b74b" rowspan="2">종목명</th>
+          <th class="tg-b74b" rowspan="2">소속섹터</th>
+          <th class="tg-b74b" rowspan="2">주가</th>
+          <th class="tg-b74b" colspan="3">기술지표</th>
+        </tr>
+        <tr>
+          <th class="tg-cwpa">퀸트기술<br>등급
+          </th>
+          <th class="tg-cwpa">보유<br>특허수
+          </th>
+          <th class="tg-cwpa">기업가치<br>추정
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+  </div>
+  <script type="text/javascript">
+            $(document).ready(function() {
+                $.ajax({
+                    type : "GET",
+                    url : "https://c-api.10bagger.co.kr/v1/news/sectorTechStkList",
+                    data : {
+                        sectorNo : parseInt(getParameter("sectorNo"))
+                    },
+                    success : function(data) {
+                        if (data.length > 0) {
+                            $(".sectorName").html(data[0].sectorName);
+                        }
+                        $.each(data, function(index, el) {
+                            var table_html = '<tr>\
+                                                <td class="tg-lboi">' + el.isuKorNm + '</td>\
+                                                <td class="tg-lboi2">' + el.sectorName + '</td>\
+                                                <td class="tg-yz93">' + addComma(el.crntPrice) + '</td>\
+                                                <td class="tg-9wq8">' + el.tcg + '</td>\
+                                                <td class="tg-9wq8">' + addComma(el.patentCount) + '</td>\
+                                                <td class="tg-9wq8">' + el.assdValue + '</td>\
+                                              </tr>'
+                            $("tbody").append(table_html);
+                        })
+                    },
+                    error : function(request, status, error) {
+                        console.error("code = " + request.status + "\nmessage = " + request.responseText + "\nerror = " + error);
+                    }
+                });
+            });
+        </script>
+</body>
+</html>

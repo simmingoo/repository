@@ -1,0 +1,149 @@
+<script>
+    $(document).ready(function(){
+        sectorTrend(sectorNo);
+        sectorCycle(sectorNo);
+        $("#saveTrendBtn").click(function () {
+            saveSectorTrend();
+        });
+        $("#saveCycleBtn").click(function () {
+            saveSectorCycle();
+        });
+    });
+</script>
+<div style="page-break-before:always">
+
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- 3. 시장성장 동향 //-->
+    <div class="xl-title-s1">
+        3. 시장성장 동향
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-title-s2">
+        (1) 특허 등록 동향
+    </div>
+    <div id="trend_desc_div_1" class="xl-note-1"></div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-graph-title xl-flex-row xl-center">
+        <div class="xl-gt-1">&nbsp;</div>
+        <div id="trend_desc_div_2" class="xl-gt-2 xl-flex-col xl-center">
+        </div>
+        <div class="xl-gt-3">&nbsp;</div>
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div id="container1" style="width:100%; height:250px; margin:0 auto;"></div>
+    <div class="xl-gt-bottom">&nbsp;</div>
+
+    <div class="xa-col xl-flex-row xl-center" style="margin-bottom:2px">
+        <div class="xa-10i">
+            <span>표시갯수 : </span>
+        </div>
+        <div class="xa-90p xl-flex-row xl-center">
+            <select id="trend_select" class="xa-select" style="border: #000000 solid 1px;" onchange="changeTrendSelect(this.value)">
+                <option value="0" selected>-표시갯수를 선택하세요-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+    </div>
+    <div id="trend_year_div" class="xa-col xl-flex-row xl-center" style="margin-bottom:2px">
+    </div>
+    <div id="trend_count_div" class="xa-col xl-flex-row xl-center" style="margin-top:2px">
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" id="saveTrendBtn" class="xl-btn-i" value="특허 등록 동향 적용">
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" class="xl-btn-i" value="기존 데이터 불러오기" onclick="sectorTrend(sectorNo)">
+    </div>
+
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <div class="xl-title-s2">
+        (2) 기술주기
+    </div>
+    <div class="xl-note-1">기술 주기는 해당 분야에서 개별 기술의 평균적인 유효기간을 의미합니다. 기술 주기가 짧을 수록 기술 변화 속도가 높은 분야로 판단할 수 있습니다.</div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-tab-title xl-flex-row xl-left">
+        <div id="cycle_desc_1" class="xl-tt-1 xl-flex-col xl-center" style="width:150px">
+        </div>
+        <div class="xl-tt-2">&nbsp;</div>
+    </div>
+    <div class="xl-3-2-1 xl-flex-row xl-center">
+        <div class="xl-321-1 xl-flex-row xl-center">
+            <b style="color:#AE2318;font-size:21px;font-weight:500">5.8</b>&nbsp;&nbsp;년
+        </div>
+        <div class="xl-321-2 xl-flex-col xl-center">
+        </div>
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div id="container2" style="width:100%; height:250px; margin:0 auto;"></div>
+    <div class="xl-gt-bottom">&nbsp;</div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <div class="xa-col xl-flex-row xl-center" style="margin-bottom:2px">
+        <div class="xa-5i">
+            <span>해당분야 기술주기 : </span>
+        </div>
+        <div class="xa-50p xl-flex-row xl-center">
+            <input type="text" id="sectorCycleVal" class="xl-note-1-input" value="">
+        </div>
+    </div>
+    <div class="xa-col xl-flex-row xl-center" style="margin-bottom:2px">
+        <div class="xa-10i">
+            <span>표시갯수 : </span>
+        </div>
+        <div class="xa-90p xl-flex-row xl-center">
+            <select id="cycle_select" class="xa-select" style="border: #000000 solid 1px;" onchange="changeCycleSelect(this.value)">
+                <option value="0">-표시갯수를 선택하세요-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+
+        </div>
+    </div>
+    <div id="cycle_selyn_div" class="xa-col xl-flex-row xl-center" style="margin-bottom:2px">
+    </div>
+    <div id="cycle_field_div" class="xa-col xl-flex-row xl-center" style="margin-top:2px;margin-bottom:2px">
+    </div>
+    <div id="cycle_div" class="xa-col xl-flex-row xl-center" style="margin-top:2px">
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" id="saveCycleBtn" class="xl-btn-i" value="기술주기 적용">
+    </div>
+
+    <div class="xl-btn-l xl-flex-col xl-center">
+        <input type="button" class="xl-btn-i" value="기존 데이터 불러오기" onclick="sectorCycle(sectorNo)">
+    </div>
+
+    <!-- ### 푸터 ### //-->
+    <div class="xl-footer xl-flex-row xl-left">
+        <div class="xl-pageno xl-flex-row xl-center">- 2 -</div>
+        <div class="xl-logobg xl-flex-col xl-center">
+            <img class="xl-logo" src="/extstatic/img/l/logo-10bagger-tp01.png">
+        </div>
+    </div>
+
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-page-bar">&nbsp;</div>
+
+</div>

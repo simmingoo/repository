@@ -1,0 +1,104 @@
+
+<script>
+
+	$(document).ready(function(){
+	    sectorTrend(sectorNo);
+	    sectorCycle(sectorNo);
+	    
+	    let url = "https://c-api.10bagger.co.kr/v1/report/sector/"+sectorNo;
+	    $.ajax({
+	        type:"get",
+	        url:url,
+	        async : false,
+	        contentType: "application/json",
+	        dataType: "json",
+	        success:function(data) {	
+	        	$("#sectorName.xl-st-4.xl-flex-col.xl-center ").text(data[0].sectorName);
+	        	$("#sectorName2").text(data[0].sectorName);
+	        },
+	    });
+	    
+	    let url2 = "https://c-api.10bagger.co.kr/v1/report/sector/cycle/"+sectorNo;
+	    $.ajax({
+	        type:"get",
+	        url:url2,
+	        async : false,
+	        contentType: "application/json",
+	        dataType: "json",
+	        success:function(data) {
+	        	$("#cycle").text(data[0].cycle);
+	        },
+	    });
+	    
+	    
+	});
+</script>
+<div class="page page2" style="page-break-before:always">
+<div class="xl-header xl-flex-row xl-left">
+                <div class="xl-st-4 xl-flex-col xl-center" id="sectorName">
+                    
+                </div>
+                <div class="xl-st-3">&nbsp;</div>
+                <div class="xl-st-2 xl-flex-col xl-center">
+                    기술가치투자 섹터 리포트
+                </div>
+                <div class="xl-st-1">&nbsp;</div>
+            </div>
+
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- 3. 시장성장 동향 //-->
+    <div class="xl-title-s1">
+        3. 시장성장 동향
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-title-s2">
+        (1) 특허 등록 동향
+    </div>
+    <div id="trend_desc_div_1" class="xl-note-1"></div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-graph-title xl-flex-row xl-center">
+        <div class="xl-gt-1">&nbsp;</div>
+        <div id="trend_desc_div_2" class="xl-gt-2 xl-flex-col xl-center">
+        </div>
+        <div class="xl-gt-3">&nbsp;</div>
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div id="container1" style="width:100%; height:250px; margin:0 auto;"></div>
+    <div class="xl-gt-bottom">&nbsp;</div>
+
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <div class="xl-title-s2">
+        (2) 기술주기
+    </div>
+    <div class="xl-note-1">기술 주기는 해당 분야에서 개별 기술의 평균적인 유효기간을 의미합니다. 기술 주기가 짧을 수록 기술 변화 속도가 높은 분야로 판단할 수 있습니다.</div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+    <div class="xl-tab-title xl-flex-row xl-left">
+        <div id="cycle_desc_1" class="xl-tt-1 xl-flex-col xl-center" style="width:150px">
+        </div>
+        <div class="xl-tt-2">&nbsp;</div>
+    </div>
+    <div class="xl-3-2-1 xl-flex-row xl-center">
+        <div class="xl-321-1 xl-flex-row xl-center">
+            <b style="color:#AE2318;font-size:21px;font-weight:500" id="cycle"></b>&nbsp;&nbsp;년
+        </div>
+        <div class="xl-321-2 xl-flex-col xl-center"><span><span id="sectorName2"></span> 시장에서 개별 기술의 평균적인 유효기간입니다.<br>기술 주기가 짧을수록 기술변화 속도가 빠르다고 볼 수 있습니다.</span></div>
+    </div>
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div id="container2" style="width:100%; height:250px; margin:0 auto;"></div>
+    <div class="xl-gt-bottom">&nbsp;</div>
+    <div class="xl-paragraph-spacing-20">&nbsp;</div>
+
+    <!-- ### 푸터 ### //-->
+    <div class="xl-footer xl-flex-row xl-left">
+        <div class="xl-pageno xl-flex-row xl-center">- 2 -</div>
+        <div class="xl-logobg xl-flex-col xl-center">
+            <img class="xl-logo" src="/extstatic/img/l/logo-10bagger-tp01.png">
+        </div>
+    </div>
+
+    <div class="xl-paragraph-spacing-10">&nbsp;</div>
+    <div class="xl-page-bar">&nbsp;</div>
+
+</div>

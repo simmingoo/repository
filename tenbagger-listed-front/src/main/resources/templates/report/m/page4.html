@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <title>page4 Report</title> <!-- [페이지명 | 사이트명] -->
+	  <link rel="stylesheet" type="text/css" href="/extstatic/css/style_mobile.css">
+	  <!-- <script src="/extstatic/js/jquery-1.12.4.min.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+	<script src="/extstatic/js/stock/highstock.js"></script>
+	<script src="/extstatic/js/stock/modules/data.js"></script>
+    <script src="/extstatic/js/maps/modules/map.js"></script>
+	<script src="/extstatic/js/maps/modules/data.js"></script>
+	<script src="/extstatic/js/mapdata/custom/world.js"></script>
+    <script src="/extstatic/js/modules/wordcloud.js"></script>
+	<script src="/extstatic/js/modules/series-label.js"></script>
+	<script src="/extstatic/js/html2pdf.bundle.min.js"></script>
+    <script src="/extstatic/js/convertapi.js"></script> -->
+	  
+	</head>
+<body>
+	<div class="page page4">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">4</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(2) 특허평가등급 비교</h3>
+					<div class="desc">
+						특허평가 등급은 (주)위즈도메인이 개발한 통계 방법으로 산출된 특허평가점수를 기반으로 합니다. 다음은 <span class="isuKorNm"></span>와 유사 기업의 평균 특허등급 비율을 비교한 것입니다. 산출 기준은 보유특허를 대상으로 하였습니다.
+					</div>
+				</div>
+				<div class="bx_chart">
+					<div class="top">
+						<div class="tit"><strong>특허 평가 등급별 비율</strong></div>
+					</div>
+					<div class="coln circle">
+						<div id="donutChart1"><!-- <div id="highcharts-udwlt8a-1485" dir="ltr" class="highcharts-container"></div> --></div>
+						<strong class="vs">VS</strong>
+						<div id="donutChart2"><!-- <div id="highcharts-udwlt8a-1491" dir="ltr" class="highcharts-container"></div> --></div>
+					</div>
+				</div>
+				<div class="unit">
+					<h3>(3) 연구원 구성 비교</h3>
+					<div class="desc">
+						발명자평가는 특허문헌에 기재된 발명자들에 대하여 해당 발명자가 출원한 특허정보를 취합하여, 특허활동에 관련한 항목 을 평가하고 다른 발명자들의 평가와 상대 비교를 통해 산출된 결과를 제공합니다.
+					</div>
+				</div>
+				<div class="bx_chart">
+					<div class="top">
+						<div class="tit"><strong>발명자 평가 등급별 비율</strong></div>
+					</div>
+					<div class="coln circle">
+						<div id="donutChart3"></div>
+						<strong class="vs">VS</strong>
+						<div id="donutChart4"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")};
+			let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&'); 
+			let url1 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+			let url2 = '/report/competition?' + query;
+			
+			fetch(url2) 
+			.then(res => res.json()) 
+			.then(data => { 
+					fetch(url1)
+						.then(res => res.json())
+						.then(res => {
+							var isuKorNm = res.isuKorNm
+							
+							var chart_data = [];
+							var chart_data_competitor = [];
+							var chart_data_inventor = [];
+							var chart_data_inventor_competitor = [];
+							var patentCnt = 0;
+							var patentCnt_competitor = 0;
+							var inventorCnt = 0;
+							var inventorCnt_competitor = 0;
+							
+							$.each(data.patentGrades.slice(0, 3), function(index, row){
+								let value = {};
+								value.name = row.grade
+								value.y = row.ratio
+								chart_data.push(value)
+								patentCnt += row.count
+								
+								let value_comp = {};
+								value_comp.name = row.grade
+								value_comp.y = row.ratioCompetitor
+								chart_data_competitor.push(value_comp)
+								patentCnt_competitor += row.countCompetitor
+							});
+							
+							$.each(data.inventorGrades.slice(0, 3), function(index, row){
+								let value = {};
+								value.name = row.grade
+								value.y = row.ratio
+								chart_data_inventor.push(value)
+								inventorCnt += row.count
+								
+								let value_comp = {};
+								value_comp.name = row.grade
+								value_comp.y = row.ratioCompetitor
+								chart_data_inventor_competitor.push(value_comp)
+								inventorCnt_competitor += row.countCompetitor
+							});
+							
+							Highcharts.chart('donutChart1', {
+									chart: {
+									      type: 'pie',
+									      margin: [0, 5, 5, 5],
+									      spacingRight:0,//차트 우측 여백 지정(default 10)
+									  	  backgroundColor:'rgba(255, 255, 255, 0)',
+									  	  width:250,
+									  	  height:250,
+									  	  marginRight:100
+									  },
+								 	
+								  	exporting: {
+									    enabled: false
+									  },
+								  	credits: {enabled: false}, //highchart 워터마크 숨김처리
+								    title: {
+								    	text: "<span style='color:rgb(174, 35, 24); font-weight:bold;'>" +isuKorNm + '</span><br/><br/> 보유특허<br/> <span style="font-size:8px;font-weight:bold;">' + patentCnt + "</span>건",
+								    	align: 'left',
+								    	x: 37,
+								    	y: 15,
+								        verticalAlign: 'middle',
+								        style:{
+								        	fontFamily:"NanumSquare",
+								        	fontSize:"11px",
+								        }
+								    },
+								    legend: {
+								      layout: 'vertical',
+								      align:'left',
+								      verticalAlign: 'bottom',
+								      itemMarginTop: 5,
+								      symbolHeight: 5.5,
+								      symbolWidth: 5.5,
+								      symbolPadding: 5,
+								      symbolRadius: 0,
+								      labelFormatter: function () {
+								    	  return this.name + '등급';
+								      },
+								      itemStyle: {
+								        color: '#444',
+								        fontFamily:"NanumSquare",
+								        fontSize: '8px',
+								      }
+								     },
+								     plotOptions: {
+								       pie: {//도넛(파이)차트 전체 옵션 지정.
+								       dataLabels: {
+									       enabled: true,
+									       distance: 5,
+								       	},
+								       	showInLegend:true
+								       },
+								       series: {
+									        states: {
+									            inactive: {
+									                opacity: 1
+									            },
+								  				hover:{
+								  					enabled:false
+								  				},
+									        },
+									        events: {
+							  		            legendItemClick: function() {
+							  		              return false;
+							  		            }
+							  				}
+									    }
+								       
+								     },
+								     series: [{
+								       type: 'pie',
+								       name:'특허 평가 등급별 비율',
+								       innerSize: '80%',//도넛 차트 지정시 내부 구멍 너비를 설정.(도넛 차트 필수 지정 옵션)
+								       data: chart_data,
+								        dataLabels: {
+								          enabled: true,
+								          format: '{y:.0f}%',//label의 포맷을 "데이터 명 : y"로 지정해서 사용.
+								          align: 'center',
+								          //세로 위치 지정				    
+								          style: {
+								         	fontSize: '10px',
+								            fontFamily: 'NanumSquare',
+								            fontWeight: '400',
+								          }
+								        },
+										 animation:false
+									}],
+									colors: ['#a41221', '#ed313b', '#f6931d', '#E80C7A'],
+									tooltip: { enabled: false },
+								     
+							});
+							Highcharts.chart('donutChart2', {
+								chart: {
+								      type: 'pie',
+								      margin: [0, 5, 5, 5],
+								      spacingRight:0,//차트 우측 여백 지정(default 10)								      							    	
+								  	  backgroundColor:'rgba(255, 255, 255, 0)',
+								  	  width:260,
+								  	  height:260,
+								  	  marginRight:100
+								  },
+							 
+							  	exporting: {
+								    enabled: false
+								  },
+							  	credits: {enabled: false}, //highchart 워터마크 숨김처리
+							    title: {
+							    	text: "<span style='font-weight:bold;'>경쟁기업</span><br/><br/> 보유평균<br/> <span style='font-size:8px;font-weight:bold;'>" + patentCnt_competitor + "</span>건",
+							    	align: 'left',
+							        verticalAlign: 'middle',
+							        x:60,
+							        y:15,
+							        style:{
+							        	fontFamily:"NanumSquare",
+							        	fontSize:"11px"
+							        }
+							    },
+							    legend: {
+							      layout: 'vertical',//범례 세로 정렬 시 vertical로 지정.(default horizontal)
+							      align:'left',
+							      verticalAlign: 'bottom',
+							      itemMarginTop: 5,//범례 margin top 지정(bottom도 존재.)
+							      symbolHeight: 5.5,
+							      symbolWidth: 5.5,
+							      symbolPadding: 5,
+							      symbolRadius: 0,
+							      labelFormatter: function () {
+							    	  return this.name + '등급';
+							      },
+							      itemStyle: {
+							    	  color: '#444',
+							          fontFamily:"NanumSquare",
+							          fontSize: '8px',
+							      }
+							     },
+							     plotOptions: {
+							       pie: {//도넛(파이)차트 전체 옵션 지정.
+							       dataLabels: {
+								       enabled: true,
+								       distance: 5,
+								       },
+								       showInLegend: true
+							       },
+							       series: {
+								        states: {
+								            inactive: {
+								                opacity: 1
+								            },
+							  				hover:{
+							  					enabled:false
+							  				},
+								        },
+								        events: {
+						  		            legendItemClick: function() {
+						  		              return false;
+						  		            }
+						  				}
+								    }
+							     },
+							     series: [{
+							       type: 'pie',
+							       name:'특허 평가 등급별 비율',
+							       innerSize: '80%',//도넛 차트 지정시 내부 구멍 너비를 설정.(도넛 차트 필수 지정 옵션)
+							       data: chart_data_competitor,
+							        dataLabels: {
+							          enabled: true,
+							          format: '{y:.0f}%',//label의 포맷을 "데이터 명 : y"로 지정해서 사용.
+							          align: 'center',
+							          //세로 위치 지정				    
+							          style: {
+							         	fontSize: '10px',
+							            fontFamily: 'NanumSquare',
+							            fontWeight: '400',
+							          }
+							        },
+									 animation:false
+								}],
+								colors: ['#253e60','#4e78a3','#bebebe','#4682b4'],
+							    tooltip: { enabled: false },
+							});
+							
+							
+							Highcharts.chart('donutChart3', {
+								chart: {
+								      type: 'pie',
+								      margin: [0, 5, 5, 5],
+								      spacingRight:0,//차트 우측 여백 지정(default 10)
+								  	  backgroundColor:'rgba(255, 255, 255, 0)',
+								  	  width:275,
+								  	  height:275,
+								  	  marginRight:100
+								  },
+							 	
+							  	exporting: {
+								    enabled: false
+								  },
+							  	credits: {enabled: false}, //highchart 워터마크 숨김처리
+							    title: {
+							    	text: "<span style='color:rgb(174, 35, 24); font-weight:bold;'>" +isuKorNm + '</span><br/><br/> 보유인원<br/> <span style="font-size:8px;font-weight:bold;">' + inventorCnt + "</span>명",
+							    	align: 'left',
+							    	x: 45,
+							    	y: 15,
+							        verticalAlign: 'middle',
+							        style:{
+							        	fontFamily:"NanumSquare",
+							        	fontSize:"11px",
+							        }
+							    },
+							    legend: {
+							      layout: 'vertical',
+							      align:'left',
+							      verticalAlign: 'bottom',
+							      itemMarginTop: 5,
+							      symbolHeight: 5.5,
+							      symbolWidth: 5.5,
+							      symbolPadding: 5,
+							      symbolRadius: 0,
+							      labelFormatter: function () {
+							    	  return this.name + '등급';
+							      },
+							      itemStyle: {
+							        color: '#444',
+							        fontFamily:"NanumSquare",
+							        fontSize: '8px',
+							      }
+							     },
+							     plotOptions: {
+							       pie: {//도넛(파이)차트 전체 옵션 지정.
+							       dataLabels: {
+								       enabled: true,
+								       distance: 5,
+							       	},
+							       	showInLegend:true
+							       },
+							       series: {
+								        states: {
+								            inactive: {
+								                opacity: 1
+								            },
+							  				hover:{
+							  					enabled:false
+							  				},
+								        },
+								        events: {
+						  		            legendItemClick: function() {
+						  		              return false;
+						  		            }
+						  				}
+								    }
+							       
+							     },
+								series: [{
+								       type: 'pie',
+								       name:'발명자 평가 등급별 비율',
+								       innerSize: '80%',//도넛 차트 지정시 내부 구멍 너비를 설정.(도넛 차트 필수 지정 옵션)
+								       data: chart_data_inventor,
+								        dataLabels: {
+								          enabled: true,
+								          format: '{y:.0f}%',//label의 포맷을 "데이터 명 : y"로 지정해서 사용.
+								          align: 'center',
+								          //세로 위치 지정				    
+								          style: {
+								         	fontSize: '10px',
+								            fontFamily: 'NanumSquare',
+								            fontWeight: '400',
+								          }
+								        },
+								        animation:false
+									}],							
+								
+								colors: ['#a41221', '#ed313b', '#f6931d', '#E80C7A'],
+								tooltip: { enabled: false },
+							     
+						});
+						Highcharts.chart('donutChart4', {
+							chart: {
+							      type: 'pie',
+							      margin: [0, 5, 5, 5],
+							      spacingRight:0,//차트 우측 여백 지정(default 10)								      							    	
+							  	  backgroundColor:'rgba(255, 255, 255, 0)',
+							  	  width:260,
+							  	  height:260,
+							  	  marginRight:100
+							  },
+						 
+						  	exporting: {
+							    enabled: false
+							  },
+						  	credits: {enabled: false}, //highchart 워터마크 숨김처리
+						    title: {
+						    	text: "<span style='font-weight:bold;'>경쟁기업</span><br/><br/> 인원평균<br/> <span style='font-size:8px;font-weight:bold;'>" + inventorCnt_competitor + "</span>명",
+						    	align: 'left',
+						        verticalAlign: 'middle',
+						        x:50,
+						        y:15,
+						        style:{
+						        	fontFamily:"NanumSquare",
+						        	fontSize:"11px"
+						        }
+						    },
+						    legend: {
+						      layout: 'vertical',//범례 세로 정렬 시 vertical로 지정.(default horizontal)
+						      align:'left',
+						      verticalAlign: 'bottom',
+						      itemMarginTop: 5,//범례 margin top 지정(bottom도 존재.)
+						      symbolHeight: 5.5,
+						      symbolWidth: 5.5,
+						      symbolPadding: 5,
+						      symbolRadius: 0,
+						      labelFormatter: function () {
+						    	  return this.name + '등급';
+						      },
+						      itemStyle: {
+						    	  color: '#444',
+						          fontFamily:"NanumSquare",
+						          fontSize: '8px',
+						      }
+						     },
+						     plotOptions: {
+						       pie: {//도넛(파이)차트 전체 옵션 지정.
+						       dataLabels: {
+							       enabled: true,
+							       distance: 5,
+							       },
+							       showInLegend: true
+						       },
+						       series: {
+							        states: {
+							            inactive: {
+							                opacity: 1
+							            },
+						  				hover:{
+						  					enabled:false
+						  				},
+							        },
+							        events: {
+					  		            legendItemClick: function() {
+					  		              return false;
+					  		            }
+					  				}
+							    }
+						     },
+						     series: [{
+							       type: 'pie',
+							       name:'발명자 평가 등급별 비율',
+							       innerSize: '80%',//도넛 차트 지정시 내부 구멍 너비를 설정.(도넛 차트 필수 지정 옵션)
+							       data: chart_data_inventor_competitor,
+							        dataLabels: {
+							          enabled: true,
+							          format: '{y:.0f}%',//label의 포맷을 "데이터 명 : y"로 지정해서 사용.
+							          align: 'center',
+							          //세로 위치 지정				    
+							          style: {
+							         	fontSize: '10px',
+							            fontFamily: 'NanumSquare',
+							            fontWeight: '400',
+							          }
+							        },
+							        animation:false
+								}],
+							colors: ['#253e60','#4e78a3','#bebebe','#4682b4'],
+						    tooltip: { enabled: false },
+						});
+							/* Highcharts.chart('donutChart3', {
+								chart: {
+								      type: 'pie',
+								      margin: [0, 5, 5, 5],
+								      spacingRight:0,//차트 우측 여백 지정(default 10)			
+								  	  backgroundColor:'rgba(255, 255, 255, 0)',
+								  	  width:250,
+								  	  height:250,
+								  	  marginRight:100
+								  },
+							 
+							  	exporting: {
+								    enabled: false
+								  },
+							  	credits: {enabled: false}, //highchart 워터마크 숨김처리
+							    title: {
+							    	text: "<span style='color:rgb(174, 35, 24); font-weight:bold;'>" +isuKorNm + '</span><br/><br/> 보유인원<br/> <span style="font-size:8px;font-weight:bold;">' + inventorCnt + "</span>명",
+							    	align: 'left',
+							    	x: 45,
+							    	y: 15,
+							        verticalAlign: 'middle',
+							        style:{
+							        	fontFamily: 'NanumSquare',
+							        	fontSize:'11px'
+							        }
+							    },
+							    legend: {
+							      layout: 'vertical',//범례 세로 정렬 시 vertical로 지정.(default horizontal)
+							      align:'left',
+							      verticalAlign: 'bottom',
+							      itemMarginTop: 5,//범례 margin top 지정(bottom도 존재.)
+							      symbolHeight: 5.5,
+							      symbolWidth: 5.5,
+							      symbolPadding: 5,
+							      symbolRadius: 0,
+							      labelFormatter: function () {
+							    	  return this.name + '등급';
+							      },
+							      itemStyle: {
+							    	fontFamily: 'NanumSquare',
+							        color: '#444',
+							        fontSize: '8px',
+							      }
+							     },
+							     plotOptions: {
+							       pie: {//도넛(파이)차트 전체 옵션 지정.
+							       dataLabels: {
+								       enabled: true,
+								       distance: 5,
+							       	},
+							       	showInLegend:true
+							       },
+							       series: {
+								        states: {
+								            inactive: {
+								                opacity: 1
+								            },
+							  				hover:{
+							  					enabled:false
+							  				},
+								        },
+								        events: {
+						  		            legendItemClick: function() {
+						  		              return false;
+						  		            }
+						  				},
+									   animation:false
+
+								    }
+							       
+							     },
+							     series: [{
+							       type: 'pie',
+							       name:'발명자 평가 등급별 비율',
+							       innerSize: '80%',//도넛 차트 지정시 내부 구멍 너비를 설정.(도넛 차트 필수 지정 옵션)
+							       data: chart_data_inventor,
+							        dataLabels: {
+							          enabled: true,
+							          format: '{y:.0f}%',//label의 포맷을 "데이터 명 : y"로 지정해서 사용.
+							          align: 'center',
+							          //세로 위치 지정				    
+							          style: {
+							         	fontSize: '10px',
+							            fontFamily: 'NanumSquare',
+							            fontWeight: '400',
+							          }
+							        }
+								}],
+								colors: ['#a41221', '#ed313b', '#f6931d', '#E80C7A'],
+								tooltip: { enabled: false },
+							     
+						});
+						Highcharts.chart('donutChart4', {
+							chart: {
+							      type: 'pie',
+							      margin: [0, 5, 5, 5],
+							      spacingRight:0,//차트 우측 여백 지정(default 10)							     
+							  	  backgroundColor:'rgba(255, 255, 255, 0)',
+							  	  width:270,
+							  	  height:270,
+							  	  marginRight:110
+							  },
+						 
+						  	exporting: {
+							    enabled: false
+							  },
+						  	credits: {enabled: false}, //highchart 워터마크 숨김처리
+						    title: {
+						    	text: "<span style='font-weight:bold;'>경쟁기업</span><br/><br/> 인원평균<br/> <span style='font-size:8px;font-weight:bold;'>" + inventorCnt_competitor + "</span>명",
+						    	align: 'left',
+						        verticalAlign: 'middle',
+						        x:50,
+						        y:15,
+						        style:{
+						        	fontFamily: 'NanumSquare',
+						        	fontSize:'11px'
+						        }
+						    },
+						    legend: {
+						      layout: 'vertical',//범례 세로 정렬 시 vertical로 지정.(default horizontal)
+						      align:'left',
+						      verticalAlign: 'bottom',
+						      itemMarginTop: 5,//범례 margin top 지정(bottom도 존재.)
+						      symbolHeight: 5.5,
+						      symbolWidth: 5.5,
+						      symbolPadding: 5,
+						      symbolRadius: 0,
+						      labelFormatter: function () {
+						    	  return this.name + '등급';
+						      },
+						      itemStyle: {
+						    	fontFamily: 'NanumSquare',
+						        color: '#444',
+						        fontSize: '8px',						        
+						      }
+						     },
+						     plotOptions: {
+						       pie: {//도넛(파이)차트 전체 옵션 지정.
+						       dataLabels: {
+							       enabled: true,
+							       distance: 5,
+							       },
+							       showInLegend: true
+						       },
+						       series: {
+							        states: {
+							            inactive: {
+							                opacity: 1
+							            },
+						  				hover:{
+						  					enabled:false
+						  				},
+							        },
+							        events: {
+					  		            legendItemClick: function() {
+					  		              return false;
+					  		            }
+					  				},
+								   animation:false
+							    }
+						     },
+						     series: [{
+						       type: 'pie',
+						       name:'발명자 평가 등급별 비율',
+						       innerSize: '80%',//도넛 차트 지정시 내부 구멍 너비를 설정.(도넛 차트 필수 지정 옵션)
+						       data: chart_data_inventor_competitor,
+						        dataLabels: {
+						          enabled: true,
+						          format: '{y:.0f}%',//label의 포맷을 "데이터 명 : y"로 지정해서 사용.
+						          align: 'center',
+						          //세로 위치 지정				    
+						          style: {
+						         	fontSize: '10px',
+						            fontFamily: 'NanumSquare',
+						            fontWeight: '400',
+						          }
+						        }
+							}],
+							colors: ['#253e60','#4e78a3','#bebebe','#4682b4'],
+						    tooltip: { enabled: false },
+						}); */
+							
+					})
+				})
+			.catch(function (error) { 
+					console.log('request failed', error) 
+				});
+			
+			
+		});
+	  </script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=595, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page23 Report</title> <!-- [페이지명 | 사이트명] -->
+
+	</head>
+<body>
+	<div class="page page23" style="page-break-before:always">
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">23</span>
+		</header>
+		<div class="container">
+			<h2>&nbsp;</h2>
+			<div class="content">
+				<div class="unit top"><h3>(2) 재무상태 요약</h3><span>(단위:억원)</span></div>
+				<div class="unit t_scroll mt10">
+					<table class="tbl">
+						<colgroup>
+							<col width="16.8%"/>
+							<col/>
+							<col width="11.76%"/>
+							<col width="11.76%"/>
+							<col width="11.76%"/>
+							<col width="11.76%"/>
+						</colgroup>
+						<thead id="thead">
+						</thead>
+						<tbody id="tbody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+$(document).ready(function(){
+	// $.ajax({
+	// 	type: 'GET',
+	// 	url: '/report/outline',
+	// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+	// 	success: function(response) {
+	// 		var data = JSON.parse(response);
+	// 		$("#reportPage23 .label_type").html(data.mktCapScale);
+	// 		$("#reportPage23 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+	// 	}
+	// })
+	$.ajax({
+		type: 'GET',
+		url: '/finance/fundamental',
+		data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		success: function(response) {
+			var data = JSON.parse(response)
+			let table_html = '<tr>\
+					<th colspan="2">항목</th>'
+				if (data.fiscalDate.t1 != null) {
+					table_html += '<th><span class="font9">'+data.fiscalDate.t1+'</span></th>'
+				}
+				if (data.fiscalDate.t2 != null) {
+					table_html += '<th><span class="font9">'+data.fiscalDate.t2+'</span></th>'
+				}
+				if (data.fiscalDate.t3 != null) {
+					table_html += '<th><span class="font9">'+data.fiscalDate.t3+'</span></th>'
+				}
+				if (data.fiscalDate.t4 != null) {
+					table_html += '<th><span class="font9">'+data.fiscalDate.t4+'</span></th></tr>'
+				}
+				$("#reportPage23 #thead").append(table_html);
+				
+				
+			$.each(data.fundamentalItems, function(index, item) {
+				if (index < 4) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left" colspan="2">'+item.itemGroupName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left" colspan="2">'+item.itemGroupName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left" colspan="2">'+item.itemGroupName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left" colspan="2">'+item.itemGroupName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left" colspan="2">'+item.itemGroupName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}	
+				}
+							
+				if (index == 4) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);					
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);					
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);					
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);					
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+				}		
+				
+				if (index == 5) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					
+				}				
+				
+				if (index == 6) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="3">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="3">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="3">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="3">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left" rowspan="3">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}			
+				}				
+				
+				if (index == 7) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}			
+				}
+				
+				if (index == 8) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}			
+				}			
+				
+				if (index == 9) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2" style="background: #FFFFFF">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2" style="background: #FFFFFF">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2" style="background: #FFFFFF">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2" style="background: #FFFFFF">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left" rowspan="2" style="background: #FFFFFF">'+item.itemGroupName+'</td>\
+							<td class="left">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}			
+				}		
+				
+				if (index == 10) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}			
+				}		
+				
+				if (index == 11) {
+					if (data.fiscalDate.t1 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t2 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t3 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else if (data.fiscalDate.t4 == null) {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}
+					else {
+						let table_html = '<tr>\
+							<td class="left bl">'+item.itemName+'</td>\
+							<td class="right">'+addComma(item.t1)+'</td>\
+							<td class="right">'+addComma(item.t2)+'</td>\
+							<td class="right">'+addComma(item.t3)+'</td>\
+							<td class="right">'+addComma(item.t4)+'</td>\
+							</tr>'
+						$("#reportPage23 #tbody").append(table_html);
+					}		
+				}	
+			})
+			$("#reportPage23 .right").each(function (index, item) {
+				if (item.innerHTML < 0) {
+					$(item).addClass("txt_red");
+				}
+			})
+		}
+	});
+});
+</script>
+</body>
+</html>

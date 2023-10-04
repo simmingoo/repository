@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=595, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page7 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page page7" style="page-break-before:always">
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">7</span>
+		</header>
+		<div class="container">
+			<h2>&nbsp;</h2>
+			<div class="content">
+				<div class="unit">
+					<h3>(4) 주요기술부문별 최신 출원특허</h3>
+					<div class="desc">
+					</div>
+				</div>
+				<div class="unit showUnit" style="display: none;">
+					<span class="tit"><u></u></span>
+					<div class="desc sm">
+					</div>
+					<div class="unit t_scroll">
+					<table class="tbl">
+						<colgroup>
+							<col width="18.48%">
+							<col>
+							<col width="13.44%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>특허번호</th> 
+								<th>발명의 명칭</th>
+								<th>출원일</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					</div>
+				</div>
+				<div class="unit showUnit" style="display: none;">
+					<span class="tit"><u></u></span>
+					<div class="desc sm">
+					</div>
+					<div class="unit t_scroll">
+					<table class="tbl">
+						<colgroup>
+							<col width="18.48%">
+							<col>
+							<col width="13.44%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>특허번호</th> 
+								<th>발명의 명칭</th>
+								<th>출원일</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		  $(function(){
+			    let params = {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")}; 
+				let query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&'); 
+				let url1 = 'https://c-api.10bagger.co.kr/v1/report/outline?' + query;
+				let url2 = '/report/technology?' + query;
+				
+				fetch(url1) 
+					.then(res => res.json()) 
+					.then(data => { 
+							//$("#reportPage7 .label_type").html(data.mktCapScale);
+							//$("#reportPage7 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+							$("#reportPage7 .desc:eq(0)").html(data.isuKorNm + "(이)가 기술부문별로 출원한 최근 특허를 표시합니다.")
+						})
+					.catch(function (error) { 
+						console.log('request failed', error) 
+						});
+				
+				fetch(url2) 
+					.then(res => res.json()) 
+					.then(data => {
+							$.each(data.ipcs, function(index, row) {
+								if(index < 2){
+									$("#reportPage7 .tit").eq(index).children().html("["+row.ic+"] "+row.icName)
+									$("#reportPage7 .showUnit").eq(index).show()
+								}
+							});
+							
+							$.each(data.ipcs, function(count, row) {
+								if(count < 2){
+									$("#reportPage7 .desc.sm").eq(count).html(row.icDesc)
+									$.each(row.patents, function(index, row) {
+										let tr_html = '<tr>\
+											<td><a href='+ row.link + ' target="_blank"><u class="txt_blue">' + row.patnv + '</u></a></td>\
+											<td style="text-align:left">'+row.ttl+'</td>\
+											<td>'+row.apd+'</td>\
+											</tr>'
+											$("#reportPage7 .tbl").find("tbody").eq(count).append(tr_html);
+									});
+								}
+							});
+						})
+				.catch(function (error) { 
+					console.log('request failed', error) 
+					});
+				
+			
+		  });
+	  </script>
+</body>
+</html>

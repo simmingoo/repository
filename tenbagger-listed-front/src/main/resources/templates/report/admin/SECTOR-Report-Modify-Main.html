@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>Unicorn Ranch</title>
+
+    <link rel="stylesheet" type="text/css" id="bootstrapBasic" href="/extstatic/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" id="bootstrapGrid" href="/extstatic/css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" type="text/css" id="bootstrapUtil" href="/extstatic/css/bootstrap-utilities.min.css"/>
+
+    <link rel="stylesheet" type="text/css" id="layoutStylesheet" href="/extstatic/css/xa-layout.css"/>
+    <link rel="stylesheet" type="text/css" id="jqueryUi" href="/extstatic/css/jquery-ui.css">
+
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/highcharts.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/data.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/exporting.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/export-data.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/sonification.js"></script>
+    <script src="/extstatic/ext/Highcharts-9.2.2/code/modules/accessibility.js"></script>
+
+    <script src="/extstatic/js/jquery-3.5.1.min.js"></script>
+    <script src="/extstatic/js/jquery-ui.min.js"></script>
+    <script src="/extstatic/js/tenbagger-grid.js"></script>
+    <script src="/extstatic/js/tenbagger-util.js"></script>
+    <script src="/extstatic/js/tenbagger-push-util.js"></script>
+    <script>
+        let sectorNo, sectorName;
+        $(document).ready( function () {
+            sectorNo = "[[${sectorNo}]]"
+            sectorName = "";
+            sectorOutline(sectorNo);
+        });
+    </script>
+</head>
+<body>
+<div class="xl-contents">
+    <div class="xl-cbody">
+        <div class="xa-sectortab xl-flex-row xl-center">
+            <div class="xa-sectortab-btn xl-flex-row xl-center" id="_sector-b1" onclick="openTab(1,sectorNo)" title="개요 및 이슈 트렌드">
+                <span id="_sector-1">page1</span>
+            </div>
+            <div class="xa-sectortab-btn xl-flex-row xl-center" id="_sector-b2" onclick="openTab(2,sectorNo)" title="특허 등록 동향 및 기술 주기">
+                <span id="_sector-2">page2</span>
+            </div>
+            <div class="xa-sectortab-btn xl-flex-row xl-center" id="_sector-b3" onclick="openTab(3,sectorNo)" title="특허 보유 현황 및 활동 현황">
+                <span id="_sector-3">page3</span>
+            </div>
+            <div class="xa-sectortab-btn xl-flex-row xl-center" id="_sector-b4" onclick="openTab(4,sectorNo)" title="투자 매력도 상위 종목 5위">
+                <span id="_sector-4">page4</span>
+            </div>
+            <div class="xa-sectortab-btn xl-flex-row xl-center" id="_sector-b5" onclick="openTab(5,sectorNo)" title="퀀트 기술분석 종목 리스트">
+                <span id="_sector-5">page5</span>
+            </div>
+        </div>
+        <div class="xl-header xl-flex-row xl-left">
+            <div id="sectorName" class="xl-st-4 xl-flex-col xl-center">
+            </div>
+            <div class="xl-st-3">&nbsp;</div>
+            <div class="xl-st-2 xl-flex-col xl-center">
+                기술가치투자 섹터 리포트
+            </div>
+            <div class="xl-st-1">&nbsp;</div>
+        </div>
+        <div id="_sector_body" class="xa-sector xl-flex-col xl-top" style="display: flex">
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

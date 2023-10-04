@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=595, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page12 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page page12" style="page-break-before:always">
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">12</span>
+		</header>
+		<div class="container">
+			<h2>&nbsp;</h2>
+			<div class="content">
+				<div class="unit">
+					<h3>(4) 특허 출원 집중도</h3>
+					<p class="desc">일반적으로 R&D 투자가 많았던 분야에서 더 많은 특허 출원이 발생합니다. 따라서 특허 출원 비중이 높은 분야는 기업이 기술개 발을 집중하는 분야이며, 특허 출원이 증가하는 추세의 분야에는 투자가 증가하고 있는 것으로 볼 수 있습니다.</p>
+					<p class="desc">다음은 <span class="isuKorNm"></span>의 출원 특허를 대상으로 기술부문별 특허 출원집중도를 최근 5년과 그 이전 5년을 비교 표시 합니다.</p>
+				</div>
+				<div class="unit bx_chart mt10">
+					<div><h3 class="tit">주요 기술부문별 출원현황 비교</h3></div>
+					<div id = "barchart1" style="width: 200px;height: 213px;display: inline-block;"></div>
+					<div id = "barchart2" style="width: 245px;height: 213px;display: inline-block;"></div>
+				</div>
+				<div class="unit t_scroll">
+					<table class="tbl">
+						<colgroup>
+							<col width="16.80%"/>
+							<col/>
+							<col width="20.1%"/>
+							<col width="19.32%"/>
+						</colgroup>
+						<thead>
+							<tr>
+								<th>IPC 코드</th>
+								<th>단위</th> 
+								<th>과거 5년간<br/>출원 집중도(%)</th>
+								<th>최근 5년간<br/>출원 집중도(%)</th>
+							</tr>
+						</thead>
+						<tbody id = t_body>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+   	$(document).ready(function(){
+   		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage12 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage12 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + respondatase.industry + ")");
+		// 	}
+		// })
+      	$.ajax({
+         	type: 'GET',
+         	url: '/report/patentactivity',
+         	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+         	success: function(response) {
+				var data = JSON.parse(response)
+				var list = [];
+				var list2 =[];
+            	$.each(data.oldPortfolios, function (index, a) {
+            		let array = [];
+            		array.push(a.ic);
+            		array.push(a.ratio);
+                    list.push(array);
+            		
+                    let array2 = [];
+                    array2.push(data.newPortfolios[index].ic);
+            		array2.push(data.newPortfolios[index].ratio);
+                    list2.push(array2);
+                    
+	               	let t_html = '<tr>\
+	               	<td><strong>'+a.ic+'</strong></td>\
+	               	<td>'+a.icName+'</td>\
+	               	<td>'+a.ratio+'</td>\
+	               	<td>'+data.newPortfolios[index].ratio+'</td>\
+	               	</tr>'
+	               	$("#reportPage12 #t_body").append(t_html);
+	            });
+				
+            	
+            	
+            	Highcharts.chart('barchart1', {
+            	    chart: {
+            	        type: 'bar',
+            	        backgroundColor:'rgba(255, 255, 255, 0)',
+            	        plotBorderWidth: 1,
+            	        width:200,
+            	        height:213
+            	    },
+            	    exporting: {
+                        enabled: false
+                    },
+                    credits: {enabled: false},
+            	    title: {
+            	        text: '과거 5년간 출원 집중도',
+            	        floating:true,
+            	        style:{
+				        	fontSize:"10px",
+				        	fontWeight:"bold"
+				        },
+				        y:-1
+            	    },
+            	    tooltip: {
+            	    	pointFormat: '{point.y:.1f}%</b>',
+            	    	enabled: true
+            	    },
+                   	
+            	    xAxis: {
+            	        type: 'category',
+            	        labels: {
+            	            enabled: false
+            	        }
+            	    },
+            	    yAxis: {
+            	        min: 0,  
+            	        max: 100,
+            	        tickInterval:20,
+            	        reversed: true,
+            	        opposite:true,
+            	        title:{
+            	        	text:""
+            	        },
+            	        labels: {
+							  style: {
+							  fontSize: '7px',
+							  color: '#BFBFBF'
+							  }
+						}
+            	    },
+            	    legend: {
+            	        enabled: false
+            	    },
+            	    
+            	    series: [{
+            	        name: 'patent',
+            	        data: list
+            	    }],
+					plotOptions: {
+						series:{
+							animation:false
+						}
+					}
+            	});
+            	
+				Highcharts.chart('barchart2', {
+    				colors: ["#a41221"],
+            	    chart: {
+            	        type: 'bar',
+            	        backgroundColor:'rgba(255, 255, 255, 0)',
+            	        plotBorderWidth: 1,
+            	        width:240,
+            	        height:213
+            	    },
+            	    title: {
+            	        text: '최근 5년간 출원 집중도',
+            	        floating:true,
+            	        style:{
+				        	fontSize:"10px",
+				        	fontWeight:"bold"
+				        },
+				        y:-1,
+            	    	x:25
+            	    },
+            	    exporting: {
+                        enabled: false
+                      },
+                   	credits: {enabled: false},
+                   	
+            	    xAxis: {
+            	        type: 'category',
+            	        labels: {
+            	            enabled: true,
+            	            style: {
+  							  fontSize: '8px',
+  							  fontWeight: 'bold',
+  							  },
+  							x:-20 
+                   			
+            	        }
+            	    },
+            	    yAxis: {
+            	    	min: 0,  
+            	        max: 100,
+            	        tickInterval:20,            	        
+            	        opposite:true,
+            	        title:{
+            	        	text:""
+            	        },
+            	        labels: {
+							  style: {
+							  fontSize: '7px',
+							  color: '#BFBFBF'
+							  }
+						}
+            	    },
+            	    legend: {
+            	        enabled: false
+            	    },
+            	    tooltip: {
+            	        pointFormat: '{point.y:.1f}%</b>'
+            	    },
+            	    series: [{
+            	        name: 'patent',
+            	        data: list2,
+            	    }]
+            	});
+         	}
+      	});
+   	});
+	</script>
+</body>
+</html>

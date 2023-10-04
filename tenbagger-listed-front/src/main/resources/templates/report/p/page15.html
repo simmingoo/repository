@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=1180, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page15 Report</title> <!-- [페이지명 | 사이트명] -->
+	</head>
+<body>
+	<div class="page page15" style="page-break-before:always">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">15</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(6) 주요 특허</h3>
+					<p class="desc"><span class="isuKorNm"></span>의 등록특허를 대상으로 평가 점수가 가장 높은 상위 20개 특허입니다.</p>
+				</div>
+				<div class="unit">
+					<table class="tbl">
+						<colgroup>
+							<col width="18.4%">
+							<col width="8.4%">
+							<col>
+							<col width="13.1%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>특허번호</th> 
+								<th>등급</th>
+								<th>발명의 명칭</th>
+								<th>출원일</th>
+							</tr>
+						</thead>
+						<tbody id = t_body>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+   	$(document).ready(function(){
+   		// $.ajax({
+		// 	type: 'GET',
+		// 	url: 'report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response);
+		// 		$("#reportPage15 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage15 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+      	$.ajax({
+         	type: 'GET',
+         	url: '/report/keypatent',
+         	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+         	success: function(response) {
+				 var data = JSON.parse(response);
+            	$.each(data, function (index, a) {
+               	let t_html = '<tr style="page-break-inside:avoid; page-break-after:auto">\
+               	<td><a href='+a.link+' target="_blank"><u class="txt_blue">'+a.patn+'</u></a></td>\
+               	<td>'+a.grade+'</td>\
+               	<td style="text-align:left">'+replaceIpName(a.ttl)+'</td>\
+               	<td>'+a.apd+'</td>\
+               	</tr>'
+               	$("#reportPage15 #t_body").append(t_html);
+            	});
+         	}
+      	});
+   	});
+	</script>
+	
+</body>
+</html>

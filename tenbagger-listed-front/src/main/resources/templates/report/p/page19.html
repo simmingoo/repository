@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+	<head>
+	  <meta charset="UTF-8">
+<!--	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">&lt;!&ndash;PC 최소 PXF로 고정하기! 프로젝트에 따라 변경 가능성&ndash;&gt;-->
+	<meta name="viewport" content="width=1180, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <meta name="theme-color" content="#ffffff">
+	  <meta name="Description" content="사이트 설명">
+	  <!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+	  <title>page19 Report</title> <!-- [페이지명 | 사이트명] -->
+	  
+	</head>
+<body>
+	<div class="page page19" style="page-break-before:always">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">19</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<h3>(10) 해외 특허활동 현황</h3>
+					<p class="desc">특허 권리는 속지주의를 원칙으로 하므로, 특허를 부여한 국가의 영토 내에서만 그 권리가 인정됩니다. 따라서 기업이 제품을 수출하거나 해외 현지에서 제품을 생산하는 등, 해외 영업 활동을 하기 위해서는 해당 국가의 특허를 필수적으로 확보하여야 합니다.</p>
+					<p class="desc">해외 활동이 많은 기업일수록 외국 특허를 많이 보유하는데, 특히 시장으로써의 비중이 높고, 향후 진출하고자 하는 국가의 특허를 많이 확보하게 됩니다. 기업의 해외 특허 출원 경향을 통해 집중하고 있는 해외 시장 현황을 파악할 수 있습니다. 아래는 최근 20년 동안 <span class="isuKorNm"></span>의 출원특허를 대상으로 국가별로 표시합니다.</p>
+				</div>
+				<div class="bx_chart">
+					<h3 class="tit"><span class="isuKorNm"></span>의 국가별 출원 현황</h3>
+					<div id="chart19"></div>
+				</div>
+				<div class="unit">
+					<table class="tbl">
+						<colgroup>
+							<col/>
+							<col width="8.4%"/>
+							<col/>
+							<col width="8.4%"/>
+						</colgroup>
+						<thead>
+							<tr>
+								<th>국가</th>
+								<th>건수</th> 
+								<th>국가</th>
+								<th>건수</th>
+							</tr>
+						</thead>
+						<tbody id="tbody1">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage19 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage19 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/family',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				data1 = data.slice(0,32)
+				var list = []
+				data = data.map(dataname => {
+					if (dataname.natName === 'WO') {
+						return {...dataname, natName:'WO(국제특허)'};
+					}
+					return {...dataname};
+				});
+				$.each(data1, function(index, item) {
+					let Object = {};
+					Object.code = item.nat;
+					Object.name = item.natName;
+					Object.value = item.cnt;
+					list.push(Object);
+					if (index % 2 == 0) {	
+						let table_html = '<tr>\
+							<td class="left">'+item.natName+'</td>\
+							<td>'+item.cnt+'</td>\
+							</tr>'					
+						$("#reportPage19 #tbody1").append(table_html);
+						}
+				})
+				var count = 0;
+				$.each(data1, function(index, item) {
+					let Object = {};
+					Object.code = item.nat;
+					Object.name = item.natName;
+					Object.value = item.cnt;
+					list.push(Object);
+					if(index % 2 == 1) {
+						let table_html = 
+							'<td class="left">'+item.natName+'</td>\
+							<td>'+item.cnt+'</td>'
+						$("#reportPage19 #tbody1").find("tr").eq(count++).append(table_html);
+					}
+				})
+			    Highcharts.mapChart('chart19', {
+			        chart: {
+			            map: 'custom/world',
+			            backgroundColor:'rgba(255, 255, 255, 0)',
+			            /* width: 535,
+			            height: 158 */
+			        },
+
+			        colors: ['rgba(19,64,117,0.05)', 'rgba(19,64,117,0.4)',
+			            'rgba(19,64,117,0.5)', 'rgba(19,64,117,0.8)', 'rgba(19,64,117,1)'],
+
+			        title: {
+			            text: ''
+			        },
+
+			        legend: {
+			        	align: 'left',
+			        	floating:true,
+			            verticalAlign: 'bottom',			            
+			            layout: 'vertical',
+			            valueDecimals: 0,			            
+			            symbolRadius: 0,
+			            symbolWidth: 17,
+			            symbolPadding:2,
+			            symbolHeight: 17,
+			            itemMarginBottom:2,
+			            itemStyle:{
+			            	fontFamily:"NanumSquare",
+					    	fontSize: "20px"
+					    },
+					    y:20
+			        },
+			        exporting: {
+                        enabled: false
+                    },
+                    credits: {
+                    	enabled: false
+                    },
+                    plotOptions: {
+					    series: {
+					        states: {
+					            inactive: {
+					                opacity: 1
+					            },
+				  				hover:{
+				  					enabled:false
+				  				},
+					        },
+					        events: {
+			  		            legendItemClick: function() {
+			  		              return false;
+			  		            }
+			  				},
+							animation:false
+					    }
+					},
+
+			        colorAxis: {
+			            dataClasses: [{
+			                from: 1,
+			                to: 10,
+			                name: '1 - 10'
+			            }, {
+			                from: 11,
+			                to: 100,
+			                name: '11 - 100'
+			            }, {
+			                from: 101,
+			                to: 1000,
+			                name: '101 - 1,000'
+			            }, {
+			                from: 1001,
+			                to: 10000,
+			                name: '1,001 - 10,000'
+			            }, {
+			            	from: 10001,  
+			            	name: '10,001 ~'
+			            }]
+			        },
+
+			        series: [{
+			            data: list,
+			            joinBy: ['iso-a2', 'code'],
+			            animation: true,
+			            name: 'Population density',
+			            states: {
+			                hover: {
+			                    color: '#a4edba'
+			                }
+			            },
+			            tooltip: {
+			            	enabled: false
+			            },
+			            shadow: false
+			        }]
+			    });
+				
+
+			}
+		});
+	});
+</script>
+
+	<div class="page page19_2" style="page-break-before:always">
+		<div class="loading"><!-- s: 노출시 show 클래스 추가-->
+		  <div class="bx">
+		    Loading
+		  </div>
+		</div>
+		<header>
+		  <h1><span class="label_type"></span></h1>
+		  <span class="num">19</span>
+		</header>
+		<div class="container">
+			<div class="content">
+				<div class="unit">
+					<table class="tbl">
+						<colgroup>
+							<col/>
+							<col width="8.4%"/>
+							<col/>
+							<col width="8.4%"/>
+						</colgroup>
+						<thead>
+							<tr>
+								<th>국가</th>
+								<th>건수</th> 
+								<th>국가</th>
+								<th>건수</th>
+							</tr>
+						</thead>
+						<tbody id="tbody2">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+	$(document).ready(function(){
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: '/report/outline',
+		// 	data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+		// 	success: function(response) {
+		// 		var data = JSON.parse(response)
+		// 		$("#reportPage19 .label_type").html(data.mktCapScale);
+		// 		$("#reportPage19 .label_type").parent().append(data.isuKorNm + " (" + data.mkt + " " + data.industry + ")");
+		// 	}
+		// })
+		$.ajax({
+			type: 'GET',
+			url: '/report/family',
+			data: {bizNo: getParameter("bizNo"), isuSrtCd: getParameter("isuSrtCd")},
+			success: function(response) {
+				var data = JSON.parse(response)
+				var data2 = data.slice(32,68)
+				if (data2.length == 0) {
+					$("#reportPage19 .page19_2").css("display", "none");
+					$("#reportPage19 .page19_2").children("header").remove();
+				}
+				var list = []
+				data = data.map(dataname => {
+					if (dataname.natName === 'WO') {
+						return {...dataname, natName:'WO(국제특허)'};
+					}
+					return {...dataname};
+				});
+				$.each(data2, function(index, item) {
+					let Object = {};
+					Object.code = item.nat;
+					Object.name = item.natName;
+					Object.value = item.cnt;
+					list.push(Object);
+					if (index % 2 == 0) {	
+						let table_html = '<tr>\
+							<td class="left">'+item.natName+'</td>\
+							<td>'+item.cnt+'</td>\
+							</tr>'					
+						$("#reportPage19 #tbody2").append(table_html);
+						}
+				})
+				var count = 0;
+				$.each(data2, function(index, item) {
+					let Object = {};
+					Object.code = item.nat;
+					Object.name = item.natName;
+					Object.value = item.cnt;
+					list.push(Object);
+					if(index % 2 == 1) {
+						let table_html = 
+							'<td class="left">'+item.natName+'</td>\
+							<td>'+item.cnt+'</td>'
+						$("#reportPage19 #tbody2").find("tr").eq(count++).append(table_html);
+					}
+				})
+			}
+		});
+	});
+</script>
+</body>
+</html>
