@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/resources/common/taglibs.jsp"%>
+<html lang="en">
+<head>
+<%@ include file="/resources/common/meta.jsp"%>
+<title>Identity Manager IAM</title>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link href="<c:url value='/resources/bootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/bootstrap/bower_components/metisMenu/dist/metisMenu.min.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/bootstrap/dist/css/sb-admin-2.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/bootstrap/bower_components/font-awesome/css/font-awesome.min.css'/>" rel="stylesheet" type="text/css">
+<link href="<c:url value='/resources/js/ui/jquery-ui-1.10.4.min.css'/>" rel='stylesheet' type='text/css' />
+
+<!-- Kendo UI CSS -->
+  <link href="<c:url value='/resources/kendoui/styles/kendo.common.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.common-bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.dataviz.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.dataviz.bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+  
+<!-- tooltipster CSS -->
+<link href="<c:url value='/resources/js/tooltipster/tooltipster.bundle.min.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/css/common.css'/>" rel="stylesheet">
+
+<link href="<c:url value='/resources/css/jquery-confirm.min.css'/>" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-confirm.min.js'/>"></script>
+
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.11.2.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/ui/jquery-ui-1.10.4.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery.validate.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/bootstrap/bower_components/bootstrap/dist/js/bootstrap.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/bootstrap/bower_components/metisMenu/dist/metisMenu.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/bootstrap/dist/js/sb-admin-2.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/kendo.all.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/kendo.dataviz.min.js'/>"></script>
+
+<!-- tooltipster -->
+<script type="text/javascript" src="<c:url value='/resources/js/tooltipster/tooltipster.bundle.min.js'/>"></script>
+
+<link href="<c:url value='/resources/css/jquery-confirm.min.css'/>" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-confirm.min.js'/>"></script>
+
+<script type="text/javascript">
+	function aClick(e) {
+		var icon = $(e).find("i");
+		var iconClass = icon.attr("class");
+		if (iconClass.indexOf("fa-plus") != -1) {
+			icon.removeClass("fa-plus");
+			icon.addClass("fa-minus");
+		} else {
+			icon.removeClass("fa-minus");
+			icon.addClass("fa-plus");
+		}
+	}
+	function setRegUsrOrgField(selectedItem) {
+		$( "#userAdd_form" ).find("input[type='text'].form-control-dt10").prop("value", selectedItem.orgNm);
+		$( "#userAdd_form" ).find("input[type='hidden'].form-control-dt10").prop("value", selectedItem.orgKey);
+		$( "#userAdd_form" ).find("input[type='text'].form-control-dt10").valid();
+	};
+
+	$(document).ready(function() {
+    	$("#userAdd_form").find("button.btn-dt10").click(function(e) {
+    		$("#usrreg-org-search-window").load("${contextPath}/login/orgSearch", {callBackFnc: 'setRegUsrOrgField'});
+    	});
+    	
+		
+		$('#sbmButton').click(function() {
+			
+			if (usrNm == "") {
+				$.alert({
+					title: 'ERROR',
+					content: '사용자 이름을 입력해 주세요.',
+				});
+				$("#usrNm").focus();
+				return false;
+			}
+			if ($("#accountCheckYN").val() == "") {
+				$.alert({
+				    title: 'ERROR',
+				    content: '아아디 중복 체크가 필요 합니다.',
+				});
+				return false;
+			}else if($("#accountCheckYN").val() == "N") {
+				$.alert({
+					    title: 'ERROR',
+					    content: '이미 생성 되어 있는 계정입니다.',
+					});
+				return false;	
+			}
+			var systemData = "";
+
+			$("#transactionId").val(makeoid());
+											
+			data = $('#userAdd_form').serialize();
+
+			$.ajax({
+				url : '${contextPath}/requestUserAddAction',
+				type : 'POST',
+				data : data,
+				datatype : "JSON",
+				success : function(obj) {
+					var data = JSON.parse(obj);
+					if(data.isError == false){
+						$.alert({
+							title: '사용자 계정 신청 결과',
+							content: '신청되었습니다.',
+						});	
+					}else {
+						$.alert({
+							title: '사용자 계정 신청 결과',
+							content: data.message,
+						});	
+					}
+					
+				}
+			});
+
+		});
+
+		$('#checkUsrBtn').click(function() {
+			data = $('#userAdd_form').serialize();
+
+			var usrloginId = $("#usrloginId").val();
+			var email = $("#email").val();
+			var usrNm = $("#usrNm").val();
+			if (usrloginId == "") {
+				$.alert({
+					title: 'ERROR',
+					content: '사용자 ID 를 입력해 주세요.',
+				});
+				$("#usrloginId").focus();
+				return false;
+			}
+
+			$.ajax({
+				url : "${contextPath}/checkUserId",
+				type : "POST",
+				data : data,
+				datatype : "JSON",
+				success : function(obj) {
+					var data = JSON.parse(obj);
+					if (data.isError == false) {
+						$("#accountCheckYN").val("Y");
+						$.alert({
+							title: '사용자 사번 체크 결과',
+							content: data.message,
+						});
+					} else {
+						$.alert({
+							title: '사용자 사번 체크 결과',
+							content: data.message,
+						});
+					}
+				}
+			});
+		});
+	});
+
+	function getDate() {
+		var now = new Date();
+		var output = now.getFullYear() + "" + (now.getMonth() + 1) + ""
+				+ now.getDate() + "" + now.getHours() + "" + now.getMinutes()
+				+ "" + now.getSeconds() + "" + now.getMilliseconds();
+		return output;
+	}
+
+	function LPad(digit, size, attatch) {
+	    var add = "";
+	    digit = digit.toString();
+
+	    if (digit.length < size) {
+	        var len = size - digit.length;
+	        for (i = 0; i < len; i++) {
+	            add += attatch;
+	        }
+	    }
+	    return add + digit;
+	}
+
+	function makeoid() {
+		var now = new Date();
+		var years = now.getFullYear();
+		var months = LPad(now.getMonth() + 1, 2, "0");
+		var dates = LPad(now.getDate(), 2, "0");
+		var hours = LPad(now.getHours(), 2, "0");
+		var minutes = LPad(now.getMinutes(), 2, "0");
+		var seconds = LPad(now.getSeconds(), 2, "0");
+		var timeValue = years + months + dates + hours + minutes + seconds; 
+		return 	timeValue;
+	}
+	
+
+
+</script>
+<style type="text/css">
+.phone-number::after {
+	content: "-";
+	position: absolute;
+	right: 5px;
+	color: black;
+	border: 0px solid;
+	top: 5px;
+}
+	.tab-pane .tab-pane-main .fade .in .active {
+   	 	height: 1000px;
+	}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<article class="container">
+	<div class="row" style="margin-left: 120px; margin-right: 120px;">
+		<div class="col-lg-12">
+			<div class="panel panel-default" style="margin-top: 12px;">
+				<div class="panel-body" style="text-align: center;">
+					<h3>
+						<i class="fa fa-edit"></i> 사용자 ID 등록 신청
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form id="userAdd_form" method="POST" class="form-horizontal"data-toggle="validator">
+		<input type="hidden" id="transactionId" name="transactionId" >
+		<input type="hidden" id="accountCheckYN" name="accountCheckYN" >
+		<div id="insertDiv">
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="inputId">사번</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="usrloginId" name="usrloginId" type="text" style="display: initial;width: 70%" placeholder="사번(필수)" required>
+					<button class="btn btn-primary" id="checkUsrBtn" type="button">사번 중복체크<i class="fa fa-mail-forward spaceLeft"></i></button>
+				</div>
+			</div>
+			<div class="form-group">
+					<label class="col-sm-3 control-label" for="orgKey">조직</label>
+					<div class="col-sm-6">
+		    			<input type="text" name="orgNm" class="form-control input-sm form-control-dt10 fdc-default" value="" style="display: initial;width: 90%" readonly  data-toggle="tooltip" />
+	    				<input type="hidden" name="orgKey" class="form-control-dt10 fdc-default" value="" />
+	    					<button class="btn btn-default btn-sm btn-dt10" name="ORGKEY" type="button"><i class="fa fa-search"></i></button>
+    				</div>
+			</div>
+			<div id="usrreg-org-search-window"></div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="inputEmail">이메일</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="email" name="email"	type="text" placeholder="이메일" required> 
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="inputName">이름</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="usrNm" name="usrNm" type="text" placeholder="이름(필수)" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="inputNumber">연락처</label>
+				<div class="col-xs-2 phone-number">
+					<input type="text" class="form-control" id="inputNumber1"
+						name="inputNumber1" placeholder="연락처를 입력해 주세요" value="010"
+						required />
+				</div>
+				<div class="col-xs-2 phone-number">
+					<input type="text" class="form-control" id="inputNumber2"
+						name="inputNumber2" placeholder="연락처 앞자리" required />
+				</div>
+				<div class="col-xs-2">
+					<input type="text" class="form-control" id="inputNumber3"
+						name="inputNumber3" placeholder="연락처 뒷자리" required />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-12 text-center">
+					<button class="btn btn-primary" id="sbmButton" type="button">
+						신청<i class="fa fa-check spaceLeft"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="common-usr-search-window"></div>
+	</form>
+	<hr>
+	</article>
+
+
+</body>
+</html>

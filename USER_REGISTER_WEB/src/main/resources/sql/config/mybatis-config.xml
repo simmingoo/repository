@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+    "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+<!--   <settings> -->
+<!--     <setting name="defaultExecutorType" value="BATCH" />  -->
+<!--   </settings> -->
+	<!-- <settings>
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings> -->
+  
+  <typeAliases>
+<!--     <typeAlias alias="login" type="com.hsecure.iam.common.vo.LoginVO" />
+    <typeAlias alias="usr" type="com.hsecure.iam.common.vo.UsrVO" />
+    <typeAlias alias="usrIpaddr" type="com.hsecure.iam.common.vo.UsrIpaddrVO" />
+    <typeAlias alias="org" type="com.hsecure.iam.common.vo.OrgVO" />
+    <typeAlias alias="fdl" type="com.hsecure.iam.common.vo.FdlVO" />
+    <typeAlias alias="fdc" type="com.hsecure.iam.common.vo.FdcVO" />
+    <typeAlias alias="fdcPrepop" type="com.hsecure.iam.common.vo.FdcPrepopVO" />
+    <typeAlias alias="luv" type="com.hsecure.iam.common.vo.LuvVO" />
+    <typeAlias alias="luc" type="com.hsecure.iam.common.vo.LucVO" />
+    <typeAlias alias="pwdpol" type="com.hsecure.iam.common.vo.PwdPolVO" />
+    <typeAlias alias="itRsc" type="com.hsecure.iam.common.vo.ItRscVO" />
+    <typeAlias alias="itRscInitPwd" type="com.hsecure.iam.common.vo.ItRscInitPwdVO" />
+    <typeAlias alias="sfc" type="com.hsecure.iam.common.vo.SfcVO" />
+    <typeAlias alias="sfd" type="com.hsecure.iam.common.vo.SfdVO" />
+    <typeAlias alias="opr" type="com.hsecure.iam.common.vo.OprVO" />
+    <typeAlias alias="role" type="com.hsecure.iam.common.vo.RoleVO" />
+    <typeAlias alias="acsp" type="com.hsecure.iam.common.vo.AcspVO" />
+    <typeAlias alias="apvp" type="com.hsecure.iam.common.vo.ApvpVO" />
+    <typeAlias alias="apvr" type="com.hsecure.iam.common.vo.ApvrVO" />
+    <typeAlias alias="rule" type="com.hsecure.iam.common.vo.RuleVO" />
+    <typeAlias alias="menu" type="com.hsecure.iam.common.vo.MenuVO" />
+    <typeAlias alias="admrole" type="com.hsecure.iam.common.vo.AdmRoleVO" />
+    <typeAlias alias="admroleIpaddr" type="com.hsecure.iam.common.vo.AdmRoleIpaddrVO" />
+    <typeAlias alias="ruleCnd" type="com.hsecure.iam.common.vo.RuleCndVO" />
+    <typeAlias alias="engErrCode" type="com.hsecure.iam.common.vo.EngErrCodeVO" />
+    <typeAlias alias="provStmt" type="com.hsecure.iam.common.vo.ProvStmtVO" />
+    <typeAlias alias="oprType" type="com.hsecure.iam.common.vo.OprTypeVO" />
+    <typeAlias alias="sched" type="com.hsecure.iam.common.vo.SchedVO" />
+    <typeAlias alias="ImpExp" type="com.hsecure.iam.common.vo.ImpExpVO" /> -->
+    <typeAlias alias="luv" type="com.hsecure.model.LuvVO" />
+    <typeAlias alias="luc" type="com.hsecure.model.LucVO" />
+    <typeAlias alias="org" type="com.hsecure.model.OrgVO" />
+    <typeAlias alias="usr" type="com.hsecure.model.UsrVO" />
+    <typeAlias alias="usrAdd" type="com.hsecure.model.UserAddVO" />
+    <typeAlias alias="usrAddBulk" type="com.hsecure.model.UserAddBulkVO"/>
+  </typeAliases>
+</configuration>

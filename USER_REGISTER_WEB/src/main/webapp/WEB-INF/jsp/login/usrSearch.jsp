@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/resources/common/taglibs.jsp"%>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<script>
+	var commonLuvDataType = ${luvDataType};
+	var commonLuvDataSttus = ${luvDataSttus};
+
+	$(document).ready(function() {
+		 
+		if (!$("#common-usr-search-table").data("kendoWindow")) {
+			$("#common-usr-search-table").kendoGrid({
+				dataSource: {
+					transport: {
+						read: {
+							url: "${contextPath}/login/usrSearch/list",
+							dataType: "json",
+							type: "POST",
+							cache: false
+						},
+						parameterMap: function (data, type) {
+							if(type = "read"){
+								var values = data;
+								
+								if($("#common_usr_usrnm_cond").val()) values["USRNM"] = $("#common_usr_usrnm_cond").val();
+								if($("#common_usr_usrloginid_cond").val()) values["USRLOGINID"] = $("#common_usr_usrloginid_cond").val();
+								if($("#reqUserId").val()) values["REQUSERID"] = $("#reqUserId").val();
+								
+								return values;
+							}
+						}
+					},
+					schema: {
+						data: "list", 				// records are returned in the "data" field of the response
+						total: "totalRecords" 		// total number of records is in the "total" field of the response
+					},
+					serverPaging: true,
+					serverSorting: false,
+					serverFiltering: false
+				},
+				sortable: true,
+				pageable: {
+					pageSize: 5,
+					
+					buttonCount: 10
+				},
+	            selectable: "true",
+				columns: [
+		            { field: "usrKey", hidden: true },
+					{ field: "usrLoginId", title: "<font style='font-size:14px;font-weight:bold;'>사번</font>"},
+					{ field: "usrNm", title: "<font style='font-size:14px;font-weight:bold;'>이름</font>"},
+					{ field: "sttus", title: "<font style='font-size:14px;font-weight:bold;'>상태</font>", template: "#= getCommonLuvNm('sttusType',sttus) #"}
+				]
+			}).data("kendoGrid");
+		}
+		
+		
+		$( "#common_usr_search_btn" ).click(function(e) {
+			$("#common-usr-search-table").data("kendoGrid").dataSource.page(1);
+		});
+		
+		$( "#common-usr-search-modal" ).modal();
+		
+		$( "#common-usr-search-confirm" ).click(function(e) {
+			var commonUsrSearchGrid = $("#common-usr-search-table").data("kendoGrid");
+			var selectedItem = commonUsrSearchGrid.dataItem(commonUsrSearchGrid.select());
+        	if(typeof(selectedItem) !== 'undefined' && selectedItem !== null) {
+            	console.log(selectedItem.usrKey + "/" + selectedItem.usrNm);
+            	var callBackUsrFnc = $("#callBackUsrFnc").val();
+            	window.parent[callBackUsrFnc](selectedItem);	
+        	}
+        	$( "#common-usr-search-modal" ).modal("hide");
+		});
+		
+		$( "#common-usr-search-modal" ).on('hide.bs.modal', function (e) {
+			$(this).remove();
+   		});
+		
+		$("#common_usr_search_cond").find("input.form-control").keypress(function (e) {
+			var key = e.which;
+			if(key == 13) {  // the enter key code
+				$("#common-usr-search-table").data("kendoGrid").dataSource.page(1);
+			}
+		});
+	});
+	
+	
+    function getCommonLuvNm(lucType, luvId) {
+    	var arrLuvData;
+    	if(lucType == "dataType") {
+    		arrLuvData = commonLuvDataType;
+    	} else if (lucType == "sttusType") {
+    		arrLuvData = commonLuvDataSttus;
+    	}
+    	for (var i = 0; i < arrLuvData.length; i++) {
+    		if (arrLuvData[i].luvId == luvId) {
+    			return arrLuvData[i].luvNm;
+    		}
+    	}
+    }
+    
+</script>
+
+<style type="text/css">
+    @media screen and (min-width: 768px) {
+        .modal-dialog {
+          width: 850px; /* New width for default modal */
+        }
+        .modal-sm {
+          width: 450px; /* New width for small modal */
+        }
+    }
+    @media screen and (min-width: 992px) {
+        .modal-lg {
+          width: 1200px; /* New width for large modal */
+        }
+    }
+</style>
+
+<input type="hidden" id="callBackUsrFnc" value="${callBackFnc }" />
+
+<!-- Modal for Usranization Search -->
+<div class="modal fade" id="common-usr-search-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" id="myModalLabel"><i class="fa fa-sitemap"></i> 사용자 선택</h5>
+            </div>
+            <div class="modal-body">
+               	<div class="panel panel-default" style="margin-top:5px;padding-bottom:-10px;">
+					<div id="common_usr_search_cond" class="panel-body">
+						<div class="row">
+							 <div class="col-md-2" style="text-align: right;">
+							    <p>사번 </p>
+							</div>
+							<div class="col-md-4" style="text-align: left;">
+						        <div class="form-group">
+						            <input id="common_usr_usrloginid_cond" class="form-control input-sm" />
+						        </div>
+							 </div>
+							<div class="col-md-2" style="text-align: right;">
+							    <p>이름 </p>
+							</div>
+							<div class="col-md-4" style="text-align: left;">
+						        <div class="form-group">
+						            <input id="common_usr_usrnm_cond" class="form-control input-sm" />
+						        </div>
+							 </div>
+						</div>                
+					</div>
+				</div>
+				
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div style="text-align: right; margin-bottom: 5px;">
+					    	<button id="common_usr_search_btn" type="button" class="btn btn-primary btn-sm" style="width:160px;"><i class="fa fa-search"></i> 검색</button>
+						</div>
+						<div id="common-usr-search-table" class="ra-section"></div>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="common-usr-search-confirm" type="button" name="confirm" class="btn btn-primary" style="width:120px;"><i class="fa fa-check"></i> 확인</button>
+                <button type="button" name="cancel" class="btn btn-default" data-dismiss="modal" style="width:120px;"><i class="fa fa-times"></i> 취소</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+  
+
+

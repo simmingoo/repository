@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/resources/common/taglibs.jsp"%>
+<html lang="en">
+<head>
+<%@ include file="/resources/common/meta.jsp"%>
+<title>Identity Manager IAM</title>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.11.2.min.js'/>"></script>
+  <!-- Bootstrap CSS -->
+  <link href="<c:url value='/resources/bootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css'/>" rel="stylesheet">
+  <link href="<c:url value='/resources/bootstrap/bower_components/metisMenu/dist/metisMenu.min.css'/>" rel="stylesheet">
+  <link href="<c:url value='/resources/bootstrap/dist/css/timeline.css'/>" rel="stylesheet">
+  <link href="<c:url value='/resources/bootstrap/dist/css/sb-admin-2.css'/>" rel="stylesheet">
+  <link href="<c:url value='/resources/bootstrap/bower_components/font-awesome/css/font-awesome.min.css'/>" rel="stylesheet" type="text/css">
+  <link href="<c:url value='/resources/js/fancytree/skin/ui.fancytree.css'/>" rel="stylesheet" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Kendo UI CSS -->
+  <!-- 
+  <link href="<c:url value='/resources/kendoui/styles/kendo.common.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.common-bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.dataviz.min.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.dataviz.bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+   -->
+  <link href="<c:url value='/resources/kendoui/styles/kendo.common.min-v2017.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.common-bootstrap.min-v2017.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.bootstrap.min-v2017.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.dataviz.min-v2017.css'/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value='/resources/kendoui/styles/kendo.dataviz.bootstrap.min-v2017.css'/>" rel="stylesheet" type="text/css" />
+   
+  <!-- tooltipster CSS -->
+  <link href="<c:url value='/resources/js/tooltipster/tooltipster.bundle.min.css'/>" rel="stylesheet">
+  
+  <link href="<c:url value='/resources/css/common.css'/>" rel="stylesheet">
+  
+  
+  <script type="text/javascript" src="<c:url value='/resources/js/ui/jquery-ui-1.10.4.min.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/js/jquery.validate.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/js/jquery.form.min.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/js/bootstrap-filestyle.min.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/bootstrap/bower_components/bootstrap/dist/js/bootstrap.min.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/bootstrap/bower_components/metisMenu/dist/metisMenu.min.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/bootstrap/dist/js/sb-admin-2.js'/>"></script>
+  <!-- JSZIP for Excel Export -->
+  <script type="text/javascript" src="<c:url value='/resources/js/jszip/jszip.min.js'/>"></script>
+  <!-- 
+  <script type="text/javascript" src="<c:url value='/resources/js/kendo.all.min.js'/>"></script>
+   -->
+  <script type="text/javascript" src="<c:url value='/resources/js/kendo.all.min-v2017.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/js/common.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/resources/js/messages/kendo.messages.ko-KR.min.js'/>"></script>
+  
+  <!-- tooltipster -->
+  <script type="text/javascript" src="<c:url value='/resources/js/tooltipster/tooltipster.bundle.min.js'/>"></script>
+
+<link href="<c:url value='/resources/css/jquery-confirm.min.css'/>" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-confirm.min.js'/>"></script>
+<style type="text/css">
+	body {
+		background-color: white;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.tab-pane.tab-pane-main.fade.in.active{
+		height: 1000px;
+	}
+	
+</style>
+
+<script type="text/javascript">
+	
+	function getUserTypeNm(userType) {
+		var userTypeNM;
+		console.log('userType : '+userType);
+		if(userType == '0'){
+			userTypeNM = '사용자';
+		}else {
+			userTypeNM = '시스템계정';
+		}
+		return userTypeNM;
+	}
+	
+	function getDate(date) {
+		return date.substring(0,10);
+	}
+	
+	function onChangeUserAddBulk(arg) {
+		$("#main_useradd_delete_btn").removeAttr("disabled");
+	}
+	
+	function onDataBoundUserAddBulk(arg) {
+		$("#main_useradd_delete_btn").attr("disabled", "disabled");
+	}
+	
+	function userAddBulkGridFn() {
+		return $("#main_useradd_grid").kendoGrid({
+			noRecords: {
+				template: "<br/><p><i class='fa fa-info-circle'></i> 등록된 사용자가 없습니다.</p>"
+			},
+			dataSource: {
+				transport: {
+					read: {
+						url: "${contextPath}/userAddBulk/list",
+						dataType: "json",
+						type: "POST",
+						cache: false
+					},
+					parameterMap: function (data, type) {
+						if(type = "read"){
+							var values = data;
+							values["REQID"] = $("#reqId").val();
+							values["sort"] = JSON.stringify(values["sort"]);
+							return values;
+						}
+					}
+				},
+				schema: {
+					data: "list", 				// records are returned in the "data" field of the response
+					total: "totalRecords" 		// total number of records is in the "total" field of the response
+				},
+				serverPaging: true,
+				serverSorting: true,
+				serverFiltering: false
+			},
+			sortable: true,
+			pageable: {
+				pageSize: 10,
+				pageSizes: [5, 10, 20, 100],
+				buttonCount: 10
+			},
+			selectable: true,
+			change: onChangeUserAddBulk,
+			dataBound: onDataBoundUserAddBulk,
+			resizable: true,
+			columnMenu: true,
+			columns: [
+	            { field: "reqSubId", hidden: true },
+	            { field: "userType", title: "<font style='font-size:14px;font-weight:bold;'>사번 입력 방법</font>", template: "#= getUserTypeNm(userType) #"},
+				{ field: "usrNm", title: "<font style='font-size:14px;font-weight:bold;'>이름</font>"},
+				{ field: "deptNo", title: "<font style='font-size:14px;font-weight:bold;'>부점코드</font>"},
+				{ field: "phone", title: "<font style='font-size:14px;font-weight:bold;'>사무실 전화번호</font>"},
+				{ field: "cellPhone", title: "<font style='font-size:14px;font-weight:bold;'>휴대폰 번호</font>"},
+				{ field: "startDt", title: "<font style='font-size:14px;font-weight:bold;'>시작일</font>", template: "#= getDate(startDt) #"},
+				{ field: "endDt", title: "<font style='font-size:14px;font-weight:bold;'>종료일</font>", template: "#= getDate(endDt) #"}
+			]
+		}).data("kendoGrid");
+	}
+	
+	function userEditBulkGridFn() {
+		return $("#main_useredit_grid").kendoGrid({
+			noRecords: {
+				template: "<br/><p><i class='fa fa-info-circle'></i> 등록된 사용자가 없습니다.</p>"
+			},
+			dataSource: {
+				transport: {
+					read: {
+						url: "${contextPath}/userEditBulk/list",
+						dataType: "json",
+						type: "POST",
+						cache: false
+					},
+					parameterMap: function (data, type) {
+						if(type = "read"){
+							var values = data;
+							values["REQID"] = $("#reqId").val();
+							values["sort"] = JSON.stringify(values["sort"]);
+							return values;
+						}
+					}
+				},
+				schema: {
+					data: "list", 				// records are returned in the "data" field of the response
+					total: "totalRecords" 		// total number of records is in the "total" field of the response
+				},
+				serverPaging: true,
+				serverSorting: true,
+				serverFiltering: false
+			},
+			sortable: true,
+			pageable: {
+				pageSize: 10,
+				pageSizes: [5, 10, 20, 100],
+				buttonCount: 10
+			},
+			selectable: true,
+			change: onChangeUserAddBulk,
+			dataBound: onDataBoundUserAddBulk,
+			resizable: true,
+			columnMenu: true,
+			columns: [
+	            { field: "reqSubId", hidden: true },
+				{ field: "usrLoginId", title: "<font style='font-size:14px;font-weight:bold;'>사번</font>"},
+				{ field: "usrNm", title: "<font style='font-size:14px;font-weight:bold;'>이름</font>"},
+				{ field: "startDt", title: "<font style='font-size:14px;font-weight:bold;'>시작일</font>", template: "#= getDate(startDt) #"},
+				{ field: "endDt", title: "<font style='font-size:14px;font-weight:bold;'>종료일</font>", template: "#= getDate(endDt) #"}
+			]
+		}).data("kendoGrid");
+	}
+	
+	
+	function userRetireBulkGridFn() {
+		return $("#main_userretire_grid").kendoGrid({
+			noRecords: {
+				template: "<br/><p><i class='fa fa-info-circle'></i> 등록된 사용자가 없습니다.</p>"
+			},
+			dataSource: {
+				transport: {
+					read: {
+						url: "${contextPath}/userRetireBulk/list",
+						dataType: "json",
+						type: "POST",
+						cache: false
+					},
+					parameterMap: function (data, type) {
+						if(type = "read"){
+							var values = data;
+							values["REQID"] = $("#reqId").val();
+							values["sort"] = JSON.stringify(values["sort"]);
+							return values;
+						}
+					}
+				},
+				schema: {
+					data: "list", 				// records are returned in the "data" field of the response
+					total: "totalRecords" 		// total number of records is in the "total" field of the response
+				},
+				serverPaging: true,
+				serverSorting: true,
+				serverFiltering: false
+			},
+			sortable: true,
+			pageable: {
+				pageSize: 10,
+				pageSizes: [5, 10, 20, 100],
+				buttonCount: 10
+			},
+			selectable: true,
+			change: onChangeUserAddBulk,
+			dataBound: onDataBoundUserAddBulk,
+			resizable: true,
+			columnMenu: true,
+			columns: [
+	            { field: "reqSubId", hidden: true },
+				{ field: "usrLoginId", title: "<font style='font-size:14px;font-weight:bold;'>사번</font>"},
+				{ field: "usrNm", title: "<font style='font-size:14px;font-weight:bold;'>이름</font>"},
+				{ field: "endDt", title: "<font style='font-size:14px;font-weight:bold;'>종료일</font>", template: "#= getDate(endDt) #"}
+			]
+		}).data("kendoGrid");
+	}
+	
+	function setUsrField(selectedItem) {
+		var reqTypeVal = $('input[name="reqType"]:checked').val();
+		if(reqTypeVal == 'E'){
+			$( "#editUsrLoginId" ).val(selectedItem.usrLoginId);
+			$( "#editUsrNm" ).val(selectedItem.usrNm);
+		}else if(reqTypeVal == 'R'){
+			$( "#retireUsrLoginId" ).val(selectedItem.usrLoginId);
+			$( "#retireUsrNm" ).val(selectedItem.usrNm);
+		}
+	}
+	
+	function setApprUsrField(selectedItem) {
+		$( "#apprUserId" ).val(selectedItem.usrLoginId);
+		$( "#apprUserNm" ).val(selectedItem.usrNm + "(" + selectedItem.orgNm +")");
+	}
+
+	$(document).ready(function() {
+	    
+		$("#userAdd_bulk_form").find("button.btn-dt10").click(function(e) {
+    		$("#usrreg-usr-search-window").load("${contextPath}/login/usrSearch", {callBackFnc: 'setUsrField'});
+    	});
+		
+		$("#userAdd_bulk_form").find("button.btn-dt09").click(function(e) {
+    		$("#usrreg-usr-search-window").load("${contextPath}/login/apprUsrSearch", {callBackFnc: 'setApprUsrField'});
+    	});
+		
+		userAddBulkGrid = userAddBulkGridFn();
+		userEditBulkGrid = userEditBulkGridFn();
+		userRetireBulkGrid = userRetireBulkGridFn();
+		
+		
+		var reqTypeVal = $('input[name="reqType"]:checked').val();
+		if(reqTypeVal == 'A'){
+			$("#userAddDiv").show();
+			$("#main_useradd_grid").show();
+			
+			$("#userEditDiv").hide();
+			$("#main_useredit_grid").hide();
+			
+			$("#userRetireDiv").hide();
+			$("#main_userretire_grid").hide();
+		}else if(reqTypeVal == 'E'){
+			$("#userAddDiv").hide();
+			$("#main_useradd_grid").hide();
+			
+			$("#userEditDiv").show();
+			$("#main_useredit_grid").show();
+			
+			$("#userRetireDiv").hide();
+			$("#main_userretire_grid").hide();			
+		}else if(reqTypeVal == 'R') {
+			$("#userAddDiv").hide();
+			$("#main_useradd_grid").hide();
+			
+			$("#userEditDiv").hide();
+			$("#main_useredit_grid").hide();
+			
+			$("#userRetireDiv").show();
+			$("#main_userretire_grid").show();
+		}
+		
+		var userTypeVal = $('input[name="userType"]:checked').val();
+		if(userTypeVal == '1'){
+			$("#divUsrId").show();
+		}else {
+			$("#divUsrId").hide();
+		}
+		
+    	$("#userAdd_form").find("button.btn-dt10").click(function(e) {
+    		$("#usrreg-org-search-window").load("${contextPath}/login/orgSearch", {callBackFnc: 'setRegUsrOrgField'});
+    	});
+    	$("#main_useradd_refresh_btn").removeAttr("disabled");
+    	 
+		$("#main_useradd_refresh_btn").click(function(e) {
+			reqTypeVal = $('input[name="reqType"]:checked').val();
+			if(reqTypeVal == "A"){
+				userAddBulkGrid.dataSource.filter({});
+				var options = localStorage["USERADDMAIN"];
+	            if (options) {
+	            	userAddBulkGrid.setOptions(JSON.parse(options));
+	            }
+	            userAddBulkGrid.dataSource.read();
+			}else if(reqTypeVal == "E"){
+				userEditBulkGrid.dataSource.filter({});
+				var options = localStorage["USEREDITMAIN"];
+	            if (options) {
+	            	userEditBulkGrid.setOptions(JSON.parse(options));
+	            }
+	            userEditBulkGrid.dataSource.read();
+			}else if(reqTypeVal == "R"){
+				userRetireBulkGrid.dataSource.filter({});
+				var options = localStorage["USERRETIREMAIN"];
+	            if (options) {
+	            	userRetireBulkGrid.setOptions(JSON.parse(options));
+	            }
+	            userRetireBulkGrid.dataSource.read();
+			}
+			
+		});
+		
+    	if (!$("input.dlgt-start").data("kendoDatePicker")
+				|| !$("input.dlgt-end").data("kendoDatePicker")) {
+			var now = new Date();
+			var mainApvpDlgtStart = $("input.dlgt-start").kendoDatePicker({
+       	    	value: new Date(),
+       	        format: "yyyy-MM-dd",
+       	        change: function() {
+       	        	var endDateObj = $("input.dlgt-end").data("kendoDatePicker");
+           	    	var startDate = this.value(),
+           	        endDate = endDateObj.value();
+           	        if (startDate) {
+           	            startDate = new Date(startDate);
+           	            startDate.setDate(startDate.getDate());
+           	         	endDateObj.min(startDate);
+           	        } else if (endDate) {
+           	        	this.max(new Date(endDate));
+           	        } else {
+           	            endDate = new Date();
+           	            this.max(endDate);
+           	         	endDateObj.min(endDate);
+           	        }
+           	    }
+       	    }).data("kendoDatePicker");
+			now.setDate(now.getDate()+365);
+			var mainApvpDlgtEnd = $("input.dlgt-end").kendoDatePicker({
+       	    	value: now,
+       	        format: "yyyy-MM-dd",
+       	        change: function() {
+       	        	var startDateObj = $("input.dlgt-start").data("kendoDatePicker");
+           	        var endDate = this.value(),
+           	        startDate = startDateObj.value();
+
+           	        if (endDate) {
+           	            endDate = new Date(endDate);
+           	            endDate.setDate(endDate.getDate());
+           	         	startDateObj.max(endDate);
+           	        } else if (startDate) {
+           	        	this.min(new Date(startDate));
+           	        } else {
+           	            endDate = new Date();
+           	         	startDateObj.max(endDate);
+           	            this.min(endDate);
+           	        }
+           	    }
+       	    }).data("kendoDatePicker");
+			
+		}
+
+		$('#checkUsrBtn').click(function() {
+			data = $('#userAdd_bulk_form').serialize();
+
+			var usrloginId = $("#usrLoginId").val();
+			if (usrloginId == "") {
+				$.alert({
+					title: 'ERROR',
+					content: '사용자 사번을 입력해 주세요.',
+				});
+				$("#usrLoginId").focus();
+				return false;
+			}
+
+			var userTypeVal = $('input[name="userType"]:checked').val();
+			var isHionUseVal = $('input[name="isHionUse"]:checked').val();
+			
+			if(userTypeVal == 1 && isHionUseVal == 0 &&usrloginId.length < 2) {
+				$.alert({
+					title: 'ERROR',
+					content: 'ID는 최소 2자리 이상이어야 합니다.',
+				});
+				$("#usrLoginId").focus();
+				return false;
+			}
+
+			if(userTypeVal == 1 && isHionUseVal == 1) {
+				
+				
+				if(usrloginId.length != 5) {
+					$.alert({
+						title: 'ERROR',
+						content: '하이온 사용 시 ID 는 5자리로 신청 되어야 합니다.',
+					});
+					$("#usrLoginId").focus();
+					return false;
+				}
+				/* 
+				if(usrloginId.length > 5) {
+					$.alert({
+						title: 'ERROR',
+						content: '하이온 사용 시 ID 는 5자리를 초과 할 수 없습니다.',
+					});
+					$("#usrLoginId").focus();
+					return false;
+				} */
+			}
+
+			$.ajax({
+				url : "${contextPath}/checkUserIdBulk",
+				type : "POST",
+				data : data,
+				datatype : "JSON",
+				success : function(obj) {
+					var data = JSON.parse(obj);
+					if (data.isError == false) {
+						$("#accountCheckYN").val("Y");
+						$.alert({
+							title: '사용자 사번 체크 결과',
+							content: data.message,
+						});
+					} else {
+						$.alert({
+							title: '사용자 사번 체크 결과',
+							content: data.message,
+						});
+					}
+				}
+			});
+		});
+		
+		$('#sbmButton').click(function() {
+			var usrloginId = $("#usrLoginId").val();
+			if ($("#reqContents").val() == "") {
+				$.alert({
+					title: 'ERROR',
+					content: '신청 사유를 입력해 주세요.',
+				});
+				$("#reqContents").focus();
+				return false;
+			}
+			
+			reqTypeVal = $('input[name="reqType"]:checked').val();
+			if(reqTypeVal == 'A'){
+				userType = $('input[name="userType"]:checked').val();
+				if ($("#usrNm").val() == "") {
+					$.alert({
+						title: 'ERROR',
+						content: '사용자 이름을 입력해 주세요.',
+					});
+					$("#usrNm").focus();
+					return false;
+				}
+				if ($("#cellPhone").val() == "") {
+					$.alert({
+						title: 'ERROR',
+						content: '휴대폰 번호를 입력해 주세요.',
+					});
+					$("#cellPhone").focus();
+					return false;
+				}
+				var isHionUseVal = $('input[name="isHionUse"]:checked').val();
+
+				if(userType == 1 && isHionUseVal == 1) {
+					
+					if(usrloginId.length != 5) {
+						$.alert({
+							title: 'ERROR',
+							content: '하이온 사용 시 ID 는 5자리로 신청 되어야 합니다.',
+						});
+						$("#usrLoginId").focus();
+						return false;
+					}
+					/*
+					if(usrloginId.length > 5) {
+						$.alert({
+							title: 'ERROR',
+							content: '하이온 사용 시 ID 는 5자리를 초과 할 수 없습니다.',
+						});
+						$("#usrLoginId").focus();
+						return false;
+					}
+					*/
+				}
+
+				if(userType == '1' && $("#usrLoginId").val() == ""){
+					$.alert({
+						title: 'ERROR',
+						content: '사용자 사번을 입력해 주세요.',
+					});
+					$("#usrLoginId").focus();
+					return false;
+				} else if(userType == '1' && $("#accountCheckYN").val() == "") {
+					$.alert({
+					    title: 'ERROR',
+					    content: '아아디 중복 체크가 필요 합니다.',
+					});
+					return false;
+				} else if(userType == '1' && $("#accountCheckYN").val() == "N") {
+					$.alert({
+					    title: 'ERROR',
+					    content: '이미 생성 되어 있는 계정입니다.',
+					});
+					return false;	
+				}
+			} else if(reqTypeVal == 'E') { 
+				if($("#editUsrLoginId").val() == ""){
+					$.alert({
+						title: 'ERROR',
+						content: '수정 대상 사용자 사번을 선택해 주세요.',
+					});
+					$("#editUsrLoginId").focus();
+					return false;
+				}
+			} else if (reqTypeVal == 'R') { 
+				if($("#retireUsrLoginId").val() == ""){
+					$.alert({
+						title: 'ERROR',
+						content: '퇴사 대상 사용자 사번을 선택해 주세요.',
+					});
+					$("#retireUsrLoginId").focus();
+					return false;
+				}
+			}
+
+			data = $('#userAdd_bulk_form').serialize();
+
+			$.ajax({
+				url : '${contextPath}/userAddBulkAction',
+				type : 'POST',
+				data : data,
+				datatype : "JSON",
+				success : function(obj) {
+					var data = JSON.parse(obj);
+					if(data.isError == false){
+						$.alert({
+							title: '사용자 계정 신청 결과',
+							content: '입력되었습니다. 결재상신 버튼을 눌러 결재를 진행해주세요.',
+						});	
+						$("#accountCheckYN").val("");
+						$("#main_useradd_refresh_btn").trigger("click");
+						
+					}else {
+						$.alert({
+							title: '사용자 계정 신청 결과',
+							content: data.message,
+						});	
+						$("#main_useradd_refresh_btn").trigger("click");
+					}
+					
+				}
+				
+			});
+
+		});
+		
+		$("input:radio[name=userType]").click(function(){
+	        userTypeVal = $('input[name="userType"]:checked').val();
+	  		if(userTypeVal == '1'){
+				$("#divUsrId").show();
+			}else {
+				$("#divUsrId").hide();
+			}
+	    });
+		
+		$("input:radio[name=reqType]").click(function(){
+			reqTypeVal = $('input[name="reqType"]:checked').val();
+			if(reqTypeVal == 'A'){
+				$("#userAddDiv").show();
+				$("#main_useradd_grid").show();
+				
+				$("#userEditDiv").hide();
+				$("#main_useredit_grid").hide();
+				
+				$("#userRetireDiv").hide();
+				$("#main_userretire_grid").hide();
+				
+			}else if(reqTypeVal == 'E'){
+				$("#userAddDiv").hide();
+				$("#main_useradd_grid").hide();
+				
+				$("#userEditDiv").show();
+				$("#main_useredit_grid").show();
+				
+				$("#userRetireDiv").hide();
+				$("#main_userretire_grid").hide();	
+				
+			}else if(reqTypeVal == 'R') {
+				$("#userAddDiv").hide();
+				$("#main_useradd_grid").hide();
+				
+				$("#userEditDiv").hide();
+				$("#main_useredit_grid").hide();
+				
+				$("#userRetireDiv").show();
+				$("#main_userretire_grid").show();
+
+			}
+	    });
+	    
+		$("#main_useradd_delete_btn").click(function (){
+			var reqTypeVal = $('input[name="reqType"]:checked').val();
+			var selectedItem;
+			if(reqTypeVal == 'A'){
+				selectedItem = userAddBulkGrid.dataItem(userAddBulkGrid.select());
+			}else if(reqTypeVal == 'E'){
+				selectedItem = userEditBulkGrid.dataItem(userEditBulkGrid.select());
+			}else if(reqTypeVal == 'R') {
+				selectedItem = userRetireBulkGrid.dataItem(userRetireBulkGrid.select());
+			}
+			
+			
+			$.ajax({
+				url : '${contextPath}/userAddBulkDeleteAction',
+				type : 'POST',
+				data : {'reqSubId':selectedItem.reqSubId,'reqType':reqTypeVal},
+				datatype : "JSON",
+				success : function(obj) {
+					var data = JSON.parse(obj);
+					if(data.isError == false){
+						$.alert({
+							title: '삭제 결과',
+							content: '삭제되었습니다.',
+						});	
+						
+						$("#main_useradd_refresh_btn").trigger("click");
+						
+					}else {
+						$.alert({
+							title: '삭제 결과',
+							content: data.message,
+						});	
+						$("#main_useradd_refresh_btn").trigger("click");
+					}
+					
+				}
+			});
+			
+		});
+		
+		$("#approveButton").click(function (){
+			
+			var reqTypeVal = $('input[name="reqType"]:checked').val();
+			
+			var gridDataLenth = 0;
+			if(reqTypeVal == 'A') {
+				gridDataLenth = userAddBulkGrid.dataSource.data().length;
+			}else if(reqTypeVal == 'E') {
+				gridDataLenth = userEditBulkGrid.dataSource.data().length;
+			}else if(reqTypeVal == 'R') {
+				gridDataLenth = userEditBulkGrid.dataSource.data().length;
+			}
+			
+			if(gridDataLenth == 0) {
+				$.alert({
+					title: 'ERROR',
+					content: "입력버튼을 누른 후 결재 상신을 진행해야 합니다.",
+				});
+				return;
+			}
+			
+			var submitYn = $("#submitYn").val();
+			if(submitYn == 'N') {
+				$("#submitYn").val('Y');
+			}else {
+				$.alert({
+					title: 'ERROR',
+					content: "결재가 진행 중입니다.",
+				});
+				return;
+			}
+			
+			data = $('#userAdd_bulk_form').serialize();
+			
+			$.ajax({
+				url : '${contextPath}/approveUserBulkAction',
+				type : 'POST',
+				data : data,
+				datatype : "JSON",
+				success : function(obj) {
+					var data = JSON.parse(obj);
+					if(data.isError == false){
+						$.alert({
+							title: '결재 상신 결과',
+							content: 'HION>책임자 승인으로 결재상신이 완료되었습니다',
+							buttons:{
+								confirm : {
+									text : '확인',
+									keys:['enter'],
+									action:function(){
+										location.reload();
+									}
+								}
+							}
+						});	
+						
+					}else {
+						$.alert({
+							title: '결재 상신 결과',
+							content: data.message,
+						});	
+					}
+				}
+			});
+			
+		});
+	});
+
+
+</script>
+<style type="text/css">
+	.text-danger{
+		color: red;
+	}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body style="width: 1000px;">
+	<input type="hidden" id="usrKey" name="userKey" value=${userKey }>
+	<article class="container">
+	<div class="row" style="margin-left: 120px; margin-right: 120px;">
+		<div class="col-lg-12">
+			<div class="panel panel-default" style="margin-top: 12px;">
+				<div class="panel-body" style="text-align: center;">
+					<h3>
+						<i class="fa fa-edit"></i> 사용자 신청 / 유효기간 변경 신청 / 퇴사 신청
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<form id="userAdd_bulk_form" method="POST" class="form-horizontal"data-toggle="validator">
+		<input type="hidden" id="reqId" name="reqId" value="${reqId }">
+		<input type="hidden" id="submitYn" value="N">
+		<div id="usrreg-usr-search-window"></div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="reqUserId">신청 유형</label>
+			<div class="col-sm-6">
+				<div class="radio">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="reqTypeAdd"  name="reqType" type="radio" value="A" checked="checked"> 사용자 계정 신청
+					
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="reqTypeEdit"  name="reqType" type="radio" value="E" > 사용자 유효기간 변경 신청
+					
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="reqTypeRetire"  name="reqType" type="radio" value="R" > 사용자 퇴사 신청
+				</div>
+			</div>
+		</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="reqUserId"> 신청자 사번</label>
+				<div class="col-sm-6" style="padding-top:7px;">
+					${usrLoginId }
+					<input type="hidden" name="reqUserId" id="reqUserId" value="${usrLoginId }">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="reqUserId">신청자 이름</label>
+				<div class="col-sm-6" style="padding-top:7px;">
+					${usrNm }
+				</div>
+			</div>
+			<div class="form-group">
+					<label class="col-sm-3 control-label" for="orgKey">소속 조직</label>
+					<div class="col-sm-6" style="padding-top:7px;">
+						${orgNm }
+    				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="apprUserNm"><strong class="text-danger">*&nbsp;&nbsp;</strong>결재자</label>
+				<div class="col-sm-6">
+					<input type="hidden" name="apprUserId" id="apprUserId" value="${apprUserId }">
+					<input class="form-control" id="apprUserNm" name="apprUserNm" readonly="readonly" style="display: initial;width: 90%" type="text" placeholder="결재자" value="${apprUserNm }">
+					<button class="btn btn-default btn-sm btn-dt09" name="USRKEY" type="button"><i class="fa fa-search"></i></button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" ><strong class="text-danger">*&nbsp;&nbsp;</strong>신청 내용</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="reqContents" name="reqContents"	type="text" placeholder="신청 내용" required> 
+				</div>
+			</div>
+		<div id="userAddDiv">
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="inputGubun"><strong class="text-danger">*&nbsp;&nbsp;</strong>사번 입력 방법</label>
+				<div class="col-sm-6">
+					<div class="control-group">
+						<div clas="controls">
+							<div class="radio">
+								<label> <input id="userType" name="userType"type="radio" value="0" checked="checked"> 자동채번 &nbsp;&nbsp; </label> 
+								<label> <input id="userType1" name="userType"type="radio" value="1"> 사번 직접입력 </label>
+						<!-- 		<label> <input id="userType1" name="userType"type="radio" value="1" checked="checked"> 사번 직접입력 ( HF 파트너스 : A0000 ~, 용역직원 : K0000 ~ )
+												<br>* 입력 시 운영부 직원에게 문의하세요. </label>  -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="divUsrId">
+				<div class="form-group" id="divUsrId">
+					<label class="col-sm-3 control-label" for="usrNm"><strong class="text-danger">*&nbsp;&nbsp;</strong>하이온 사용 여부</label>
+					<div class="col-sm-6">
+						<div class="control-group">
+							<div class="controls">
+								<div class="radio">
+									<label> <input id="isHionUse" name="isHionUse"type="radio" value="0" checked="checked"> 미사용  &nbsp;&nbsp; </label>
+									<label> <input id="isHionUse1" name="isHionUse"type="radio" value="1" > 사용 </label> 
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" id="divUsrId">
+					<label class="col-sm-3 control-label" for="usrNm"><strong class="text-danger">*&nbsp;&nbsp;</strong>사번</label>
+					<div class="col-sm-6">
+						<input class="form-control" id="usrLoginId" name="usrLoginId" type="text" placeholder="사번" style="display: initial;width: 70%;text-transform: lowercase;">
+						<button class="btn btn-primary" id="checkUsrBtn" type="button">사번 중복체크<i class="fa fa-mail-forward spaceLeft"></i></button>
+						<input type="hidden" id="accountCheckYN" name="accountCheckYN">
+					</div>
+				</div>
+			</div>
+			<div class="form-group" id="divUsrId">
+				<label class="col-sm-3 control-label" for="userTp"><strong class="text-danger">*&nbsp;&nbsp;</strong>사용자구분</label>
+				<div class="col-sm-6">
+					<div class="control-group">
+						<div class="controls">
+							<div class="radio">
+								<label> <input id="userTp1" name="userTp"type="radio" value="6" checked="checked"> HF파트너스  &nbsp;&nbsp; </label>
+								<label> <input id="userTp" name="userTp"type="radio" value="5" > 용역직원 </label> 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="usrNm"><strong class="text-danger">*&nbsp;&nbsp;</strong>이름</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="usrNm" name="usrNm" type="text" placeholder="이름(필수)" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="phone">사내전화번호</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="phone"name="phone"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="연락처를 입력해 주세요(숫자만 입력해 주세요.)" required />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="cellPhone"><strong class="text-danger">*&nbsp;&nbsp;</strong>휴대폰번호</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="cellPhone"name="cellPhone"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="연락처를 입력해 주세요(숫자만 입력해 주세요.)" required />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="startDt">유효기간 시작일</label>
+				<div class="col-sm-6">
+					<input type="text" class="dlgt-dt dlgt-start" id="startDt" name="startDt" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="endDt">유효기간 종료일</label>
+				<div class="col-sm-6">
+					<input type="text" class="dlgt-dt dlgt-end" id="endDt" name="endDt" />
+				</div>
+			</div>
+		</div>
+		<!-- 사용자 생성 신청 DIV 종료-->
+		
+		<!-- 사용자 수정 신청 DIV 시작-->
+		<div id="userEditDiv">
+			<div class="form-group" id="divUsrId">
+				<label class="col-sm-3 control-label" for="usrNm"><strong class="text-danger">*&nbsp;&nbsp;</strong>대상자 사번</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="editUsrLoginId" name="editUsrLoginId" style="display: initial;width: 90%" type="text" placeholder="사번" >
+					<button class="btn btn-default btn-sm btn-dt10" name="USRKEY" type="button"><i class="fa fa-search"></i></button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="usrNm">이름</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="editUsrNm" name="editUsrNm" type="text" placeholder="이름(필수)" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="startDt">유효기간 시작일</label>
+				<div class="col-sm-6">
+					<input type="text" class="dlgt-dt dlgt-start" id="editStartDt" name="editStartDt" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="endDt">유효기간 종료일</label>
+				<div class="col-sm-6">
+					<input type="text" class="dlgt-dt dlgt-end" id="editEndDt" name="editEndDt" />
+				</div>
+			</div>
+
+		</div>
+		<!-- 사용자 수정 신청 DIV 종료-->
+		
+		<!-- 사용자 퇴사 신청 DIV 시작-->
+		<div id="userRetireDiv">
+			<div class="form-group" id="divUsrId">
+				<label class="col-sm-3 control-label" for="retireUsrLoginId"><strong class="text-danger">*&nbsp;&nbsp;</strong>대상자 사번</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="retireUsrLoginId" name="retireUsrLoginId" style="display: initial;width: 90%" type="text" placeholder="사번" >
+					<button class="btn btn-default btn-sm btn-dt10" name="USRKEY" type="button"><i class="fa fa-search"></i></button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="usrNm">이름</label>
+				<div class="col-sm-6">
+					<input class="form-control" id="retireUsrNm" name="retireUsrNm" type="text" placeholder="이름" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="retireDt">유효기간 종료일</label>
+				<div class="col-sm-6">
+					<input type="text" class="dlgt-dt dlgt-end" id="retireDt" name="retireDt" />
+				</div>
+			</div>
+
+		</div>
+		<!-- 사용자 퇴사 신청 DIV 종료-->
+		
+		<div class="form-group">
+			<div class="col-sm-12 text-center">
+				<button class="btn btn-primary" id="sbmButton" type="button">추가 <i class="fa fa-check spaceLeft"></i></button>
+				<button class="btn btn-primary" id="approveButton" type="button">결재상신 <i class="fa fa-check spaceLeft"></i></button>
+			</div>
+		</div>
+		
+	</form>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6" style="text-align: left;">
+							<p>
+								<button id="main_useradd_refresh_btn" type="button" class="btn btn-primary btn-sm" disabled="disabled"><i class="fa fa-refresh"></i> 새로고침</button>
+								<button id="main_useradd_delete_btn" type="button" class="btn btn-primary btn-sm" disabled="disabled"><i class="fa fa-times"></i> 삭제</button>
+							</p>
+						</div>
+					</div>
+					<div id="main_useradd_grid" class="ra-section"></div>
+					<div id="main_useredit_grid" class="ra-section"></div>
+					<div id="main_userretire_grid" class="ra-section"></div>					
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr>
+	
+	</article>
+
+
+</body>
+</html>

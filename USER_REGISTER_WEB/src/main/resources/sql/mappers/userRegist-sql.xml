@@ -1,0 +1,1056 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="userRegist">
+    	  <resultMap id="orgResult" type="org">
+			    <id property="orgKey" column="ORGKEY" javaType="String"/>
+			    <result property="pOrgKey" column="PORGKEY" javaType="String"/>
+			    <result property="pOrgNm" column="PORGNM" javaType="String"/>
+			    <result property="orgNm" column="ORGNM" javaType="String"/>
+			    <result property="orgType" column="ORGTYPE" javaType="String"/>
+			    <result property="pwdPKey" column="PWDPKEY" javaType="String"/>
+			    <result property="orderNo" column="ORDERNO" javaType="int"/>
+			    <result property="sttus" column="STTUS" javaType="String"/>
+			    <result property="createDm" column="CREATEDM" javaType="String"/>
+			    <result property="modifyDm" column="MODIFYDM" javaType="String"/>
+		  </resultMap>
+		  
+		  <resultMap  id="usrAddBulkResult" type="usrAddBulk">
+		  	<id property="reqId" column="REQ_ID" javaType="String"/>
+		  	<result property="reqSubId" column="REQ_SUB_ID" javaType="String"/>
+		  	<result property="userType" column="USERTYPE" javaType="String"/>
+		  	<result property="usrLoginId" column="USRLOGINID" javaType="String"/>
+		  	<result property="usrNm" column="USRNM" javaType="String"/>
+		  	<result property="deptNo" column="DEPTNO" javaType="String"/>
+		  	<result property="phone" column="PHONE" javaType="String"/>
+		  	<result property="cellPhone" column="CELLPHONE" javaType="String"/>
+		  	<result property="startDt" column="STARTDT" javaType="String"/>
+		  	<result property="endDt" column="ENDDT" javaType="String"/>
+		  	<result property="reqType" column="APPTYPE" javaType="String"/>
+		  	<result property="apprDt" column="APPRDT" javaType="String"/>
+		  	<result property="appprStat" column="APPRSTAT" javaType="String"/>
+		  	<result property="reqDt" column="REQ_DT" javaType="String"/>
+		  	<result property="reqUserId" column="REQ_USER_ID" javaType="String"/>
+		  	<result property="reqContents" column="REQ_CONTENTS" javaType="String"/>
+		  	<result property="orgNm" column="ORGNM" javaType="String"/>
+		  	<result property="userTp" column="USER_TP" javaType="String"/>
+		  </resultMap>
+		  
+		  	<!-- luv List -->
+			<select id="selectLuvList" parameterType="String" resultType="luv">
+				SELECT	b.luvEncoded,
+						b.luvDecoded,
+						b.luvnm,
+						b.luvkey,
+						b.orderno,
+						b.sttus,
+						b.creator,
+						b.createdm,
+						b.modifier,
+						b.modifydm,
+						b.note,
+						b.defaultYn,
+						b.luvEncoded AS code,
+						b.luvnm AS name
+				FROM	iam_luc a
+				INNER JOIN iam_luv b
+				ON	a.luckey = b.luckey
+				AND	a.luckey = #{strLucKey}
+				AND	a.sttus = 'ST01'
+				AND	b.sttus = 'ST01'
+				ORDER BY b.orderno ASC
+			</select>
+			
+			<!-- luv List -->
+			<select id="selectLuvListBySqlstring" parameterType="String" resultType="luv">
+				SELECT	code, name
+				FROM	(${_parameter})
+			</select>
+			
+			<!-- luc Detail Info -->
+			<select id="selectLucDetailInfo" parameterType="String" resultType="luc">
+				SELECT	*
+				FROM	iam_luc 
+				WHERE	luckey = #{strLucKey}
+			</select>
+			
+			<select id="selectOrgSearchCount" parameterType="usr" resultType="String">
+			    SELECT COUNT(orgkey) CNT FROM
+			  	(
+			  		<choose>
+				    	<when test="listMap != null">
+				    		SELECT orgkey FROM 
+							(
+								SELECT DISTINCT * FROM iam_org
+								START WITH orgkey IN (
+									<foreach item="item" collection="listMap" separator=" , " close=" ">
+										#{item.ORGKEY}
+									</foreach>
+								)
+								CONNECT BY PRIOR orgkey = porgkey
+							) 
+						    <where>
+						    	<if test="orgNm != null">
+						    		ORGNM LIKE '%' || #{orgNm} || '%'
+						    	</if>
+						    	<if test="pOrgKey != null">
+						    		AND PORGKEY LIKE '%' || #{pOrgKey} || '%'
+						    	</if>
+						    	<if test="pOrgNm != null">
+						    		AND PORGKEY IN (SELECT ORGKEY FROM IAM_ORG WHERE ORGNM LIKE '%' || #{pOrgNm} || '%')
+						    	</if>
+						    </where>
+				    	</when>
+				    	<otherwise>
+				    		SELECT orgkey FROM iam_org
+						    <where>
+						    	<if test="orgNm != null">
+						    		ORGNM LIKE '%' || #{orgNm} || '%'
+						    	</if>
+						    	<if test="pOrgKey != null">
+						    		AND PORGKEY LIKE '%' || #{pOrgKey} || '%'
+						    	</if>
+						    	<if test="pOrgNm != null">
+						    		AND PORGKEY IN (SELECT ORGKEY FROM IAM_ORG WHERE ORGNM LIKE '%' || #{pOrgNm} || '%')
+						    	</if>
+						    </where>
+				    	</otherwise>
+					</choose>
+			  	)
+			  	
+			  </select>
+					  
+					  
+		    <select id="selectOrgSearch" parameterType="org" resultMap="orgResult">
+		    SELECT E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT O.* FROM (
+			    		SELECT A.*, C.ORGNM AS PORGNM FROM (
+					    	<choose>
+				    			<when test="listMap != null">
+									SELECT * FROM 
+									(
+										SELECT DISTINCT * FROM iam_org
+										START WITH orgkey IN (
+											<foreach item="item" collection="listMap" separator=" , " close=" ">
+												#{item.ORGKEY}
+											</foreach>
+										)
+										CONNECT BY PRIOR orgkey = porgkey
+									) 
+							    	<where>
+								    	<if test="orgNm != null">
+								    		ORGNM LIKE '%' || #{orgNm} || '%'
+								    	</if>
+								    	<if test="pOrgKey != null">
+								    		AND PORGKEY LIKE '%' || #{pOrgKey} || '%'
+								    	</if>
+								    	<if test="pOrgNm != null">
+								    		AND PORGKEY IN (SELECT ORGKEY FROM IAM_ORG WHERE ORGNM LIKE '%' || #{pOrgNm} || '%')
+								    	</if>
+								    </where>
+				    			</when>
+				    			<otherwise>
+				    				SELECT * FROM iam_org 
+								    <where>
+								    	<if test="orgNm != null">
+								    		ORGNM LIKE '%' || #{orgNm} || '%'
+								    	</if>
+								    	<if test="pOrgKey != null">
+								    		AND PORGKEY LIKE '%' || #{pOrgKey} || '%'
+								    	</if>
+								    	<if test="pOrgNm != null">
+								    		AND PORGKEY IN (SELECT ORGKEY FROM IAM_ORG WHERE ORGNM LIKE '%' || #{pOrgNm} || '%')
+								    	</if>
+								    </where>
+				    			</otherwise>
+			    			</choose>
+					    ) A
+					    LEFT OUTER JOIN IAM_ORG C
+					    ON A.PORGKEY = C.ORGKEY
+				    ) O
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE E.RNUM > #{firstIndex}
+		    ]]>
+		    
+		  </select>
+
+		  <!-- 사용자 목록 -->
+		  <select id="selectUsrSearch" parameterType="usr" resultType="usr">
+		    SELECT 
+		    	TO_CHAR(E.createdm,'yyyy-mm-dd hh24:mi:ss') AS CREATEDM,
+				TO_CHAR(E.modifydm,'yyyy-mm-dd hh24:mi:ss') AS MODIFYDM,
+				E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT O.* FROM (
+		    		SELECT A.*, B.ORGNM
+				    FROM (
+				    <choose>
+				    	<when test="listMap != null">
+				    		SELECT * FROM 
+							(
+								SELECT x.* FROM iam_usr x
+								INNER JOIN 
+								(
+								  SELECT orgkey FROM iam_org
+								  START WITH orgkey IN (
+									<foreach item="item" collection="listMap" separator=" , " close=" ">
+										#{item.ORGKEY}
+									</foreach>
+								  )
+								  CONNECT BY PRIOR orgkey = porgkey
+								) y
+								ON x.orgkey=y.orgkey
+							) 
+						    <where>
+						    	<if test="usrLoginId != null">
+						    		USRLOGINID LIKE '%' || #{usrLoginId} || '%'
+						    	</if>
+						    	<if test="usrNm != null">
+						    		AND USRNM LIKE '%' || #{usrNm} || '%'
+						    	</if>
+						    	<if test="reqUserId != null">
+						    		AND ORGKEY IN
+						    		(
+						    			SELECT ORGKEY FROM IAM_ORG
+										START WITH ORGKEY = (
+										SELECT ORGKEY FROM IAM_ORG_ATTR WHERE DEPTNO IN 
+										(
+											SELECT BROF_CD FROM IAM_USR A
+											INNER JOIN IAM_USR_ATTR B
+											ON A.USRKEY = B.USRKEY
+											WHERE USRLOGINID = #{reqUserId})
+										)
+										CONNECT BY PRIOR ORGKEY = PORGKEY
+						    		)
+						    	</if>
+						    </where>
+				    	</when>
+				    	<otherwise>
+				    		SELECT * FROM iam_usr 
+						    <where>
+						    	<if test="usrLoginId != null">
+						    		USRLOGINID LIKE '%' || #{usrLoginId} || '%'
+						    	</if>
+						    	<if test="usrNm != null">
+						    		AND USRNM LIKE '%' || #{usrNm} || '%'
+						    	</if>
+						    	<if test="reqUserId != null">
+						    		AND ORGKEY IN
+						    		(
+						    			SELECT ORGKEY FROM IAM_ORG
+										START WITH ORGKEY = (
+										SELECT ORGKEY FROM IAM_ORG_ATTR WHERE DEPTNO IN 
+										(
+											SELECT BROF_CD FROM IAM_USR A
+											INNER JOIN IAM_USR_ATTR B
+											ON A.USRKEY = B.USRKEY
+											WHERE USRLOGINID = #{reqUserId})
+										)
+										CONNECT BY PRIOR ORGKEY = PORGKEY
+						    		)
+						    	</if>
+						    </where>
+				    	</otherwise>
+				    </choose>
+				    ) A
+				    LEFT OUTER JOIN IAM_ORG B
+				    ON A.ORGKEY = B.ORGKEY
+				    LEFT OUTER JOIN IAM_USR_ATTR D
+				    ON A.USRKEY = D.USRKEY
+				    WHERE D.STFF_DVCD IN ('80')
+				    AND A.USRNM NOT IN ('퇴사자')
+				    ) O
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE RNUM > #{firstIndex}
+		    ]]>
+		    
+		  </select>
+		  
+		 <!-- 사용자 Total Count -->
+		  <select id="selectUsrSearchCount" parameterType="usr" resultType="String">
+		  	SELECT COUNT(usrkey) CNT FROM
+		  	(
+		  		SELECT C.USRKEY, C.USRNM FROM (
+		  		<choose>
+			    	<when test="listMap != null">
+			    		SELECT * FROM 
+						(
+							SELECT x.* FROM iam_usr x
+							INNER JOIN 
+							(
+							  SELECT orgkey FROM iam_org
+							  START WITH orgkey IN (
+								<foreach item="item" collection="listMap" separator=" , " close=" ">
+									#{item.ORGKEY}
+								</foreach>
+							  )
+							  CONNECT BY PRIOR orgkey = porgkey
+							) y
+							ON x.orgkey=y.orgkey
+						) 
+					    <where>
+					    	<if test="usrLoginId != null">
+					    		USRLOGINID LIKE '%' || #{usrLoginId} || '%'
+					    	</if>
+					    	<if test="usrNm != null">
+					    		AND USRNM LIKE '%' || #{usrNm} || '%'
+					    	</if>
+					    	<if test="reqUserId != null">
+						    		AND ORGKEY IN
+						    		(
+						    			SELECT ORGKEY FROM IAM_ORG
+										START WITH ORGKEY = (
+										SELECT ORGKEY FROM IAM_ORG_ATTR WHERE DEPTNO IN 
+										(
+											SELECT BROF_CD FROM IAM_USR A
+											INNER JOIN IAM_USR_ATTR B
+											ON A.USRKEY = B.USRKEY
+											WHERE USRLOGINID = #{reqUserId})
+										)
+										CONNECT BY PRIOR ORGKEY = PORGKEY
+						    		)
+					    	</if>
+					    </where>
+			    	</when>
+			    	<otherwise>
+			    		SELECT * FROM iam_usr
+					    <where>
+					      <if test="usrLoginId != null">
+					        USRLOGINID LIKE '%' || #{usrLoginId} || '%'
+					      </if>
+					      <if test="usrNm != null">
+					        AND USRNM LIKE '%' || #{usrNm} || '%'
+					      </if>
+					      <if test="reqUserId != null">
+						    		AND ORGKEY IN
+						    		(
+						    			SELECT ORGKEY FROM IAM_ORG
+										START WITH ORGKEY = (
+										SELECT ORGKEY FROM IAM_ORG_ATTR WHERE DEPTNO IN 
+										(
+											SELECT BROF_CD FROM IAM_USR A
+											INNER JOIN IAM_USR_ATTR B
+											ON A.USRKEY = B.USRKEY
+											WHERE USRLOGINID = #{reqUserId})
+										)
+										CONNECT BY PRIOR ORGKEY = PORGKEY
+						    		)
+					      </if>
+					    </where>
+			    	</otherwise>
+				</choose>
+				) C
+				LEFT OUTER JOIN IAM_USR_ATTR D
+			    ON C.USRKEY = D.USRKEY
+			    WHERE D.STFF_DVCD IN ('80')
+			    AND C.USRNM NOT IN ('퇴사자')
+		  	)
+		  </select>
+		  
+		  <select id="checkUserId" parameterType="usrAdd" resultType="int">
+		  		SELECT COUNT(*) FROM (
+				    SELECT USRLOGINID FROM IAM_USR WHERE USRLOGINID IN (#{usrloginId})
+				    UNION ALL
+				    SELECT USRLOGINID FROM USER_REGISTER_INFO_T WHERE USRLOGINID IN (#{usrloginId})
+				)
+		  </select>
+		  
+		  <select id="checkUserIdBulk" parameterType="usrAddBulk" resultType="int">
+		  		SELECT COUNT(*) FROM (
+				    SELECT USRLOGINID FROM IAM_USR WHERE LOWER(USRLOGINID) IN (LOWER(#{usrLoginId}))
+				    UNION ALL
+				    SELECT A.USRLOGINID FROM USER_REGISTER_BULK_INFO_T A
+                    INNER JOIN USER_REGISTER_BULK_REQ_T B
+                    ON A.REQ_ID = B.REQ_ID
+                    AND B.APPRSTAT IN ('00','01','02','03','04','05','06') 
+                    WHERE LOWER(USRLOGINID) IN (LOWER(#{usrLoginId}))
+				)
+		  </select>
+		  
+		  <insert id="registUserAdd" parameterType="usrAdd">
+		  		INSERT INTO USER_REGISTER_INFO_T 
+		  		(	
+		  			TID
+		  			,USRLOGINID
+		  			,USRNM
+		  			,ORGKEY
+		  			,EMAIL
+		  			,PHONE
+		  		)
+		  		VALUES 
+		  		(
+		  			#{transactionId}
+		  			,#{usrloginId}
+		  			,#{usrNm}
+		  			,#{orgKey}
+		  			,#{email}
+		  			,#{phone}
+		  		)
+		  </insert>
+		  
+		  <select id="findUserAddInfo" parameterType="string" resultType="usrAdd">
+		  		SELECT 
+		  			TID transactionId
+		  			,USRLOGINID usrloginId
+		  			,USRNM usrNm
+		  			,ORGKEY orgKey
+		  			,EMAIL email
+		  			,PHONE phone
+		  		FROM USER_REGISTER_INFO_T
+		  		WHERE TID = #{transactionId}
+		  </select>
+		  
+		 <select id="selectProcessDefinitionId" parameterType="String" resultType="String">
+			SELECT ID_ FROM ACT_RE_PROCDEF
+			WHERE KEY_ = (SELECT RE_PROCDEF_KEY FROM IAM_OPR WHERE OPRKEY IN #{oprkey})
+		</select>
+		
+		<select id="selectUsrKey"  parameterType="String" resultType="String" >
+			SELECT USRKEY 
+			FROM IAM_USR 
+			WHERE USRLOGINID IN #{usrloginId}
+		</select>
+		
+		<select id="selectUserAddBulkListCount" parameterType="usrAddBulk" resultType="String">
+		    SELECT COUNT(REQ_SUB_ID) CNT FROM
+		  	(
+	  			SELECT * FROM USER_REGISTER_BULK_INFO_T 
+			    <where>
+			    	<if test="reqId != null">
+			    		AND REQ_ID IN ( #{reqId})
+			    	</if>
+			    </where>
+		  	)
+		</select>
+					  
+		<select id="selectUserAddBulkList" parameterType="usrAddBulk" resultMap="usrAddBulkResult">
+		    SELECT E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT O.* FROM (
+		    				SELECT 
+		    					A.CELLPHONE
+								,A.DEPTNO
+								,A.ENDDT
+								,A.PHONE
+								,A.REQ_ID
+								,A.REQ_SUB_ID
+								,A.STARTDT
+								,A.USERTYPE
+								,A.USRLOGINID
+								,A.USRNM 
+		    					,C.ORGNM
+		    				FROM USER_REGISTER_BULK_INFO_T A
+		    				INNER JOIN IAM_ORG_ATTR B
+							ON A.DEPTNO = B.DEPTNO
+							INNER JOIN IAM_ORG C
+							ON B.ORGKEY = C.ORGKEY
+						    <where>
+						    	<if test="reqId != null">
+						    		AND A.REQ_ID IN ( #{reqId})
+						    	</if>
+						    </where>
+				    ) O
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE E.RNUM > #{firstIndex}
+		    ]]>
+		    
+		</select>
+		
+		<select id="selectUserEditBulkListCount" parameterType="usrAddBulk" resultType="String">
+		    SELECT COUNT(REQ_SUB_ID) CNT FROM
+		  	(
+	  			SELECT * FROM USER_EDIT_BULK_INFO_T 
+			    <where>
+			    	<if test="reqId != null">
+			    		AND REQ_ID IN ( #{reqId})
+			    	</if>
+			    </where>
+		  	)
+		</select>
+					  
+		<select id="selectUserEditBulkList" parameterType="usrAddBulk" resultMap="usrAddBulkResult">
+		    SELECT E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT O.* FROM (
+		    				 SELECT * FROM USER_EDIT_BULK_INFO_T 
+						    <where>
+						    	<if test="reqId != null">
+						    		AND REQ_ID IN ( #{reqId})
+						    	</if>
+						    </where>
+				    ) O
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE E.RNUM > #{firstIndex}
+		    ]]>
+		    
+		</select>
+		
+		<select id="selectUserRetireBulkListCount" parameterType="usrAddBulk" resultType="String">
+		    SELECT COUNT(REQ_SUB_ID) CNT FROM
+		  	(
+	  			SELECT * FROM USER_RETIRE_BULK_INFO_T 
+			    <where>
+			    	<if test="reqId != null">
+			    		AND REQ_ID IN ( #{reqId})
+			    	</if>
+			    </where>
+		  	)
+		</select>
+					  
+		<select id="selectUserRetireBulkList" parameterType="usrAddBulk" resultMap="usrAddBulkResult">
+		    SELECT E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT O.* FROM (
+		    				 SELECT * FROM USER_RETIRE_BULK_INFO_T 
+						    <where>
+						    	<if test="reqId != null">
+						    		AND REQ_ID IN ( #{reqId})
+						    	</if>
+						    </where>
+				    ) O
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE E.RNUM > #{firstIndex}
+		    ]]>
+		    
+		</select>
+		
+		<select id="getNextUserId" resultType="String">
+			SELECT 
+			    NEXT_ID
+			FROM IAM_IDS
+			WHERE TABLE_NAME = 'CUSTOM_USER_ID'
+		</select>
+		
+		<update id="updateNextUserId">
+			UPDATE IAM_IDS    
+			SET NEXT_ID = NEXT_ID+1    
+			WHERE TABLE_NAME = 'CUSTOM_USER_ID'
+		</update>
+		
+		<update id="registUserAddBulkInfo" parameterType="usrAddBulk">
+			<![CDATA[
+				MERGE INTO USER_REGISTER_BULK_REQ_T A
+				USING DUAL
+				ON (TRIM(REQ_ID) = #{reqId})
+				WHEN MATCHED THEN
+				    UPDATE SET
+				        A.REQ_USER_ID = #{reqUserId , jdbcType=VARCHAR}
+				        ,A.REQ_CONTENTS = #{reqContents , jdbcType=VARCHAR}
+				        ,A.APPRNO = #{apprNo , jdbcType=VARCHAR}
+				        ,A.APPRSTAT = '03'
+				        ,A.APPR_USER_ID = #{apprUserId , jdbcType=VARCHAR}
+				WHEN NOT MATCHED THEN
+				    INSERT (REQ_ID, REQ_USER_ID, REQ_CONTENTS, REQ_DT, APPRNO, APPRSTAT, APPRDT, APPTYPE, APPR_USER_ID)
+				    VALUES (#{reqId , jdbcType=VARCHAR}, #{reqUserId , jdbcType=VARCHAR}, #{reqContents , jdbcType=VARCHAR}, CAST(SYSTIMESTAMP AS TIMESTAMP), #{apprNo , jdbcType=VARCHAR}, '03', CAST(SYSTIMESTAMP AS TIMESTAMP),#{reqType},#{apprUserId , jdbcType=VARCHAR})
+
+			]]>
+		</update>
+		
+		<update id="registUserAddBulk" parameterType="usrAddBulk">
+			<![CDATA[
+				MERGE INTO USER_REGISTER_BULK_INFO_T A
+				USING DUAL
+				ON (TRIM(REQ_SUB_ID) = #{reqSubId} AND TRIM(REQ_ID) = #{reqId})
+				WHEN MATCHED THEN
+				    UPDATE SET
+				        A.USERTYPE = #{userType , jdbcType=VARCHAR}
+				        ,A.USRLOGINID = #{usrLoginId , jdbcType=VARCHAR}
+				        ,A.USRNM = #{usrNm , jdbcType=VARCHAR}
+				        ,A.DEPTNO =    (SELECT BROF_CD FROM IAM_USR_ATTR WHERE USRKEY = (SELECT USRKEY FROM IAM_USR WHERE USRLOGINID = #{reqUserId}))
+				        ,A.PHONE = #{phone , jdbcType=VARCHAR}
+				        ,A.CELLPHONE = #{cellPhone , jdbcType=VARCHAR}
+				        ,A.STARTDT = TO_TIMESTAMP(TO_DATE(#{startDt},'YYYY-MM-DD'))
+				        ,A.ENDDT = TO_TIMESTAMP(TO_DATE(#{endDt},'YYYY-MM-DD'))
+				        ,A.USER_TP = #{userTp , jdbcType=VARCHAR}
+				WHEN NOT MATCHED THEN
+				    INSERT (REQ_SUB_ID, REQ_ID, USERTYPE, USRLOGINID, USRNM, DEPTNO, PHONE,  CELLPHONE, STARTDT, ENDDT, USER_TP)
+				    VALUES (#{reqSubId , jdbcType=VARCHAR}, #{reqId , jdbcType=VARCHAR}, #{userType , jdbcType=VARCHAR}, #{usrLoginId , jdbcType=VARCHAR}, #{usrNm , jdbcType=VARCHAR}, (SELECT BROF_CD FROM IAM_USR_ATTR WHERE USRKEY = (SELECT USRKEY FROM IAM_USR WHERE USRLOGINID = #{reqUserId})), #{phone , jdbcType=VARCHAR}, #{cellPhone , jdbcType=VARCHAR}, TO_TIMESTAMP(TO_DATE(#{startDt},'YYYY-MM-DD')), TO_TIMESTAMP(TO_DATE(#{endDt},'YYYY-MM-DD')), #{userTp , jdbcType=VARCHAR})
+			]]>
+		</update>
+		
+		<delete id="deleteUserAddBulk" parameterType="usrAddBulk">
+			DELETE FROM USER_REGISTER_BULK_INFO_T
+			WHERE REQ_SUB_ID = #{reqSubId}
+		</delete>
+		
+		<select id="getImUserInfo" parameterType="usrAddBulk" resultType="hashmap">
+			SELECT 
+			    USRNM, 
+			    A.EMP_NO EMPNO, 
+			    BROF_CD AS BROF_CD, 
+			    A.BROF_NM, 
+			    BROF_TEAM_CD, 
+			    BROF_TEAM_NM, 
+			    DCHF_EPNO, 
+			    DCHF_NM, 
+			    POS_REGU_CD, 
+			    JGRD_CD, 
+			    (SELECT MAX(POS_REGU_CD) FROM IAM_USR WHERE EMPNO = OA.DCHF_EPNO) APRR_POS_REGU_CD,
+			    (SELECT MAX(JGRD_CD) FROM IAM_USR WHERE EMPNO = OA.DCHF_EPNO) APRR_JGRD_CD,
+			    A.HQBR_CD,
+                A.HQBR_NM,
+                O.ORGNM
+			FROM IAM_USR I 
+            INNER JOIN IAM_USR_ATTR A ON I.USRKEY = A.USRKEY 
+			INNER JOIN IAM_ORG_ATTR OA ON I.ORGKEY = OA.ORGKEY
+            INNER JOIN IAM_ORG O ON OA.ORGKEY = O.ORGKEY
+			WHERE A.EMP_NO =#{reqUserId}
+		</select>
+		
+		<update id="updateUserAddBulkReqTbl" parameterType="usrAddBulk">
+			UPDATE USER_REGISTER_BULK_REQ_T
+			SET	APPRNO = #{apprNo , jdbcType=VARCHAR}
+				,APPRSTAT = #{appprStat , jdbcType=VARCHAR}
+			WHERE REQ_ID = #{reqId}
+		</update>
+		
+		<select id="getApprovalCnt" parameterType="usrAddBulk" resultType="int">
+			SELECT 
+				COUNT(*) 
+			FROM USER_REGISTER_BULK_REQ_T
+			WHERE APPRNO = #{apprNo}
+		</select>
+		
+		<update id="updateApprovalResult" parameterType="usrAddBulk" >
+			UPDATE USER_REGISTER_BULK_REQ_T
+			SET	APPRDT = TO_TIMESTAMP(TO_DATE(#{apprDt},'YYYYMMDD'))
+				,APPRSTAT = #{appprStat , jdbcType=VARCHAR}
+			WHERE APPRNO = #{apprNo}
+		</update>
+		
+		<select id="getApprovalReqList" parameterType="usrAddBulk" resultMap="usrAddBulkResult">
+		
+			<choose>
+				<when test='reqType == "A"'>
+					SELECT 
+					    A.USRLOGINID
+					    ,A.USRNM
+					    ,A.DEPTNO
+					    ,A.PHONE
+					    ,A.CELLPHONE
+					    ,TO_CHAR(STARTDT,'YYYYMMDD') STARTDT
+					    ,TO_CHAR(ENDDT,'YYYYMMDD') ENDDT
+					    ,A.REQ_SUB_ID
+					    ,B.REQ_USER_ID
+					    ,A.USER_TP
+					FROM USER_REGISTER_BULK_INFO_T A
+					INNER JOIN USER_REGISTER_BULK_REQ_T B
+					ON A.REQ_ID = B.REQ_ID
+					WHERE B.APPRNO = #{apprNo}
+				</when>
+				<when test='reqType == "E"'>
+					SELECT 
+					    A.USRLOGINID
+					    ,TO_CHAR(STARTDT,'YYYYMMDD') STARTDT
+					    ,TO_CHAR(ENDDT,'YYYYMMDD') ENDDT
+					FROM USER_EDIT_BULK_INFO_T A
+					INNER JOIN USER_REGISTER_BULK_REQ_T B
+					ON A.REQ_ID = B.REQ_ID
+					WHERE B.APPRNO = #{apprNo}
+				</when>
+				<when test='reqType == "R"'>
+					SELECT 
+					    A.USRLOGINID
+					    ,TO_CHAR(ENDDT,'YYYYMMDD') ENDDT
+					FROM USER_RETIRE_BULK_INFO_T A
+					INNER JOIN USER_REGISTER_BULK_REQ_T B
+					ON A.REQ_ID = B.REQ_ID
+					WHERE B.APPRNO = #{apprNo}
+				</when>
+			</choose>
+		
+		</select>
+		
+		<update id="registUserEditBulk" parameterType="usrAddBulk">
+			<![CDATA[
+				MERGE INTO USER_EDIT_BULK_INFO_T A
+				USING DUAL
+				ON (TRIM(REQ_SUB_ID) = #{reqSubId} AND TRIM(REQ_ID) = #{reqId})
+				WHEN MATCHED THEN
+				    UPDATE SET
+				        A.USRLOGINID = #{editUsrLoginId , jdbcType=VARCHAR}
+				        ,A.USRNM = #{usrNm , jdbcType=VARCHAR}
+				        ,A.STARTDT = TO_TIMESTAMP(TO_DATE(#{editStartDt},'YYYY-MM-DD'))
+				        ,A.ENDDT = TO_TIMESTAMP(TO_DATE(#{editEndDt},'YYYY-MM-DD'))
+				WHEN NOT MATCHED THEN
+				    INSERT (REQ_SUB_ID, REQ_ID, USRLOGINID, USRNM, STARTDT, ENDDT)
+				    VALUES (#{reqSubId , jdbcType=VARCHAR}, #{reqId , jdbcType=VARCHAR}, #{editUsrLoginId , jdbcType=VARCHAR}, #{editUsrNm , jdbcType=VARCHAR}, TO_TIMESTAMP(TO_DATE(#{editStartDt},'YYYY-MM-DD')), TO_TIMESTAMP(TO_DATE(#{editEndDt},'YYYY-MM-DD')))
+
+			]]>
+		</update>
+		
+		<update id="registUserRetireBulk" parameterType="usrAddBulk">
+			<![CDATA[
+				MERGE INTO USER_RETIRE_BULK_INFO_T A
+				USING DUAL
+				ON (TRIM(REQ_SUB_ID) = #{reqSubId} AND TRIM(REQ_ID) = #{reqId})
+				WHEN MATCHED THEN
+				    UPDATE SET
+				        A.USRLOGINID = #{retireUsrLoginId , jdbcType=VARCHAR}
+				        ,A.USRNM = #{usrNm , jdbcType=VARCHAR}
+				        ,A.ENDDT = TO_TIMESTAMP(TO_DATE(#{retireDt},'YYYY-MM-DD'))
+				WHEN NOT MATCHED THEN
+				    INSERT (REQ_SUB_ID, REQ_ID, USRLOGINID, USRNM, ENDDT)
+				    VALUES (#{reqSubId , jdbcType=VARCHAR}, #{reqId , jdbcType=VARCHAR}, #{retireUsrLoginId , jdbcType=VARCHAR}, #{retireUsrNm , jdbcType=VARCHAR}, TO_TIMESTAMP(TO_DATE(#{retireDt},'YYYY-MM-DD')))
+			]]>
+		</update>
+		
+		<delete id="deleteUserEditBulk" parameterType="usrAddBulk">
+			DELETE FROM USER_EDIT_BULK_INFO_T
+			WHERE REQ_SUB_ID = #{reqSubId}
+		</delete>
+		
+		<delete id="deleteUserRetireBulk" parameterType="usrAddBulk">
+			DELETE FROM USER_RETIRE_BULK_INFO_T
+			WHERE REQ_SUB_ID = #{reqSubId}
+		</delete>
+			
+		<select id="selectApproveHistoryListCount" parameterType="usrAddBulk" resultType="String">
+		    SELECT COUNT(REQ_ID) CNT FROM
+		  	(
+		  		SELECT O.*, U.USRNM FROM (
+		  			SELECT * FROM USER_REGISTER_BULK_REQ_T 
+				    <where>
+				    	<if test="reqUserId != null">
+				    		AND REQ_USER_ID IN ( SELECT USRLOGINID FROM IAM_USR WHERE ORGKEY IN (SELECT ORGKEY FROM IAM_USR WHERE USRLOGINID IN (#{reqUserId})))
+				    	</if>
+		   				<if test="usrLoginId != null">
+							AND REQ_USER_ID LIKE '%' || #{usrLoginId} || '%'
+						</if>
+				    	<if test="reqContents != null">
+							AND REQ_CONTENTS LIKE '%' || #{reqContents} || '%'
+						</if>
+				    	<if test="appprStat != null">
+							AND APPRSTAT =  #{appprStat} 
+						</if>
+				    	<if test="reqType != null">
+							AND APPTYPE =  #{reqType} 
+						</if>
+						<choose>
+							<when test="periodType == 'last1week'">
+								AND REQ_DT >= SYSDATE -7
+							</when>
+							<when test="periodType == 'last1month'">
+								AND REQ_DT >= ADD_MONTHS(SYSDATE,-1)
+							</when>
+							<when test="periodType == 'last6month'">
+								AND REQ_DT >= ADD_MONTHS(SYSDATE,-6)
+							</when>
+							<when test="periodType == 'last1year'">
+								AND REQ_DT >= ADD_MONTHS(SYSDATE,-12)
+							</when>
+						</choose>
+						
+						<if test="startDt != null">
+							<![CDATA[
+								AND TO_CHAR(REQ_DT,'YYYY-MM-DD') >=  #{startDt} 
+							]]>
+						</if>
+						
+						<if test="endDt != null">
+							<![CDATA[
+								AND TO_CHAR(REQ_DT,'YYYY-MM-DD') <=  #{endDt} 
+							]]>
+						</if>
+						
+				    </where>
+				    ) O
+				    INNER JOIN IAM_USR U
+				    ON O.REQ_USER_ID = U.USRLOGINID
+				    <where>
+				      	<if test="usrNm != null">
+							AND U.USRNM LIKE '%' || #{usrNm} || '%'
+						</if>
+				    </where>
+		  	)
+		</select>
+					  
+		<select id="selectApproveHistoryList" parameterType="usrAddBulk" resultMap="usrAddBulkResult">
+		    SELECT E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT O.*, U.USRNM FROM (
+		    				 SELECT * FROM USER_REGISTER_BULK_REQ_T 
+						    <where>
+						    	<if test="reqUserId != null">
+						    		AND REQ_USER_ID IN ( SELECT USRLOGINID FROM IAM_USR WHERE ORGKEY IN (SELECT ORGKEY FROM IAM_USR WHERE USRLOGINID IN (#{reqUserId})))
+						    	</if>
+						    	<if test="usrLoginId != null">
+									AND REQ_USER_ID LIKE '%' || #{usrLoginId} || '%'
+								</if>
+						    	<if test="reqContents != null">
+									AND REQ_CONTENTS LIKE '%' || #{reqContents} || '%'
+								</if>
+						    	<if test="appprStat != null">
+									AND APPRSTAT =  #{appprStat} 
+								</if>
+						    	<if test="reqType != null">
+									AND APPTYPE =  #{reqType} 
+								</if>
+								<choose>
+									<when test="periodType == 'last1week'">
+										AND REQ_DT >= SYSDATE -7
+									</when>
+									<when test="periodType == 'last1month'">
+										AND REQ_DT >= ADD_MONTHS(SYSDATE,-1)
+									</when>
+									<when test="periodType == 'last6month'">
+										AND REQ_DT >= ADD_MONTHS(SYSDATE,-6)
+									</when>
+									<when test="periodType == 'last1year'">
+										AND REQ_DT >= ADD_MONTHS(SYSDATE,-12)
+									</when>
+								</choose>
+
+								<if test="startDt != null">
+									<![CDATA[
+										AND TO_CHAR(REQ_DT,'YYYY-MM-DD') >=  #{startDt} 
+									]]>
+								</if>
+								
+								<if test="endDt != null">
+									<![CDATA[
+										AND TO_CHAR(REQ_DT,'YYYY-MM-DD') <=  #{endDt} 
+									]]>
+								</if>
+						    </where>
+				    ) O
+				    INNER JOIN IAM_USR U
+				    ON O.REQ_USER_ID = U.USRLOGINID
+				    <!-- 
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+				     -->
+				      <where>
+				      	<if test="usrNm != null">
+							AND U.USRNM LIKE '%' || #{usrNm} || '%'
+						</if>
+				      </where>
+				    ORDER BY O.REQ_DT DESC
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE E.RNUM > #{firstIndex}
+		    ]]>
+		    
+		</select>
+		
+		<select id="selectUserInfo" parameterType="String" resultType="hashmap">
+			SELECT 
+				 USR.USRKEY
+				 ,USR.USRNM
+				 ,USR.PHONE
+				 ,USR.EMAIL
+				 ,USR.MOBILE
+				 ,USR.USRLOGINID
+				 ,ORG.ORGNM
+				 ,ATTR.ENCO_DY AS STARTDT
+				 ,ATTR.RETIR_DY AS ENDDT
+			FROM IAM_USR USR
+			INNER JOIN IAM_USR_ATTR ATTR
+			ON USR.USRKEY = ATTR.USRKEY
+			INNER JOIN IAM_ORG ORG
+			ON USR.ORGKEY = ORG.ORGKEY
+			WHERE USR.USRKEY = #{usrKey}
+		</select>
+		
+		
+		<select id="getAttrUserCnt" parameterType="String" resultType="int">
+			SELECT 
+				 COUNT(*)
+			FROM IAM_USR_ATTR
+			WHERE USRKEY = #{usrKey}
+		</select>
+		
+		
+		<select id="selectUserNotAttrInfo" parameterType="String" resultType="hashmap">
+			SELECT 
+				 USR.USRKEY
+				 ,USR.USRNM
+				 ,USR.PHONE
+				 ,USR.EMAIL
+				 ,USR.MOBILE
+				 ,USR.USRLOGINID
+				 ,ORG.ORGNM
+				 ,ORG.ORGKEY
+			FROM IAM_USR USR
+			INNER JOIN IAM_ORG ORG
+			ON USR.ORGKEY = ORG.ORGKEY
+			WHERE USR.USRKEY = #{usrKey}
+		</select>
+		
+		
+		<select id="getApprovalReqInfo" parameterType="usrAddBulk" resultType="hashmap">
+			SELECT 
+				* 
+			FROM USER_REGISTER_BULK_REQ_T 
+			WHERE APPRNO = #{apprNo}
+		</select>
+		
+		<update id="updateCreateUsrLoginId" parameterType="usrAddBulk">
+			UPDATE USER_REGISTER_BULK_INFO_T
+			SET USRLOGINID = #{usrLoginId}
+			WHERE REQ_SUB_ID = #{reqSubId}
+		</update>
+
+		<select id="getMaxPartnerUserId" parameterType="usrAddBulk" resultType="hashmap">
+			SELECT MAX(Usrloginid) USRLOGINID  FROM IAM_USR 
+            WHERE length(usrloginid) = 5 
+            AND regexp_like(substr(usrloginid,0,1),'[a-j]{1}')
+            AND regexp_like(substr(usrloginid,0,5),'[0-9]{4}')
+		</select>
+
+		<select id="getMaxOutsideUserId" parameterType="usrAddBulk" resultType="hashmap">
+			SELECT MAX(Usrloginid) USRLOGINID  FROM IAM_USR 
+            WHERE length(usrloginid) = 5 
+            AND regexp_like(substr(usrloginid,0,1),'[k-z]{1}')
+            AND regexp_like(substr(usrloginid,0,5),'[0-9]{4}')
+		</select>
+		
+		
+		  <!-- 사용자 목록 -->
+		  <select id="selectApprUsrSearch" parameterType="usr" resultType="usr">
+		    SELECT 
+		    	TO_CHAR(E.createdm,'yyyy-mm-dd hh24:mi:ss') AS CREATEDM,
+				TO_CHAR(E.modifydm,'yyyy-mm-dd hh24:mi:ss') AS MODIFYDM,
+				E.* FROM (
+		    	SELECT ROWNUM AS RNUM, D.* FROM (
+		    		SELECT * FROM (
+						SELECT 
+			                B.USRKEY, B.USRLOGINID, B.USRNM, C.ORGNM, B.CREATEDM, B.MODIFYDM
+			             FROM (
+			                 SELECT 
+			                    DCHF_EPNO 
+			                 FROM IAM_ORG_ATTR
+			                 WHERE ORGT_BROF_CD = (SELECT BROF_CD FROM IAM_USR_ATTR WHERE EMP_NO = #{reqUserId})
+			                 AND DCHF_EPNO IS NOT NULL 
+			                 AND DCHF_EPNO NOT IN ('null','-')
+			                 AND BROF_TEAM_DSCD_DY  > to_char(sysdate, 'YYYYMMDD')
+			             ) A
+			             INNER JOIN IAM_USR B
+			             ON A.DCHF_EPNO = B.USRLOGINID
+			             INNER JOIN IAM_ORG C
+			             ON B.ORGKEY = C.ORGKEY
+					) 
+				    <where>
+				    	<if test="usrLoginId != null">
+				    		USRLOGINID LIKE '%' || #{usrLoginId} || '%'
+				    	</if>
+				    	<if test="usrNm != null">
+				    		AND USRNM LIKE '%' || #{usrNm} || '%'
+				    	</if>
+				    </where>
+				    <if test="sort != null">
+				    	ORDER BY
+				    	<foreach item="item" collection="sort" open=" O." separator=" , " close=" ">
+							${item.field} ${item.dir}
+						</foreach>
+				    </if>
+			<![CDATA[
+		    	) D WHERE ROWNUM <= #{firstIndex} + #{recordCountPerPage}
+		    ) E WHERE RNUM > #{firstIndex}
+		    ]]>
+		    
+		  </select>
+		  
+		 <!-- 사용자 Total Count -->
+		  <select id="selectApprUsrSearchCount" parameterType="usr" resultType="String">
+		  	SELECT COUNT(usrkey) CNT FROM
+		  	(
+		  		SELECT * FROM (
+					SELECT 
+		                B.USRKEY, B.USRLOGINID, B.USRNM, C.ORGNM 
+		             FROM (
+		                 SELECT 
+		                    DCHF_EPNO 
+		                 FROM IAM_ORG_ATTR
+		                 WHERE ORGT_BROF_CD = (SELECT BROF_CD FROM IAM_USR_ATTR WHERE EMP_NO = #{reqUserId})
+		                 AND DCHF_EPNO IS NOT NULL 
+		                 AND DCHF_EPNO NOT IN ('null','-')
+		             ) A
+		             INNER JOIN IAM_USR B
+		             ON A.DCHF_EPNO = B.USRLOGINID
+		             INNER JOIN IAM_ORG C
+		             ON B.ORGKEY = C.ORGKEY
+				) 
+			    <where>
+			    	<if test="usrLoginId != null">
+			    		USRLOGINID LIKE '%' || #{usrLoginId} || '%'
+			    	</if>
+			    	<if test="usrNm != null">
+			    		AND USRNM LIKE '%' || #{usrNm} || '%'
+			    	</if>
+			    </where>
+		  	)
+		  </select>
+
+		<select id="getApprUserInfo" parameterType="String" resultType="hashmap">
+			SELECT 
+			    B.EMP_NO
+			    ,A.USRNM
+			    ,B.POS_REGU_CD
+			    ,B.JGRD_CD
+			    ,B.BROF_CD
+			    ,B.BROF_TEAM_CD
+			FROM IAM_USR A
+			INNER JOIN IAM_USR_ATTR B
+			ON A.USRKEY = B.USRKEY
+			WHERE B.EMP_NO IN (
+			    SELECT 
+			        APPR_USER_ID
+			    FROM USER_REGISTER_BULK_REQ_T
+			    WHERE REQ_ID = #{reqId}
+			)
+		</select>
+		
+		<select id="checkAdminRole" parameterType="String" resultType="int" >
+			SELECT 
+			    COUNT(*) 
+			FROM IAM_USR A
+			INNER JOIN IAM_ADMROLE_USR B
+			ON A.USRKEY = B.USRKEY
+			AND A.USRKEY = (SELECT USRKEY FROM IAM_USR WHERE USRLOGINID = #{usrLoginId})
+			INNER JOIN IAM_ADMROLE C
+			ON B.ADMROLEKEY = C.ADMROLEKEY
+			AND C.ADMROLEKEY IN ('ADMROLE00000000000000000000','ADMROLE00000000000000000002')
+		</select>
+    </mapper>
